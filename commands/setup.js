@@ -3,6 +3,7 @@ const { bold, italic } = require("discord.js");
 const ping = require('../commands/ping.js');
 const burger = require('../commands/big-burger.js');
 const git = require('../commands/git.js');
+const snoring = require('../commands/snoring.js');
 
 module.exports = (client) => {
 
@@ -13,7 +14,7 @@ module.exports = (client) => {
 
             case 'ping':
 
-                await interaction.reply(italic(bold(ping.result())));
+                await interaction.reply(italic(bold(ping.result(client))));
 
                 break;
             case 'big-burger':
@@ -28,6 +29,12 @@ module.exports = (client) => {
                 await interaction.reply(git.result());
 
                 break;
+            case 'snoring':
+
+                // await interaction.reply('💤💤💤');
+                await snoring.result(interaction, client);
+
+                break;
         }
     });
 
@@ -35,6 +42,7 @@ module.exports = (client) => {
     return [
         ping.PING_COMMAND,
         burger.BURGER_COMMAND,
-        git.GIT_COMMAND
+        git.GIT_COMMAND,
+        snoring.SNORING_COMMAND
     ];
 }

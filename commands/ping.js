@@ -6,7 +6,7 @@ const ping = {
 
 exports.PING_COMMAND = ping;
 
-exports.result = () => {
+exports.result = (client) => {
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
