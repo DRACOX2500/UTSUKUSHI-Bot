@@ -1,0 +1,8 @@
+# Clone the respository
+git clone https://github.com/DRACOX2500/Discord-Bot.git
+
+# Enter into the directory
+cd Discord-Bot
+
+# Install the dependencies
+npm install
