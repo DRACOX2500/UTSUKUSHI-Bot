@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "ckey": "^1.0.3",
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.1"
   },
