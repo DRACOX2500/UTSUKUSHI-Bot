@@ -2,12 +2,7 @@
 module.exports = (TOKEN, CLIENT_ID, client) => {
 
     const { REST, Routes } = require('discord.js');
-    require('../commands/setup')(client);
-
-    const COMMANDS = [
-        require('../commands/ping.js').PING_COMMAND,
-        require('../commands/big-burger.js').BURGER_COMMAND,
-    ];
+    const COMMANDS = require('../commands/setup')(client);
 
     const rest = new REST({ version: '10' }).setToken(TOKEN);
 
@@ -16,6 +11,7 @@ module.exports = (TOKEN, CLIENT_ID, client) => {
         console.log('Started refreshing application (/) commands.');
 
         await rest.put(Routes.applicationCommands(CLIENT_ID), { body: COMMANDS });
+        console.log(COMMANDS);
 
         console.log('Successfully reloaded application (/) commands.');
     } catch (error) {

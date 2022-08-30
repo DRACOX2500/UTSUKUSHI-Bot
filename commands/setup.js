@@ -1,36 +1,40 @@
 const { bold, italic } = require("discord.js");
 
+const ping = require('../commands/ping.js');
+const burger = require('../commands/big-burger.js');
+const git = require('../commands/git.js');
+
 module.exports = (client) => {
+
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
 
-        console.log(interaction);
-      
-        if (interaction.commandName === 'ping') {
-            if(Math.random(5) == 1 )
-          	    await interaction.reply(italic(bold(`🏓🔥 SMAAAAAAAAAAAAAAAAASH! (${Math.round(client.ws.ping)}ms)`)));
-            else
-                await interaction.reply(italic(bold(`🏓 Pong! (${Math.round(client.ws.ping)}ms)`)));
-        }
+        switch (interaction.commandName) {
 
-        if (interaction.commandName === 'big-burger') {
-            const axios = require("axios");
-            let result = "";
+            case 'ping':
 
-            const options = {
-                method: 'GET',
-                url: 'https://foodish-api.herokuapp.com/api/images/burger/'
-            };
+                await interaction.reply(italic(bold(ping.result())));
 
-            axios.request(options).then(function (response) {
-                console.log(response.data);
-                result = response.data;
-                interaction.reply(result.image);
+                break;
+            case 'big-burger':
 
-            }).catch(function (error) {
-                console.error(error);
-                return;
-            });
+                const res = burger.result();
+                if (res)
+                    await interaction.reply(res);
+
+                break;
+            case 'git':
+
+                await interaction.reply(git.result());
+
+                break;
         }
     });
+
+    // Add all commands here !
+    return [
+        ping.PING_COMMAND,
+        burger.BURGER_COMMAND,
+        git.GIT_COMMAND
+    ];
 }
