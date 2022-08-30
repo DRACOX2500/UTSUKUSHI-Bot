@@ -1,3 +1,5 @@
 #Node_Modules
-node_modules
+node_modules/
 
+#Env
+#token.env
