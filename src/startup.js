@@ -6,6 +6,7 @@ module.exports = (TOKEN, CLIENT_ID, client) => {
 
     const COMMANDS = [
         require('../commands/ping.js').PING_COMMAND,
+        require('../commands/big-burger.js').BURGER_COMMAND,
     ];
 
     const rest = new REST({ version: '10' }).setToken(TOKEN);
