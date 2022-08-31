@@ -5,6 +5,7 @@ const burger = require('../commands/big-burger.js');
 const git = require('../commands/git.js');
 const snoring = require('../commands/snoring.js');
 const play = require('../commands/play.js');
+const activity = require('../commands/activity.js');
 
 module.exports = (client) => {
 
@@ -18,29 +19,28 @@ module.exports = (client) => {
             case 'ping':
 
                 await interaction.reply(italic(bold(ping.result(client))));
-
                 break;
             case 'big-burger':
 
                 const res = burger.result();
                 if (res)
                     await interaction.reply(res);
-
                 break;
             case 'git':
 
                 await interaction.reply(git.result());
-
                 break;
             case 'snoring':
 
-                // await interaction.reply('💤💤💤');
                 await snoring.result(interaction, client);
-
                 break;
             case 'play':
 
-                await play.result(client, interaction);
+                await play.result(interaction, client);
+                break;
+            case 'activity':
+
+                await activity.result(interaction, client);
                 break;
         }
     });
@@ -52,5 +52,6 @@ module.exports = (client) => {
         git.GIT_COMMAND,
         snoring.SNORING_COMMAND,
         play.PLAY_MUSIC_COMMAND,
+        activity.ACTIVITY_COMMAND,
     ];
 }

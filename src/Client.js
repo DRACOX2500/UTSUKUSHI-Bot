@@ -1,7 +1,9 @@
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
 const { createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+
+const TWITCH_LINK = 'https://www.twitch.tv/*';
 
 class BotClient extends Client {
 
@@ -20,11 +22,15 @@ class BotClient extends Client {
 
         this.on('ready', () => {
             console.log(`Logged in as ${this.user.tag}!`);
-            this.user.setActivity('Toute la journée !');
+            this.user.setActivity(':]', {type: ActivityType.Streaming, url: TWITCH_LINK});
             this.user.setStatus('idle');
         });
         this.on("error", console.error);
         this.on("warn", console.warn);
+    }
+
+    setActivity(activity) {
+        this.user.setActivity(activity.status, {type: activity.type, url: TWITCH_LINK});
     }
 
     setVocalConnection(connection) {
