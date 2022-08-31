@@ -4,11 +4,14 @@ const ping = require('../commands/ping.js');
 const burger = require('../commands/big-burger.js');
 const git = require('../commands/git.js');
 const snoring = require('../commands/snoring.js');
+const play = require('../commands/play.js');
 
 module.exports = (client) => {
 
     client.on('interactionCreate', async interaction => {
+        
         if (!interaction.isChatInputCommand()) return;
+        console.log('[' + interaction.user.username + '] use commands : ' + interaction.commandName);
 
         switch (interaction.commandName) {
 
@@ -35,6 +38,10 @@ module.exports = (client) => {
                 await snoring.result(interaction, client);
 
                 break;
+            case 'play':
+
+                await play.result(client, interaction);
+                break;
         }
     });
 
@@ -43,6 +50,7 @@ module.exports = (client) => {
         ping.PING_COMMAND,
         burger.BURGER_COMMAND,
         git.GIT_COMMAND,
-        snoring.SNORING_COMMAND
+        snoring.SNORING_COMMAND,
+        play.PLAY_MUSIC_COMMAND,
     ];
 }

@@ -1,8 +1,9 @@
 
-const ping = {
-    name: 'ping',
-    description: 'Replies with Pong!',
-};
+const { SlashCommandBuilder } = require('discord.js');
+
+const ping = new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Replies with Pong!');
 
 exports.PING_COMMAND = ping;
 
