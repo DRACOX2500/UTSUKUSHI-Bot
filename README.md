@@ -6,6 +6,7 @@
 - **[Dotenv](https://www.npmjs.com/package/dotenv)** : 16.0.1                           # Manage Environments Variables
 - **[@Discordjs/voice](https://www.npmjs.com/package/@discordjs/voice)** : 0.11.0       # Manage Voice Channel Connection and Audio Player
 - **[ytdl-core](https://www.npmjs.com/package/ytdl-core)** : 4.11.1                     # Youtube Downloader
+- **[ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
 
 ## CI
 
