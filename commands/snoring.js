@@ -10,7 +10,7 @@ exports.SNORING_COMMAND = snoring;
 exports.result = async (interaction, client) => {
 
     const channel = interaction.member.voice.channel;
-    if(!channel) return await interaction.reply("🚫 I'm not tired !");
+    if(!channel) return interaction.reply("🚫 I'm not tired !");
 
     client.joinVocalChannel(channel);
 
