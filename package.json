@@ -11,7 +11,8 @@
     "sodium": "^3.0.2",
     "sodium-native": "^3.4.1",
     "tweetnacl": "^1.0.3",
-    "ytdl-core": "^4.11.1"
+    "ytdl-core": "^4.11.1",
+    "ytsr": "^3.8.0"
   },
   "name": "bot-discord",
   "version": "1.0.0",
@@ -19,8 +20,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "bot",
+    "discord",
+    "music",
+    "javascript"
+  ],
+  "author": "DRACOX2500",
   "license": "ISC",
-  "description": ""
+  "description": "Discord Bot for a private Discord Server"
 }

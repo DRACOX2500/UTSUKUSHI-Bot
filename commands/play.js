@@ -14,14 +14,16 @@ exports.PLAY_MUSIC_COMMAND = play;
 exports.result = async (client, interaction) => {
 
     const channel = interaction.member.voice.channel;
-    if(!channel) return await interaction.reply("❌ You are not in a voice channel");
+    if(!channel) return interaction.reply("❌ You are not in a voice channel");
 
     client.joinVocalChannel(channel);
 
     const { YtbStream } = require('../src/ytbStream');
 
     const url = interaction.options.get('song').value;
-    const stream = new YtbStream(url);
+    const stream = new YtbStream();
+    await stream.init(url);
+    
     stream.setInfoEvent((info) => {
         let title = bold(info.player_response.videoDetails.title);
         return interaction.editReply(`🎵 Now playing ${title} !`);
