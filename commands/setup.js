@@ -1,4 +1,4 @@
-const { bold, italic } = require("discord.js");
+const { bold, italic } = require('discord.js');
 
 const ping = require('../commands/ping.js');
 const burger = require('../commands/big-burger.js');
@@ -9,49 +9,49 @@ const activity = require('../commands/activity.js');
 
 module.exports = (client) => {
 
-    client.on('interactionCreate', async interaction => {
-        
-        if (!interaction.isChatInputCommand()) return;
-        console.log('[' + interaction.user.username + '] use commands : ' + interaction.commandName);
+	client.on('interactionCreate', async interaction => {
 
-        switch (interaction.commandName) {
+		if (!interaction.isChatInputCommand()) return;
+		console.log('[' + interaction.user.username + '] use commands : ' + interaction.commandName);
 
-            case 'ping':
+		switch (interaction.commandName) {
 
-                await interaction.reply(italic(bold(ping.result(client))));
-                break;
-            case 'big-burger':
+		case 'ping':
 
-                const res = burger.result();
-                if (res)
-                    await interaction.reply(res);
-                break;
-            case 'git':
+			await interaction.reply(italic(bold(ping.result(client))));
+			break;
+		case 'big-burger': {
+			const res = await burger.result();
+			await interaction.reply(res);
+			break;
+		}
+		case 'git':
 
-                await interaction.reply(git.result());
-                break;
-            case 'snoring':
+			await interaction.reply(git.result());
+			break;
+		case 'snoring':
 
-                await snoring.result(interaction, client);
-                break;
-            case 'play':
+			await snoring.result(interaction, client);
+			break;
+		case 'play':
 
-                await play.result(interaction, client);
-                break;
-            case 'activity':
+			await play.result(interaction, client);
+			break;
+		case 'activity':
 
-                await activity.result(interaction, client);
-                break;
-        }
-    });
+			await activity.result(interaction, client);
+			break;
+		}
+	});
 
-    // Add all commands here !
-    return [
-        ping.PING_COMMAND,
-        burger.BURGER_COMMAND,
-        git.GIT_COMMAND,
-        snoring.SNORING_COMMAND,
-        play.PLAY_MUSIC_COMMAND,
-        activity.ACTIVITY_COMMAND,
-    ];
-}
+	// Add all commands here !
+	return [
+		ping.PING_COMMAND,
+		burger.BURGER_COMMAND,
+		git.GIT_COMMAND,
+		snoring.SNORING_COMMAND,
+		play.PLAY_MUSIC_COMMAND,
+		activity.ACTIVITY_COMMAND,
+	];
+
+};
