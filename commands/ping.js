@@ -8,13 +8,18 @@ const ping = new SlashCommandBuilder()
 exports.PING_COMMAND = ping;
 
 exports.result = (client) => {
+	if (!client) return '‼️🤖 No Client found !';
 
 	function getRandomInt(max) {
 		return Math.floor(Math.random() * max);
 	}
 
+	function getWsPing(client) {
+		return Math.round(client.ws.ping);
+	}
+
 	if (getRandomInt(5) == 1)
-		return `🏓🔥 SMAAAAAAAAAAAAAAAAASH! (${Math.round(client.ws.ping)}ms)`;
+		return `🏓🔥 SMAAAAAAAAAAAAAAAAASH! (${getWsPing(client)}ms)`;
 	else
-		return `🏓 Pong! (${Math.round(client.ws.ping)}ms)`;
+		return `🏓 Pong! (${getWsPing(client)}ms)`;
 };

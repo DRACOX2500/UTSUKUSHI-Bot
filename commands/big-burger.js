@@ -6,20 +6,30 @@ const burger = new SlashCommandBuilder()
 
 exports.BURGER_COMMAND = burger;
 
-exports.result = () => {
+const options = {
+	method: 'GET',
+	url: 'https://foodish-api.herokuapp.com/api/images/burger/',
+};
+
+exports.result = async () => {
 	const axios = require('axios');
 
-	const options = {
-		method: 'GET',
-		url: 'https://foodish-api.herokuapp.com/api/images/burger/',
-	};
+	function burgerError(err) {
+		if (err)
+			console.error('[Big-Burger] Error: ' + err.message);
+		return '🥲 Sorry but no burger has been found 🍔!';
+	}
 
-	axios.request(options).then((response) => {
-		console.log(response.data);
-		return response.data;
-
-	}).catch(function(error) {
-		console.error(error);
-		return null;
-	});
+	const burgerResult = await axios.request(options).then(
+		response => {
+			if (!response)
+				return burgerError();
+			else
+				return response.data.image;
+		},
+		error => {
+			burgerError(error);
+		}
+	)
+	return burgerResult;
 };

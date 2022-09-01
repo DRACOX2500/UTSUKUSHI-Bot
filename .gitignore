@@ -1,6 +1,6 @@
 #Node_Modules
 node_modules/
 
-#Env
-#.env
-wrangler.toml
+#Coverage
+coverage/
+

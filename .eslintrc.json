@@ -4,6 +4,8 @@
 		"node": true,
 		"es6": true
 	},
+	"parser": "@babel/eslint-parser",
+	"requireConfigFile": false,
 	"parserOptions": {
 		"ecmaVersion": 2021
 	},
