@@ -1,6 +1,0 @@
-name = "discord-bot"
-type = "webpack"
-workers_dev = true
-account_id = "c9a3aed830f18702bce81b65327d8f9f"
-route = ""
-zone_id = ""
