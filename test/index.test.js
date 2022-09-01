@@ -10,7 +10,7 @@ test('Test Ping Command Without Client', () => {
     expect(pingResult()).toBe('‼️🤖 No Client found !');
 });
 
-// Ping command
+// Burger command
 test('Test Big-Buger', async () => {
     const data = await burgerResult()
     expect(data).toMatch(BURGER_API);
