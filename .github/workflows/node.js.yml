@@ -54,4 +54,5 @@ jobs:
       with:
         fetch-depth: 0
     - name: ESLint
-    - uses: stefanoeb/eslint-action@1.0.2
+    - run: npm i \
+            node_modules/eslint/bin/eslint.js .
