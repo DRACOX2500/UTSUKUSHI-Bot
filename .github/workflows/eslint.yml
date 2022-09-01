@@ -19,5 +19,5 @@ jobs:
       with:
         fetch-depth: 0
     - name: ESLint
-      run: npm i \
-            node_modules/eslint/bin/eslint.js .
+      run: npm i 
+      run: node_modules/eslint/bin/eslint.js .
