@@ -14,7 +14,7 @@ exports.result = () => {
 		url: 'https://foodish-api.herokuapp.com/api/images/burger/',
 	};
 
-	axios.request(options).then(function(response) {
+	axios.request(options).then((response) => {
 		console.log(response.data);
 		return response.data;
 
