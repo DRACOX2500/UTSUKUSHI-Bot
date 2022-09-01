@@ -60,4 +60,4 @@ jobs:
     - name: Coverage Index
       run: npm run c8-start
     - name: Coverage Test
-      run: c8 npm test
+      run: npm run c8-test
