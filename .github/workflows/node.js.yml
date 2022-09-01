@@ -54,6 +54,6 @@ jobs:
       with:
         fetch-depth: 0
     - name: Coverage Index
-      run: npm run c8-start
+      run: npm run c8-start && exit 0
     - name: Coverage Test
-      run: c8 npm test
+      run: c8 npm test && exit 0

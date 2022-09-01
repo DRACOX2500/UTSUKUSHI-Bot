@@ -14,8 +14,8 @@ exports.result = (client) => {
 		return Math.floor(Math.random() * max);
 	}
 
-	function getWsPing(client) {
-		return Math.round(client.ws.ping);
+	function getWsPing(cli) {
+		return Math.round(cli.ws.ping);
 	}
 
 	if (getRandomInt(5) == 1)

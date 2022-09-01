@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // TEST
 const { result: pingResult } = require('../commands/ping.js');
 const { result: burgerResult } = require('../commands/big-burger.js');
@@ -7,16 +8,16 @@ const BURGER_API = /^https:\/\/foodish-api\.herokuapp\.com\/images\/burger\/burg
 
 // Ping command
 test('Test Ping Command Without Client', () => {
-    expect(pingResult()).toBe('‼️🤖 No Client found !');
+	expect(pingResult()).toBe('‼️🤖 No Client found !');
 });
 
 // Burger command
 test('Test Big-Buger', async () => {
-    const data = await burgerResult()
-    expect(data).toMatch(BURGER_API);
+	const data = await burgerResult();
+	expect(data).toMatch(BURGER_API);
 });
 
 // Git command
 test('Test Git Command', () => {
-    expect(gitResult()).toBe('https://github.com/DRACOX2500/Discord-Bot');
+	expect(gitResult()).toBe('https://github.com/DRACOX2500/Discord-Bot');
 });
