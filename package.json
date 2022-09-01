@@ -15,7 +15,7 @@
     "ytsr": "^3.8.0"
   },
   "name": "bot-discord",
-  "version": "1.0.0",
+  "version": "1.0.0-Snapshot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,5 +28,8 @@
   ],
   "author": "DRACOX2500",
   "license": "ISC",
-  "description": "Discord Bot for a private Discord Server"
+  "description": "Discord Bot for a private Discord Server",
+  "devDependencies": {
+    "eslint": "^8.23.0"
+  }
 }
