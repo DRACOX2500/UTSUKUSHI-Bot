@@ -9,5 +9,5 @@ const client = new BotClient({ token: TOKEN, clientID: CLIENT_ID });
 
 require('./src/loadCommands.js')(client);
 
-if(login === 0)
-    client.login(TOKEN);
+if (login !== '0')
+	client.login(TOKEN);

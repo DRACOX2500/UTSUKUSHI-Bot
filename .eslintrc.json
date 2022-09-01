@@ -5,9 +5,15 @@
 		"es6": true
 	},
 	"parser": "@babel/eslint-parser",
-	"requireConfigFile": false,
 	"parserOptions": {
-		"ecmaVersion": 2021
+		"ecmaVersion": 2021,
+		"requireConfigFile": false,
+		"babelOptions": {
+		  "babelrc": false,
+		  "configFile": false,
+		  // your babel options
+		  "presets": ["@babel/preset-env"]
+		}
 	},
 	"rules": {
         "arrow-spacing": ["warn", { "before": true, "after": true }],

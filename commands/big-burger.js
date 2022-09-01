@@ -29,7 +29,7 @@ exports.result = async () => {
 		},
 		error => {
 			burgerError(error);
-		}
-	)
+		},
+	);
 	return burgerResult;
 };

@@ -1,5 +1,4 @@
 const { bold, italic } = require('discord.js');
-const { BotClient } = require('../src/Client.js');
 
 const ping = require('../commands/ping.js');
 const burger = require('../commands/big-burger.js');
@@ -21,11 +20,11 @@ module.exports = (client) => {
 
 			await interaction.reply(italic(bold(ping.result(client))));
 			break;
-		case 'big-burger':
-
+		case 'big-burger': {
 			const res = await burger.result();
 			await interaction.reply(res);
 			break;
+		}
 		case 'git':
 
 			await interaction.reply(git.result());
@@ -54,6 +53,5 @@ module.exports = (client) => {
 		play.PLAY_MUSIC_COMMAND,
 		activity.ACTIVITY_COMMAND,
 	];
-	
 
 };

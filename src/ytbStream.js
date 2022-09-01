@@ -1,4 +1,4 @@
-const ytdl = require('ytdl-core');
+const ytdl = require('@distube/ytdl-core');
 const ytsr = require('ytsr');
 
 const YOUTUBE_VIDEO_LINK = /^https:\/\/www\.youtube\.com\/watch\?v=.+$/;
@@ -20,17 +20,25 @@ class YtbStream {
 
 	async init(url) {
 
-		if (!url.match(YOUTUBE_VIDEO_LINK))
+		if (!url.match(YOUTUBE_VIDEO_LINK)) {
 			url = await this.searchByKeyword(url);
+			if (!url)
+				return;
+		}
 
-
-		this.stream = await this.getStreamSources(url);
-
-		this.initEvents();
+		await this.getStreamSources(url)
+			.then(
+				(stream) => {
+					this.stream = stream;
+					this.initEvents();
+					return this;
+				},
+			);
 	}
 
-	async getStreamSources(url) {
-		return ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 });
+	getStreamSources(url) {
+		console.log(url);
+		return Promise.resolve(ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 }));
 	}
 
 	async searchByKeyword(keyword) {
@@ -41,6 +49,11 @@ class YtbStream {
 				},
 			);
 		const result = await ytsr(filter.url, { limit: 5 });
+		if (result.results === 0) {
+			this.source.found = false;
+			return;
+		}
+
 		this.setSource(result.items[0]);
 		return this.source.url;
 	}
@@ -50,6 +63,7 @@ class YtbStream {
 		this.source.url = object.url || '';
 		this.source.duration = object.duration || '';
 		this.source.view = object.view || 0;
+		this.source.found = true;
 	}
 
 	setInfoEvent(func) {
@@ -59,7 +73,7 @@ class YtbStream {
 
 	initEvents() {
 		this.stream.on('error', error => {
-			console.error('[Stream] Error:', error.message);
+			console.error('[Stream] Error:', error);
 		});
 	}
 
