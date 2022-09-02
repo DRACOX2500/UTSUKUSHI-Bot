@@ -39,7 +39,7 @@ module.exports = (client) => {
 			break;
 		case 'activity':
 
-			await activity.result(interaction, client);
+			await interaction.reply(activity.result(interaction, client));
 			break;
 		}
 	});

@@ -1,13 +1,11 @@
 require('dotenv').config({ path: '.env' });
 const login = process.argv[2] || 1;
 
-const TOKEN = process.env.DISCORD_TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID;
+const { client } = require('./src/initBot.js');
 
-const { BotClient } = require('./src/Client');
-const client = new BotClient({ token: TOKEN, clientID: CLIENT_ID });
+const { loadCommands } = require('./src/loadCommands.js');
 
-require('./src/loadCommands.js')(client);
+loadCommands(client);
 
 if (login !== '0')
-	client.login(TOKEN);
+	client.login(client.token);

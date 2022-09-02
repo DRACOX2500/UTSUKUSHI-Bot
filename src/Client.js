@@ -22,24 +22,24 @@ class BotClient extends Client {
 
 		this.on('ready', () => {
 			console.log(`Logged in as ${this.user.tag}!`);
-			this.user.setActivity(':]', { type: ActivityType.Streaming, url: TWITCH_LINK });
-			this.user.setStatus('idle');
+			this.user?.setActivity(':]', { type: ActivityType.Streaming, url: TWITCH_LINK });
+			this.user?.setStatus('idle');
 		});
 		this.on('error', console.error);
 		this.on('warn', console.warn);
 	}
 
 	setActivity(activity) {
-		this.user.setActivity(activity.status, { type: activity.type, url: TWITCH_LINK });
+		this.user?.setActivity(activity.status, { type: activity.type, url: TWITCH_LINK });
 	}
 
 	setVocalConnection(connection) {
 		this.connection = connection;
-		this.connection.on('stateChange', (oldState, newState) => {
+		this.connection?.on('stateChange', (oldState, newState) => {
 			console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
 		});
 
-		this.connection.on('error', error => {
+		this.connection?.on('error', error => {
 			console.error('[Connection] Error:', error.message);
 		});
 	}
