@@ -20,25 +20,26 @@ class YtbStream {
 
 	async init(url) {
 
-		if (!url.match(YOUTUBE_VIDEO_LINK)) {
-			url = await this.searchByKeyword(url);
-			if (!url)
-				return;
-		}
+		if (!url.match(YOUTUBE_VIDEO_LINK))
+			await this.searchByKeyword(url);
+		else
+			this.setSource({ url: url });
 
-		await this.getStreamSources(url)
+		await this.getStreamSources()
 			.then(
 				(stream) => {
 					this.stream = stream;
+					if (this.stream)
+						this.source.found = true;
+
 					this.initEvents();
 					return this;
 				},
 			);
 	}
 
-	getStreamSources(url) {
-		console.log(url);
-		return Promise.resolve(ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 }));
+	getStreamSources() {
+		return Promise.resolve(ytdl(this.source.url, { filter: 'audioonly', highWaterMark: 1 << 25 }));
 	}
 
 	async searchByKeyword(keyword) {
@@ -63,7 +64,6 @@ class YtbStream {
 		this.source.url = object.url || '';
 		this.source.duration = object.duration || '';
 		this.source.view = object.view || 0;
-		this.source.found = true;
 	}
 
 	setInfoEvent(func) {

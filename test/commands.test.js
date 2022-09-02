@@ -7,7 +7,7 @@ const { result: activityResult } = require('../commands/activity.js');
 
 const { client } = require('../src/initBot.js');
 
-const BURGER_API = /^https:\/\/foodish-api\.herokuapp\.com\/images\/burger\/burger\d+\..{3,4}$/;
+const BURGER_API_RESULT = /^https:\/\/foodish-api\.herokuapp\.com\/images\/burger\/burger\d+\..{3,4}$/;
 
 // Ping command
 test('Test Ping Command Without Client', () => {
@@ -17,7 +17,7 @@ test('Test Ping Command Without Client', () => {
 // Burger command
 test('Test Big-Buger', async () => {
 	const data = await burgerResult();
-	expect(data).toMatch(BURGER_API);
+	expect(data).toMatch(BURGER_API_RESULT);
 });
 
 // Burger command [Error]

@@ -19,11 +19,10 @@ exports.result = async (interaction, client) => {
 	const stream = new YtbStream();
 	await stream.init(url);
 
-	client.joinVocalChannel(channel);
-
 	stream.setInfoEvent(() => {
 		return interaction.editReply('💤💤💤');
 	});
 
+	client.joinVocalChannel(channel);
 	await client.playMusic(stream.get());
 };
