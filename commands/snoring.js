@@ -11,6 +11,8 @@ exports.result = async (interaction, client) => {
 	const channel = interaction.member.voice.channel;
 	if (!channel) return interaction.reply('🚫 I\'m not tired !');
 
+	await interaction.deferReply();
+
 	const { YtbStream } = require('../src/ytbStream');
 
 	const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
@@ -18,7 +20,10 @@ exports.result = async (interaction, client) => {
 	await stream.init(url);
 
 	client.joinVocalChannel(channel);
-	client.playMusic(stream.get());
 
-	await interaction.reply('💤💤💤');
+	stream.setInfoEvent(() => {
+		return interaction.editReply('💤💤💤');
+	});
+
+	await client.playMusic(stream.get());
 };
