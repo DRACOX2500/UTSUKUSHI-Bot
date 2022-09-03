@@ -42,6 +42,7 @@ async function interactionButton(interaction, client) {
 	switch (interaction.customId) {
 
 	case 'vdown':
+		if (!client.player) return interaction.reply('❌ No Song available !');
 		client.volumeDown();
 
 		interaction.message.embeds[0].data.fields[5].value = (client.resource.volume.volume * 100) + '%';
@@ -76,7 +77,7 @@ async function interactionButton(interaction, client) {
 		// TODO : skip command
 		break;
 	case 'vup':
-
+		if (!client.player) return interaction.reply('❌ No Song available !');
 		client.volumeUp();
 
 		interaction.message.embeds[0].data.fields[5].value = (client.resource.volume.volume * 100) + '%';
