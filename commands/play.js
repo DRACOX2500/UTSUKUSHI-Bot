@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, bold } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
+const { EmbedPlayer } = require('../src/embedPlayer.js');
 
 const play = new SlashCommandBuilder()
 	.setName('play')
@@ -26,9 +27,12 @@ exports.result = async (interaction, client) => {
 	if (!stream.source.found)
 		return interaction.editReply('❌ Music not found !');
 
-	stream.setInfoEvent((info) => {
-		const title = bold(info.player_response.videoDetails.title);
-		return interaction.editReply(`🎵 Now playing ${title} !`);
+	stream.setInfoEvent(async (info) => {
+		const embedPlayer = new EmbedPlayer(info);
+
+		const embed = embedPlayer.getEmbed();
+		const comp = embedPlayer.getButtonMenu();
+		return interaction.editReply({ embeds: [embed], components: [comp] });
 	});
 
 	client.joinVocalChannel(channel);

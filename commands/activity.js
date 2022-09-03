@@ -21,14 +21,14 @@ const activity = new SlashCommandBuilder()
 
 exports.ACTIVITY_COMMAND = activity;
 
-exports.result = async (interaction, client) => {
+exports.result = (interaction, client) => {
 
 
 	const newActivity = {
-		status: interaction.options.get('status').value,
-		type: interaction.options.get('type').value,
+		status: interaction ? interaction.options.get('status').value : ActivityType.Playing,
+		type: interaction ? interaction.options.get('type').value : 'Test',
 	};
 
 	client.setActivity(newActivity);
-	await interaction.reply('🤖 Bot activity has been change !');
+	return '🤖 Bot activity has been change !';
 };

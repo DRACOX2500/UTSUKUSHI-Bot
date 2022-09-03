@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable curly */
 const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
@@ -12,7 +13,11 @@ class BotClient extends Client {
 
 		this.token = config.token;
 		this.clientID = config.clientID;
+
 		this.player = null;
+		this.isPausePlayer = true;
+		this.resource = null;
+
 		this.connection = null;
 
 		this.ready();
@@ -22,24 +27,24 @@ class BotClient extends Client {
 
 		this.on('ready', () => {
 			console.log(`Logged in as ${this.user.tag}!`);
-			this.user.setActivity(':]', { type: ActivityType.Streaming, url: TWITCH_LINK });
-			this.user.setStatus('idle');
+			this.user?.setActivity(':]', { type: ActivityType.Streaming, url: TWITCH_LINK });
+			this.user?.setStatus('idle');
 		});
 		this.on('error', console.error);
 		this.on('warn', console.warn);
 	}
 
 	setActivity(activity) {
-		this.user.setActivity(activity.status, { type: activity.type, url: TWITCH_LINK });
+		this.user?.setActivity(activity.status, { type: activity.type, url: TWITCH_LINK });
 	}
 
 	setVocalConnection(connection) {
 		this.connection = connection;
-		this.connection.on('stateChange', (oldState, newState) => {
+		this.connection?.on('stateChange', (oldState, newState) => {
 			console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
 		});
 
-		this.connection.on('error', error => {
+		this.connection?.on('error', error => {
 			console.error('[Connection] Error:', error.message);
 		});
 	}
@@ -58,12 +63,39 @@ class BotClient extends Client {
 	async playMusic(stream) {
 
 		this.setPlayer(createAudioPlayer());
-		const resource = createAudioResource(stream);
+		this.resource = createAudioResource(stream, { inlineVolume: true });
+		this.resource.volume.setVolume(1);
 
 		this.connection.subscribe(this.player);
 
-		console.log('Play started');
-		this.player.play(resource);
+		this.player.play(this.resource);
+		this.isPausePlayer = false;
+	}
+
+	volumeDown() {
+		if (!this.resource) return;
+
+		let volume = this.resource.volume.volume;
+		volume = Math.round(((volume - 0.1) + Number.EPSILON) * 10) / 10;
+
+		if (typeof (volume) !== 'number')
+			return;
+		else if (volume < 0) volume = 0;
+
+		this.resource.volume.setVolume(volume);
+	}
+
+	volumeUp() {
+		if (!this.resource) return;
+
+		let volume = this.resource.volume.volume;
+		volume = Math.round(((volume + 0.1) + Number.EPSILON) * 10) / 10;
+
+		if (typeof (volume) !== 'number')
+			return;
+		else if (volume > 1) volume = 1;
+
+		this.resource.volume.setVolume(volume);
 	}
 
 	setPlayer(player) {
@@ -89,6 +121,7 @@ class BotClient extends Client {
 			this.connection.destroy();
 
 		console.log('Connection closed !');
+		this.resource = null;
 		this.player = null;
 		this.connection = null;
 	}
