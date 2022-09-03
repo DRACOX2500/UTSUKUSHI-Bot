@@ -1,4 +1,4 @@
-const { EmbedBuilder, time } = require('discord.js');
+const { EmbedBuilder, time, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require('discord.js');
 const { minuteSecondsFormater } = require('./utils/secondsToMinuteSecondsFormat.js');
 
 const { LOGO_MUSIC_BLUE, LOGO_MUSIC_PURPLE } = require('./utils/logo.js');
@@ -18,6 +18,8 @@ class EmbedPlayer {
 		this.author = data.videoDetails.author.name;
 		this.authorLink = data.videoDetails.author.channel_url;
 		this.authorThumbnail = data.videoDetails.author.thumbnails[2].url;
+
+		this.volume = 100;
 	}
 
 	getEmbed() {
@@ -34,10 +36,42 @@ class EmbedPlayer {
 				{ name: 'Category :', value: this.category, inline: true },
 				{ name: 'Publish :', value: time(new Date(this.publishDate)), inline: true },
 				{ name: 'Likes :', value: this.videoLikeCount.toString(), inline: true },
+				{ name: 'Volume :', value: this.volume.toString() + '%', inline: true },
 			)
 			.setImage(this.thumbnailUrl)
 			.setTimestamp()
 			.setFooter({ text: 'Youtube', iconURL: LOGO_MUSIC_PURPLE });
+	}
+
+	getButtonMenu() {
+		return new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId('vdown')
+					.setEmoji('<:vold:937333517258469416>')
+					.setStyle(ButtonStyle.Secondary),
+
+				new ButtonBuilder()
+					.setCustomId('stop')
+					.setEmoji('<:stop:937333534186680321>')
+					.setStyle(ButtonStyle.Danger),
+
+				new ButtonBuilder()
+					.setCustomId('pause')
+					.setEmoji('<:p_:937332417738473503>')
+					.setStyle(ButtonStyle.Success),
+
+				new ButtonBuilder()
+					.setCustomId('skip')
+					.setEmoji('<:skip:937332450953146432>')
+					.setStyle(ButtonStyle.Primary)
+					.setDisabled(true),
+
+				new ButtonBuilder()
+					.setCustomId('vup')
+					.setEmoji('<:volp:937332469798162462>')
+					.setStyle(ButtonStyle.Secondary),
+			);
 	}
 }
 

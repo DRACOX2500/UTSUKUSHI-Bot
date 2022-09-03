@@ -28,9 +28,11 @@ exports.result = async (interaction, client) => {
 		return interaction.editReply('❌ Music not found !');
 
 	stream.setInfoEvent(async (info) => {
+		const embedPlayer = new EmbedPlayer(info);
 
-		const embed = new EmbedPlayer(info).getEmbed();
-		return interaction.editReply({ embeds: [embed] });
+		const embed = embedPlayer.getEmbed();
+		const comp = embedPlayer.getButtonMenu();
+		return interaction.editReply({ embeds: [embed], components: [comp] });
 	});
 
 	client.joinVocalChannel(channel);

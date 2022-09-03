@@ -1,7 +1,7 @@
 const ytdl = require('@distube/ytdl-core');
 const ytsr = require('ytsr');
 
-const YOUTUBE_VIDEO_LINK = /^https:\/\/www\.youtube\.com\/watch\?v=.+$/;
+const YOUTUBE_VIDEO_LINK = /(^https:\/\/www\.youtube\.com\/watch\?v=.+$)|(^https:\/\/youtu\.be\/$)/;
 
 class YtbStream {
 
