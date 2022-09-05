@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 // TEST
-const { result: pingResult } = require('../commands/ping.js');
-const { result: burgerResult, BURGER_ERROR } = require('../commands/big-burger.js');
-const { result: gitResult } = require('../commands/git.js');
-const { result: activityResult } = require('../commands/activity.js');
+const { result: pingResult } = require('../src/commands/PingCommand/ping.js');
+const { result: burgerResult, BURGER_ERROR } = require('../src/commands/BigBurgerCommand/big-burger.js');
+const { result: gitResult } = require('../src/commands/GitCommand/git.js');
+const { result: activityResult } = require('../src/commands/ActivityCommand/activity.js');
 
 const { client } = require('../src/initBot.js');
 
