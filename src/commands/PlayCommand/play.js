@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { EmbedPlayer } = require('../src/embedPlayer.js');
+const { EmbedPlayer } = require('../../class/embedPlayer');
+const { YtbStream } = require('../../class/ytbStream');
 
 const play = new SlashCommandBuilder()
 	.setName('play')
@@ -17,8 +18,6 @@ exports.result = async (interaction, client) => {
 	if (!channel) return interaction.reply('❌ You are not in a voice channel');
 
 	await interaction.deferReply();
-
-	const { YtbStream } = require('../src/ytbStream');
 
 	const url = interaction.options.get('song').value;
 	const stream = new YtbStream();

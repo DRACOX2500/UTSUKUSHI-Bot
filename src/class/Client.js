@@ -2,7 +2,7 @@
 /* eslint-disable curly */
 const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
-const { createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+const { createAudioPlayer, createAudioResource, NoSubscriberBehavior } = require('@discordjs/voice');
 
 const TWITCH_LINK = 'https://www.twitch.tv/*';
 
@@ -60,14 +60,17 @@ class BotClient extends Client {
 		this.setVocalConnection(connection);
 	}
 
-	async playMusic(stream) {
+	async playMusic(source) {
 
-		this.setPlayer(createAudioPlayer());
-		this.resource = createAudioResource(stream, { inlineVolume: true });
+		this.setPlayer(createAudioPlayer({
+			behaviors: {
+				noSubscriber: NoSubscriberBehavior.Pause,
+			},
+		}));
+		this.resource = createAudioResource(source, { inlineVolume: true });
 		this.resource.volume.setVolume(1);
 
 		this.connection.subscribe(this.player);
-
 		this.player.play(this.resource);
 		this.isPausePlayer = false;
 	}

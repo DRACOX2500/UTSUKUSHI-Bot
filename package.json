@@ -15,7 +15,7 @@
     "ytsr": "^3.8.0"
   },
   "name": "bot-discord",
-  "version": "1.0.0-Snapshot",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
