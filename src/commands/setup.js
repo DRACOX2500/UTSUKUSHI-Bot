@@ -1,11 +1,11 @@
 const { bold, italic, EmbedBuilder } = require('discord.js');
 
-const ping = require('./ping.js');
-const burger = require('./big-burger.js');
-const git = require('./git.js');
-const snoring = require('./snoring.js');
-const play = require('./play.js');
-const activity = require('./activity.js');
+const ping = require('./PingCommand/ping.js');
+const burger = require('./BigBurgerCommand/big-burger.js');
+const git = require('./GitCommand/git.js');
+const snoring = require('./SnoringCommand/snoring.js');
+const play = require('./PlayCommand/play.js');
+const activity = require('./ActivityCommand/activity.js');
 
 async function interactionChatInput(interaction, client) {
 	switch (interaction.commandName) {
@@ -15,8 +15,9 @@ async function interactionChatInput(interaction, client) {
 		await interaction.reply(italic(bold(ping.result(client))));
 		break;
 	case 'big-burger': {
+		await interaction.reply('🍔 Burger loading...');
 		const res = await burger.result();
-		await interaction.reply(res);
+		await interaction.editReply(res);
 		break;
 	}
 	case 'git':

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { YtbStream } = require('../../class/ytbStream');
 
 const snoring = new SlashCommandBuilder()
 	.setName('snoring')
@@ -13,7 +14,6 @@ exports.result = async (interaction, client) => {
 
 	await interaction.deferReply();
 
-	const { YtbStream } = require('../src/ytbStream');
 
 	const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
 	const stream = new YtbStream();
