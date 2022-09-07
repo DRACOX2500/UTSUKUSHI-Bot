@@ -7,3 +7,6 @@ coverage/
 #TypeScript
 dist/
 
+#local
+variable.env
+

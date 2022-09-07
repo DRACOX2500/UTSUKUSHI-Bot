@@ -5,7 +5,7 @@ import { TWITCH_LINK } from '../utils/const';
 import { VocalConnection } from './VocalConnection';
 import { COMMANDS, CommandSetup } from '../commands/setup';
 
-config({ path: '.env' });
+config({ path: 'variable.env' });
 
 export class BotClient extends Client {
 
