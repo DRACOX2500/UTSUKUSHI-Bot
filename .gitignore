@@ -8,5 +8,5 @@ coverage/
 dist/
 
 #local
-variable.env
+.env
 
