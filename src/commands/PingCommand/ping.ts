@@ -7,7 +7,7 @@ export class PingCommand {
 		.setName('ping')
 		.setDescription('Replies with Pong 🏓!');
 
-	static readonly result = (client: Client): string => {
+	static readonly result = (client: Client | null): string => {
 		if (!client) return '‼️🤖 No Client found !';
 
 		function getWsPing(cli: Client) {

@@ -9,8 +9,8 @@ config({ path: '.env' });
 
 export class BotClient extends Client {
 
-	private DISCORD_TOKEN: string;
-	private CLIENT_ID: string;
+	private DISCORD_TOKEN!: string;
+	private CLIENT_ID!: string;
 
 	connection: VocalConnection = new VocalConnection();
 
@@ -22,7 +22,7 @@ export class BotClient extends Client {
 		url: TWITCH_LINK,
 	};
 
-	constructor() {
+	constructor(test = false) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -34,12 +34,12 @@ export class BotClient extends Client {
 		this.DISCORD_TOKEN = process.env.DISCORD_TOKEN || '';
 		this.CLIENT_ID = process.env.CLIENT_ID || '';
 
-		this.init();
+		this.init(test);
 	}
 
-	init(): void {
+	private init(test: boolean): void {
 		this.initEvents();
-		this.loadCommands();
+		this.loadCommands(!test);
 		this.setup.initCommand(this);
 	}
 
@@ -59,11 +59,11 @@ export class BotClient extends Client {
 		this.on('warn', console.warn);
 	}
 
-	private async loadCommands(log = true): Promise<number> {
+	protected async loadCommands(log: boolean): Promise<number> {
 
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
 
-		await (async () => {
+		return (async (): Promise<number> => {
 			try {
 				if (log)
 					console.log('Started refreshing application (/) commands.');
@@ -75,9 +75,10 @@ export class BotClient extends Client {
 			}
 			catch (error) {
 				console.error(error);
+				return 1;
 			}
+			return 0;
 		})();
-		return 0;
 	}
 
 	setActivity(activity: Activity): void {

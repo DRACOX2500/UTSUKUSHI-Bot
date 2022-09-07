@@ -50,7 +50,6 @@ export class CommandSetup {
 	}
 
 	private async interactionButton(interaction: ButtonInteraction, client: BotClient): Promise<InteractionResponse<boolean> | undefined> {
-		// FIXME : update
 		switch (interaction.customId) {
 
 		case 'vdown':

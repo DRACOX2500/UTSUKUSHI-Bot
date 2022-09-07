@@ -24,7 +24,7 @@ export class ActivityCommand {
 				.setDescription('Statis of bot activity')
 				.setRequired(true));
 
-	static readonly result = (interaction: ChatInputCommandInteraction, client: BotClient): string => {
+	static readonly result = (interaction: ChatInputCommandInteraction | null, client: BotClient): string => {
 		if (!interaction) return '❌🤖 Bot activity not change !';
 
 		const newActivity: Activity = {
