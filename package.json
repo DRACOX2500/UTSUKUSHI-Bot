@@ -1,4 +1,24 @@
 {
+  "name": "bot-discord",
+  "version": "1.1.0-Snapshot",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsc & node dist/index.js",
+    "test": "jest",
+    "c8-start": "npx c8 npm run-script start -- 0",
+    "c8-test": "npx c8 npm test",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "music",
+    "javascript",
+    "typescript"
+  ],
+  "author": "DRACOX2500",
+  "license": "ISC",
+  "description": "Discord Bot for a private Discord Server",
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.11.0",
@@ -14,31 +34,16 @@
     "tweetnacl": "^1.0.3",
     "ytsr": "^3.8.0"
   },
-  "name": "bot-discord",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "jest",
-    "c8-start": "npx c8 npm run-script start -- 0",
-    "c8-test": "npx c8 npm test"
-  },
-  "keywords": [
-    "bot",
-    "discord",
-    "music",
-    "javascript"
-  ],
-  "author": "DRACOX2500",
-  "license": "ISC",
-  "description": "Discord Bot for a private Discord Server",
   "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.13",
     "@babel/eslint-parser": "^7.18.9",
     "@babel/preset-env": "^7.18.10",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "c8": "^7.12.0",
     "eslint": "^8.23.0",
-    "jest": "^29.0.1"
+    "jest": "^29.0.1",
+    "typescript": "^4.8.2"
   }
 }

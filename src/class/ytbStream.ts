@@ -1,54 +1,54 @@
-const ytdl = require('@distube/ytdl-core');
-const ytsr = require('ytsr');
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import ytdl from '@distube/ytdl-core';
+import ytsr from 'ytsr';
+import { StreamSource } from '../model/StreamSource';
+import { YOUTUBE_VIDEO_LINK_REGEX } from '../utils/const';
 
-const YOUTUBE_VIDEO_LINK = /(^https:\/\/www\.youtube\.com\/watch\?v=.+$)|(^https:\/\/youtu\.be\/$)/;
+export class YtbStream {
 
-class YtbStream {
+	source: StreamSource = {
+		title: '',
+		url: '',
+		duration: '',
+		view: 0,
+		found: null,
+	};
 
-	constructor() {
+	private stream: any | null = null;
 
-		this.source = {
-			title: '',
-			url: '',
-			duration: '',
-			view: 0,
-			found: null,
-		};
+	async init(url: string): Promise<void> {
 
-		this.stream = null;
-	}
-
-	async init(url) {
-
-		if (!url.match(YOUTUBE_VIDEO_LINK))
+		if (!url.match(YOUTUBE_VIDEO_LINK_REGEX))
 			await this.searchByKeyword(url);
 		else
 			this.setSource({ url: url });
 
 		await this.getStreamSources()
 			.then(
-				(stream) => {
+				(stream: any) => {
 					this.stream = stream;
 					if (this.stream)
 						this.source.found = true;
 
 					this.initEvents();
-					return this;
 				},
 			);
 	}
 
-	getStreamSources() {
+	getStreamSources(): Promise<any> {
 		return Promise.resolve(ytdl(this.source.url, { filter: 'audioonly', highWaterMark: 1 << 25 }));
 	}
 
-	async searchByKeyword(keyword) {
+	async searchByKeyword(keyword: string) : Promise<void> {
 		const filter = await ytsr.getFilters(keyword)
 			.then(
 				(res) => {
-					return res.get('Type').get('Video');
+					return res.get('Type')?.get('Video');
 				},
 			);
+		if (!filter?.url) return;
+
 		const result = await ytsr(filter.url, { limit: 5 });
 		if (result.results === 0) {
 			this.source.found = false;
@@ -56,28 +56,27 @@ class YtbStream {
 		}
 
 		this.setSource(result.items[0]);
-		return this.source.url;
 	}
 
-	setSource(object) {
+	setSource(object: any): void {
 		this.source.title = object.title || '';
 		this.source.url = object.url || '';
 		this.source.duration = object.duration || '';
 		this.source.view = object.view || 0;
 	}
 
-	setInfoEvent(func) {
+	setInfoEvent(func: Function): void {
 		if (this.stream)
 			this.stream.on('info', func);
 	}
 
-	initEvents() {
-		this.stream.on('error', error => {
+	initEvents(): void {
+		this.stream.on('error', (error: Error) => {
 			console.error('[Stream] Error:', error);
 		});
 	}
 
-	get() {
+	get(): any {
 		return this.stream;
 	}
 
