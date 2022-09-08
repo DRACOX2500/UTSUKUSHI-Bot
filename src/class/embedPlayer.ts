@@ -23,7 +23,9 @@ export class EmbedPlayer {
 		volume: 0,
 	};
 
-	constructor(data: any) {
+	volumeOpti = false;
+
+	constructor(data: any, volumeOpti = false) {
 		this.data.title = data.videoDetails.title;
 		this.data.duration = data.videoDetails.lengthSeconds;
 		this.data.view = data.videoDetails.viewCount;
@@ -38,6 +40,8 @@ export class EmbedPlayer {
 		this.data.authorThumbnail = data.videoDetails.author.thumbnails[2].url;
 
 		this.data.volume = 100;
+		this.volumeOpti = volumeOpti;
+		console.log('Volume:', this.volumeOpti);
 	}
 
 	getEmbed() {
@@ -67,7 +71,8 @@ export class EmbedPlayer {
 				new ButtonBuilder()
 					.setCustomId('vdown')
 					.setEmoji('<:vold:937333517258469416>')
-					.setStyle(ButtonStyle.Secondary),
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(this.volumeOpti),
 
 				new ButtonBuilder()
 					.setCustomId('stop')
@@ -88,7 +93,8 @@ export class EmbedPlayer {
 				new ButtonBuilder()
 					.setCustomId('vup')
 					.setEmoji('<:volp:937332469798162462>')
-					.setStyle(ButtonStyle.Secondary),
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(this.volumeOpti),
 			);
 	}
 }
