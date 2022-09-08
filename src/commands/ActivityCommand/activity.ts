@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, ActivityType, SlashCommandIntegerOption, ChatInputCommandInteraction } from 'discord.js';
-import { BotCacheGlobal, BotCacheGuild } from 'src/model/BotCache';
 import { BotClient } from '../../class/BotClient';
 import { Activity } from '../../model/Activity';
 import { TWITCH_LINK } from '../../utils/const';
