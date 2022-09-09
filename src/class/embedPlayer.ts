@@ -32,16 +32,15 @@ export class EmbedPlayer {
 		this.data.category = data.player_response.microformat.playerMicroformatRenderer.category;
 		this.data.publishDate = new Date(data.player_response.microformat.playerMicroformatRenderer.publishDate);
 		this.data.videoUrl = data.videoDetails.video_url;
-		this.data.videoLikeCount = data.videoDetails.likes.toString();
+		this.data.videoLikeCount = data.videoDetails.likes.toString() || '-1';
 		this.data.thumbnailUrl = data.videoDetails.thumbnails[3].url;
 
 		this.data.author = data.videoDetails.author.name;
 		this.data.authorLink = data.videoDetails.author.channel_url;
 		this.data.authorThumbnail = data.videoDetails.author.thumbnails[2].url;
 
-		this.data.volume = 100;
+		this.data.volume = '100';
 		this.volumeOpti = volumeOpti;
-		console.log('Volume:', this.volumeOpti);
 	}
 
 	getEmbed() {

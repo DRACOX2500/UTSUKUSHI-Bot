@@ -12,7 +12,8 @@ export class PlayCommand {
 		.setDescription('Play Music 🎵!')
 		.addStringOption(option =>
 			option.setName('song')
-				.setDescription('The Song you want to play'))
+				.setDescription('The Song you want to play')
+				.setAutocomplete(true))
 		.addBooleanOption(option =>
 			option.setName('optimization')
 				.setDescription('Optimize the player\'s performance but disabled volume settings'));
@@ -34,7 +35,7 @@ export class PlayCommand {
 		}
 
 		const stream = new YtbStream();
-		await stream.init(url);
+		await stream.init(url, interaction);
 
 		if (!stream.source.found)
 			return interaction.editReply('❌ Music not found !');
@@ -44,11 +45,12 @@ export class PlayCommand {
 
 			const embed = embedPlayer.getEmbed();
 			const comp = embedPlayer.getButtonMenu();
-			return interaction.editReply({ embeds: [embed], components: [comp] });
+			await interaction.editReply({ embeds: [embed], components: [comp] });
+
+			await client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
+			if (!url.match(/^https?:\/\//))
+				await client.getDatabase().setUserData(interaction.user, { keyword: url });
 		});
-
-
-		client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
 
 		client.connection.join(channel);
 		client.connection.newBotPlayer()?.playMusic(stream.get(), opti);

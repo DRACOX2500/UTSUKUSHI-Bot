@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ytdl from '@distube/ytdl-core';
@@ -17,12 +18,12 @@ export class YtbStream {
 
 	private stream: any | null = null;
 
-	async init(url: string): Promise<void> {
+	async init(urlKeywords: string, interaction?: any): Promise<void> {
 
-		if (!url.match(YOUTUBE_VIDEO_LINK_REGEX))
-			await this.searchByKeyword(url);
+		if (!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX))
+			await this.searchByKeyword(urlKeywords);
 		else
-			this.setSource({ url: url });
+			this.setSource({ url: urlKeywords });
 
 		await this.getStreamSources()
 			.then(
@@ -31,7 +32,7 @@ export class YtbStream {
 					if (this.stream)
 						this.source.found = true;
 
-					this.initEvents();
+					this.initEvents(interaction);
 				},
 			);
 	}
@@ -70,9 +71,11 @@ export class YtbStream {
 			this.stream.on('info', func);
 	}
 
-	initEvents(): void {
+	initEvents(interaction?: any): void {
 		this.stream.on('error', (error: Error) => {
-			console.error('[Stream] Error:', error);
+			console.error('[Stream] Error:', error.message);
+			if (interaction && error.message === 'Sign in to confirm your age')
+				interaction.editReply('🔞 Sorry, but I can\'t play age restricted videos !');
 		});
 	}
 

@@ -12,5 +12,5 @@ export interface EmbedData {
     authorLink: string;
     authorThumbnail: string;
 
-    volume: number;
+    volume: number | string;
 }

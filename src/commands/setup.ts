@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType } from 'discord.js';
+import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction } from 'discord.js';
 import { PingCommand } from './PingCommand/ping';
 import { BigBurgerCommand } from './BigBurgerCommand/big-burger';
 import { GitCommand } from './GitCommand/git';
@@ -8,6 +8,7 @@ import { PlayCommand } from './PlayCommand/play';
 import { ActivityCommand } from './ActivityCommand/activity';
 import { CommandSlash } from './enum';
 import { BotClient } from 'src/class/BotClient';
+import { CacheCommand } from './CacheCommand/cache';
 
 export class CommandSetup {
 
@@ -45,6 +46,10 @@ export class CommandSetup {
 		case CommandSlash.Activity :
 
 			await interaction.reply(ActivityCommand.result(interaction, client));
+			break;
+		case CommandSlash.Cache :
+
+			await CacheCommand.result(interaction, client);
 			break;
 		}
 	}
@@ -108,8 +113,37 @@ export class CommandSetup {
 				console.log('[' + interaction.user.username + '] use button : ' + interaction.customId);
 				await this.interactionButton(interaction, client);
 			}
+			else if (interaction.isAutocomplete()) {
+				await this.interactionAutocomplete(interaction, client);
+			}
 
 		});
+	}
+
+	async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
+		if (interaction.commandName === 'play') {
+			const focusedOption = interaction.options.getFocused(true);
+			let choices: string[] | undefined;
+
+			let keywordsCache = client.getDatabase().userDataCache.userdata.get(interaction.user.id);
+			if (!keywordsCache) {
+				const data = await client.getDatabase().getUserData(interaction.user);
+				if (data) {
+					client.getDatabase().userDataCache.userdata.set(interaction.user.id, data);
+					keywordsCache = client.getDatabase().userDataCache.userdata.get(interaction.user.id);
+				}
+			}
+
+			if (focusedOption.name === 'song') {
+				choices = keywordsCache?.keywords;
+			}
+
+			if (!choices) return;
+			const filtered = choices.filter(choice => choice.toLowerCase().includes(focusedOption.value.toLowerCase()));
+			await interaction.respond(
+				filtered.map(choice => ({ name: choice, value: choice })),
+			);
+		}
 	}
 }
 
@@ -120,4 +154,5 @@ export const COMMANDS = [
 	SnoringCommand.slash,
 	PlayCommand.slash,
 	ActivityCommand.slash,
+	CacheCommand.slash,
 ];

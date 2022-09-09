@@ -7,6 +7,7 @@ export enum CommandSlash {
     Snoring = 'snoring',
     Play = 'play',
     Activity = 'activity',
+    Cache = 'cache'
 }
 
 export enum EmbedPlayerCommand {
