@@ -1,20 +1,18 @@
 {
-	"extends": "eslint:recommended",
 	"env": {
 		"node": true,
 		"es6": true
 	},
-	"parser": "@babel/eslint-parser",
-	"parserOptions": {
-		"ecmaVersion": 2021,
-		"requireConfigFile": false,
-		"babelOptions": {
-		  "babelrc": false,
-		  "configFile": false,
-		  // your babel options
-		  "presets": ["@babel/preset-env"]
-		}
-	},
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
 	"rules": {
         "arrow-spacing": ["warn", { "before": true, "after": true }],
 		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],

@@ -4,3 +4,9 @@ node_modules/
 #Coverage
 coverage/
 
+#TypeScript
+dist/
+
+#local
+.env
+
