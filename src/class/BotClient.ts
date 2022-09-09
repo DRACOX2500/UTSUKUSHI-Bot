@@ -52,6 +52,7 @@ export class BotClient extends Client {
 		this.initEvents();
 		this.loadCommands(!test);
 		this.setup.initCommand(this);
+		this.setup.initBotEvents(this);
 	}
 
 	loginBot(): void {

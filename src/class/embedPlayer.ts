@@ -43,7 +43,7 @@ export class EmbedPlayer {
 		this.volumeOpti = volumeOpti;
 	}
 
-	getEmbed() {
+	getEmbed(): EmbedBuilder {
 		return new EmbedBuilder()
 			.setColor(0xFF0000)
 			.setTitle(this.data.title)

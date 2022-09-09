@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction } from 'discord.js';
+import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, TextBasedChannel, VoiceChannel, Guild, ChannelType, Collection, GuildBasedChannel } from 'discord.js';
 import { PingCommand } from './PingCommand/ping';
 import { BigBurgerCommand } from './BigBurgerCommand/big-burger';
 import { GitCommand } from './GitCommand/git';
@@ -9,6 +9,8 @@ import { ActivityCommand } from './ActivityCommand/activity';
 import { CommandSlash } from './enum';
 import { BotClient } from 'src/class/BotClient';
 import { CacheCommand } from './CacheCommand/cache';
+import { EmbedNotify } from '../class/embedNotify';
+import { NotifyCommand } from './NotifyCommand/notify';
 
 export class CommandSetup {
 
@@ -50,6 +52,10 @@ export class CommandSetup {
 		case CommandSlash.Cache :
 
 			await CacheCommand.result(interaction, client);
+			break;
+		case CommandSlash.Notify :
+
+			NotifyCommand.result(interaction, client);
 			break;
 		}
 	}
@@ -102,24 +108,6 @@ export class CommandSetup {
 		}
 	}
 
-	initCommand(client: BotClient) {
-		client.on('interactionCreate', async (interaction: Interaction<CacheType>) => {
-
-			if (interaction.isChatInputCommand()) {
-				console.log('[' + interaction.user.username + '] use commands : ' + interaction.commandName);
-				await this.interactionChatInput(interaction, client);
-			}
-			else if (interaction.isButton()) {
-				console.log('[' + interaction.user.username + '] use button : ' + interaction.customId);
-				await this.interactionButton(interaction, client);
-			}
-			else if (interaction.isAutocomplete()) {
-				await this.interactionAutocomplete(interaction, client);
-			}
-
-		});
-	}
-
 	async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
 		if (interaction.commandName === 'play') {
 			const focusedOption = interaction.options.getFocused(true);
@@ -144,6 +132,67 @@ export class CommandSetup {
 				filtered.map(choice => ({ name: choice, value: choice })),
 			);
 		}
+		else if (interaction.commandName === 'notify') {
+			const textchannel = interaction.guild?.channels.cache.filter(channel => channel.type === ChannelType.GuildText);
+			if (textchannel) {
+				await interaction.respond(
+					textchannel.map(choice => ({ name: choice.name, value: choice.id })),
+				);
+			}
+		}
+	}
+
+	initCommand(client: BotClient) {
+		client.on('interactionCreate', async (interaction: Interaction<CacheType>) => {
+
+			if (interaction.isChatInputCommand()) {
+				console.log('[' + interaction.user.username + '] use commands : ' + interaction.commandName);
+				await this.interactionChatInput(interaction, client);
+			}
+			else if (interaction.isButton()) {
+				console.log('[' + interaction.user.username + '] use button : ' + interaction.customId);
+				await this.interactionButton(interaction, client);
+			}
+			else if (interaction.isAutocomplete()) {
+				await this.interactionAutocomplete(interaction, client);
+			}
+
+		});
+	}
+
+	async notifyGuild(client: BotClient, user: string, channelId: string, guild: Guild): Promise<void> {
+		const data = await client.getDatabase().getCacheByGuild(guild);
+		if (data?.vocalNotifyChannel) {
+			const channelNotify: TextBasedChannel = await guild.channels.fetch(data.vocalNotifyChannel).then((result) => {return <TextBasedChannel>result; });
+			const userJoin = (await guild.members.fetch(user)).user;
+			const channel = await guild.channels.fetch(channelId).then((result) => {return <VoiceChannel>result; });
+			const embedNotify = new EmbedNotify(userJoin, channel);
+			const embed = embedNotify.getEmbed();
+			channelNotify?.send({ embeds: [embed] });
+		}
+	}
+
+	initBotEvents(client: BotClient) {
+		client.on('voiceStateUpdate', async (oldState, newState) => {
+			if (oldState.channelId === newState.channelId) {
+				// 'a user has not moved!'
+			}
+			if (oldState.channelId != null && newState.channelId != null && newState.channelId != oldState.channelId) {
+				// 'a user switched channels'
+			}
+			if (oldState.channelId === null) {
+				// 'a user joined!'
+				const user = newState.id;
+				const channelId = <string>newState.channelId;
+				const guild = newState.guild;
+
+				this.notifyGuild(client, user, channelId, guild);
+
+			}
+			if (newState.channelId === null) {
+				// 'a user left!'
+			}
+		});
 	}
 }
 
@@ -155,4 +204,5 @@ export const COMMANDS = [
 	PlayCommand.slash,
 	ActivityCommand.slash,
 	CacheCommand.slash,
+	NotifyCommand.slash,
 ];
