@@ -8,7 +8,8 @@ export enum CommandSlash {
     Play = 'play',
     Activity = 'activity',
     Cache = 'cache',
-    Notify = 'notify'
+    Notify = 'notify',
+    Fuel = 'fuel'
 }
 
 export enum EmbedPlayerCommand {

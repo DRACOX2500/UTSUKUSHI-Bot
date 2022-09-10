@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, TextBasedChannel, VoiceChannel, Guild, ChannelType, Collection, GuildBasedChannel } from 'discord.js';
+import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, TextBasedChannel, VoiceChannel, Guild, ChannelType } from 'discord.js';
 import { PingCommand } from './PingCommand/ping';
 import { BigBurgerCommand } from './BigBurgerCommand/big-burger';
 import { GitCommand } from './GitCommand/git';
@@ -9,8 +9,9 @@ import { ActivityCommand } from './ActivityCommand/activity';
 import { CommandSlash } from './enum';
 import { BotClient } from 'src/class/BotClient';
 import { CacheCommand } from './CacheCommand/cache';
-import { EmbedNotify } from '../class/embedNotify';
+import { EmbedNotify } from '../class/embed/embedNotify';
 import { NotifyCommand } from './NotifyCommand/notify';
+import { FuelCommand } from './FuelCommand/fuel';
 
 export class CommandSetup {
 
@@ -28,9 +29,8 @@ export class CommandSetup {
 			);
 			break;
 		case CommandSlash.BigBurger : {
-			await interaction.reply('🍔 Burger loading...');
-			const res = await BigBurgerCommand.result();
-			await interaction.editReply(res);
+
+			await BigBurgerCommand.result(interaction);
 			break;
 		}
 		case CommandSlash.Git :
@@ -56,6 +56,10 @@ export class CommandSetup {
 		case CommandSlash.Notify :
 
 			NotifyCommand.result(interaction, client);
+			break;
+		case CommandSlash.Fuel :
+
+			FuelCommand.result(interaction);
 			break;
 		}
 	}
@@ -109,7 +113,7 @@ export class CommandSetup {
 	}
 
 	async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
-		if (interaction.commandName === 'play') {
+		if (interaction.commandName === CommandSlash.Play) {
 			const focusedOption = interaction.options.getFocused(true);
 			let choices: string[] | undefined;
 
@@ -132,7 +136,7 @@ export class CommandSetup {
 				filtered.map(choice => ({ name: choice, value: choice })),
 			);
 		}
-		else if (interaction.commandName === 'notify') {
+		else if (interaction.commandName === CommandSlash.Notify) {
 			const textchannel = interaction.guild?.channels.cache.filter(channel => channel.type === ChannelType.GuildText);
 			if (textchannel) {
 				await interaction.respond(
@@ -181,6 +185,7 @@ export class CommandSetup {
 				// 'a user switched channels'
 			}
 			if (oldState.channelId === null) {
+				if (newState.member?.user.bot) return;
 				// 'a user joined!'
 				const user = newState.id;
 				const channelId = <string>newState.channelId;
@@ -205,4 +210,5 @@ export const COMMANDS = [
 	ActivityCommand.slash,
 	CacheCommand.slash,
 	NotifyCommand.slash,
+	FuelCommand.slash,
 ];
