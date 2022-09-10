@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SlashCommandBuilder } from 'discord.js';
-import { BURGER_ERROR } from '../../utils/const';
-import axios from 'axios';
-
-const options = {
-	method: 'GET',
-	url: 'https://foodish-api.herokuapp.com/api/images/burger/',
-};
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { BurgerAPI } from '../../api/burger/BurgerAPI';
 
 export class BigBurgerCommand {
 
@@ -14,24 +8,16 @@ export class BigBurgerCommand {
 		.setName('big-burger')
 		.setDescription('Random Burger 🍔!');
 
-	static readonly result = async (test_error = false): Promise<string> => {
+	static readonly result = async (interaction: ChatInputCommandInteraction, test_error = false): Promise<void> => {
 
-		function burgerError(err?: Error) {
-			if (err)
-				console.error('[Big-Burger] Error: ' + err.message);
-			return BURGER_ERROR;
-		}
+		await interaction.reply('🍔 Burger loading...');
 
-		return axios.request(options).then(
-			(response: any) => {
-				if (!response || test_error)
-					return burgerError();
-				else
-					return response.data.image;
-			},
-			(error: Error) => {
-				return burgerError(error);
-			},
-		);
+		const api = new BurgerAPI();
+		const response = await api.getReponse(test_error);
+
+		if (typeof response === 'string')
+			await interaction.editReply(response);
+		else
+			await interaction.editReply(response.image);
 	};
 }

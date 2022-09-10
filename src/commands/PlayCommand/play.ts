@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, InteractionResponse, Message } from 'discord.js';
-import { EmbedPlayer } from '../../class/embedPlayer';
+import { EmbedPlayer } from '../../class/embed/embedPlayer';
 import { BotClient } from '../../class/BotClient';
 import { YtbStream } from '../../class/ytbStream';
 import { BotCacheGuild } from 'src/model/BotCache';
@@ -47,9 +47,9 @@ export class PlayCommand {
 			const comp = embedPlayer.getButtonMenu();
 			await interaction.editReply({ embeds: [embed], components: [comp] });
 
-			await client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
+			client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
 			if (!url.match(/^https?:\/\//))
-				await client.getDatabase().setUserData(interaction.user, { keyword: url });
+				client.getDatabase().setUserData(interaction.user, { keyword: url });
 		});
 
 		client.connection.join(channel);

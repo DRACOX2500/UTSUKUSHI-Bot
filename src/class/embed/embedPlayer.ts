@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmbedBuilder, time, ActionRowBuilder, ButtonStyle, ButtonBuilder } from 'discord.js';
-import { minuteSecondsFormater } from '../utils/secondsToMinuteSecondsFormat';
-import { EmbedData } from '../model/EmbedData';
-import { LOGO_MUSIC_BLUE, LOGO_MUSIC_PURPLE } from '../utils/const';
+import { minuteSecondsFormater } from '../../utils/secondsToMinuteSecondsFormat';
+import { EmbedData } from '../../model/EmbedData';
+import { LOGO_MUSIC_BLUE, LOGO_MUSIC_PURPLE } from '../../utils/const';
 
 export class EmbedPlayer {
 
