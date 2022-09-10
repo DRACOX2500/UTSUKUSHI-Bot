@@ -24,12 +24,12 @@ export class EmbedFuel {
 					.setColor(0x2B1291)
 					.setDescription(
 						`**Address** : ${data.fields.adresse}\n` +
-                        `**Service** : ${data.fields.services_service}\n` +
+                        `**Services** : ${data.fields.services_service.replaceAll('//', ', ')}\n` +
                         '⛽---------------------------------------------------------------🚙💨\n' +
                         `**Last Data Updated** : ${time(new Date(data.fields.prix_maj))}`
 					)
 					.addFields(
-						{ name: 'Fuel cost', value: `${this.fuelType} : ${data.fields.prix_valeur}€` },
+						{ name: 'Fuel cost', value: `${this.fuelType} : ${data.fields.prix_valeur}€/L` },
 						{ name: 'City :', value: data.fields.ville, inline: true },
 						{ name: 'Department :', value: `(${data.fields.dep_code}) ${data.fields.dep_name}`, inline: true },
 						{ name: 'Region', value: data.fields.reg_name, inline: true },
