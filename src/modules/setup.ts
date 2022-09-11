@@ -1,17 +1,18 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, TextBasedChannel, VoiceChannel, Guild, ChannelType } from 'discord.js';
-import { PingCommand } from './PingCommand/ping';
-import { BigBurgerCommand } from './BigBurgerCommand/big-burger';
-import { GitCommand } from './GitCommand/git';
-import { SnoringCommand } from './SnoringCommand/snoring';
-import { PlayCommand } from './PlayCommand/play';
-import { ActivityCommand } from './ActivityCommand/activity';
+import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
+import { PingCommand } from './commands/PingCommand/ping';
+import { BigBurgerCommand } from './commands/BigBurgerCommand/big-burger';
+import { GitCommand } from './commands/GitCommand/git';
+import { SnoringCommand } from './commands/SnoringCommand/snoring';
+import { PlayCommand } from './commands/PlayCommand/play';
+import { ActivityCommand } from './commands/ActivityCommand/activity';
 import { CommandSlash } from './enum';
 import { BotClient } from 'src/class/BotClient';
-import { CacheCommand } from './CacheCommand/cache';
-import { EmbedNotify } from '../class/embed/embedNotify';
-import { NotifyCommand } from './NotifyCommand/notify';
-import { FuelCommand } from './FuelCommand/fuel';
+import { CacheCommand } from './commands/CacheCommand/cache';
+import { NotifyCommand } from './commands/NotifyCommand/notify';
+import { FuelCommand } from './commands/FuelCommand/fuel';
+import { NotifyEvent } from './events/NotifyEvent';
+import { DeleteContext } from './contexts/DeleteContext';
 
 export class CommandSetup {
 
@@ -112,7 +113,7 @@ export class CommandSetup {
 		}
 	}
 
-	async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
+	private async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
 		if (interaction.commandName === CommandSlash.Play) {
 			const focusedOption = interaction.options.getFocused(true);
 			let choices: string[] | undefined;
@@ -146,6 +147,12 @@ export class CommandSetup {
 		}
 	}
 
+	private async interactionContext(interaction: ContextMenuCommandInteraction, client: BotClient): Promise<void> {
+
+		if (interaction.isMessageContextMenuCommand())
+			DeleteContext.result(interaction, client);
+	}
+
 	initCommand(client: BotClient) {
 		client.on('interactionCreate', async (interaction: Interaction<CacheType>) => {
 
@@ -160,20 +167,12 @@ export class CommandSetup {
 			else if (interaction.isAutocomplete()) {
 				await this.interactionAutocomplete(interaction, client);
 			}
+			else if (interaction.isContextMenuCommand()) {
+				console.log('[' + interaction.user.username + '] use constext : ' + interaction.commandName);
+				await this.interactionContext(interaction, client);
+			}
 
 		});
-	}
-
-	async notifyGuild(client: BotClient, user: string, channelId: string, guild: Guild): Promise<void> {
-		const data = await client.getDatabase().getCacheByGuild(guild);
-		if (data?.vocalNotifyChannel) {
-			const channelNotify: TextBasedChannel = await guild.channels.fetch(data.vocalNotifyChannel).then((result) => {return <TextBasedChannel>result; });
-			const userJoin = (await guild.members.fetch(user)).user;
-			const channel = await guild.channels.fetch(channelId).then((result) => {return <VoiceChannel>result; });
-			const embedNotify = new EmbedNotify(userJoin, channel);
-			const embed = embedNotify.getEmbed();
-			channelNotify?.send({ embeds: [embed] });
-		}
 	}
 
 	initBotEvents(client: BotClient) {
@@ -191,7 +190,7 @@ export class CommandSetup {
 				const channelId = <string>newState.channelId;
 				const guild = newState.guild;
 
-				this.notifyGuild(client, user, channelId, guild);
+				new NotifyEvent().notifyGuild(client, user, channelId, guild);
 
 			}
 			if (newState.channelId === null) {
@@ -211,4 +210,5 @@ export const COMMANDS = [
 	CacheCommand.slash,
 	NotifyCommand.slash,
 	FuelCommand.slash,
+	DeleteContext.context,
 ];

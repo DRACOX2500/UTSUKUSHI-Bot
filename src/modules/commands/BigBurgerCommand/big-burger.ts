@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { BurgerAPI } from '../../api/burger/BurgerAPI';
+import { BurgerAPI } from '../../../api/burger/BurgerAPI';
 
 export class BigBurgerCommand {
 

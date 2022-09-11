@@ -1,8 +1,8 @@
 /* eslint-disable no-shadow */
 import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
-import { EmbedFuel } from '../../class/embed/embedFuel';
-import { API } from '../../utils/const';
-import { FuelAPI } from '../../api/fuel-fr/FuelAPI';
+import { EmbedFuel } from '../../../class/embed/embedFuel';
+import { API } from '../../../utils/const';
+import { FuelAPI } from '../../../api/fuel-fr/FuelAPI';
 
 enum FuelType {
 

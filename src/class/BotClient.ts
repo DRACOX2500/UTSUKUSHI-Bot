@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusDa
 import { Activity } from '../model/Activity';
 import { TWITCH_LINK } from '../utils/const';
 import { VocalConnection } from './VocalConnection';
-import { COMMANDS, CommandSetup } from '../commands/setup';
+import { COMMANDS, CommandSetup } from '../modules/setup';
 import { BotFirebase, FirebaseAuth } from '../Database/Firebase';
 
 config({ path: '.env' });
@@ -17,6 +17,8 @@ export class BotClient extends Client {
 	private database!: BotFirebase;
 
 	connection: VocalConnection = new VocalConnection();
+
+	isRemoving = false;
 
 	private setup: CommandSetup = new CommandSetup();
 

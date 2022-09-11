@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder } from 'discord.js';
-import { BotClient } from '../../class/BotClient';
-import { YtbStream } from '../../class/ytbStream';
+import { BotClient } from '../../../class/BotClient';
+import { YtbStream } from '../../../class/ytbStream';
 
 const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
 

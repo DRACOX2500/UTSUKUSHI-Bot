@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 // TEST
-import { PingCommand } from '../src/commands/PingCommand/ping';
-import { GitCommand } from '../src/commands/GitCommand/git';
-import { ActivityCommand } from '../src/commands/ActivityCommand/activity';
+import { PingCommand } from '../src/modules/commands/PingCommand/ping';
+import { GitCommand } from '../src/modules/commands/GitCommand/git';
+import { ActivityCommand } from '../src/modules/commands/ActivityCommand/activity';
 import { API } from '../src/utils/const';
 
 import { BotClient } from '../src/class/BotClient';

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, InteractionResponse, Message } from 'discord.js';
-import { EmbedPlayer } from '../../class/embed/embedPlayer';
-import { BotClient } from '../../class/BotClient';
-import { YtbStream } from '../../class/ytbStream';
+import { EmbedPlayer } from '../../../class/embed/embedPlayer';
+import { BotClient } from '../../../class/BotClient';
+import { YtbStream } from '../../../class/ytbStream';
 import { BotCacheGuild } from 'src/model/BotCache';
 
 export class PlayCommand {
@@ -22,7 +22,7 @@ export class PlayCommand {
 		if (!interaction || !interaction.member) return;
 
 		const channel = interaction.member.voice.channel;
-		if (!channel) return interaction.editReply('❌ You are not in a voice channel');
+		if (!channel) return interaction.reply('❌ You are not in a voice channel');
 
 		await interaction.deferReply();
 
@@ -48,7 +48,8 @@ export class PlayCommand {
 			await interaction.editReply({ embeds: [embed], components: [comp] });
 
 			client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
-			if (!url.match(/^https?:\/\//))
+			const keywordsCache = client.getDatabase().userDataCache.userdata.get(interaction.user.id)?.keywords;
+			if (!url.match(/^https?:\/\//) && !keywordsCache?.includes(url))
 				client.getDatabase().setUserData(interaction.user, { keyword: url });
 		});
 

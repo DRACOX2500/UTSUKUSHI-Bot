@@ -1,5 +1,5 @@
 import { Client, SlashCommandBuilder } from 'discord.js';
-import { getRandomInt } from '../../utils/getRandomInt';
+import { getRandomInt } from '../../../utils/getRandomInt';
 
 export class PingCommand {
 
