@@ -1,5 +1,6 @@
-import { Client, SlashCommandBuilder } from 'discord.js';
-import { getRandomInt } from '../../../utils/getRandomInt';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { BotClient } from '../../../class/BotClient';
+import { EmbedPong } from '../../../class/embed/embedPong';
 
 export class PingCommand {
 
@@ -7,17 +8,13 @@ export class PingCommand {
 		.setName('ping')
 		.setDescription('Replies with Pong 🏓!');
 
-	static readonly result = (client: Client | null): string => {
-		if (!client) return '‼️🤖 No Client found !';
+	static readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient | null) => {
+		if (!client) return interaction.reply('‼️🤖 No Client found !');
 
-		function getWsPing(cli: Client) {
-			return Math.round(cli.ws.ping);
-		}
+		const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true });
+		const embedPong = new EmbedPong(sent, interaction, client);
+		interaction.editReply({ content: '', embeds: [embedPong.getEmbed()] });
 
-		if (getRandomInt(5) == 1)
-			return `🏓🔥 SMAAAAAAAAAAAAAAAAASH! (${getWsPing(client)}ms)`;
-		else
-			return `🏓 Pong! (${getWsPing(client)}ms)`;
 	};
 
 }

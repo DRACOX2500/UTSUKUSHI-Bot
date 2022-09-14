@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
+import { EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
 import { PingCommand } from './commands/PingCommand/ping';
 import { BigBurgerCommand } from './commands/BigBurgerCommand/big-burger';
 import { GitCommand } from './commands/GitCommand/git';
@@ -21,13 +21,7 @@ export class CommandSetup {
 
 		case CommandSlash.Ping :
 
-			await interaction.reply(
-				italic(
-					bold(
-						PingCommand.result(client)
-					)
-				)
-			);
+			PingCommand.result(interaction, client);
 			break;
 		case CommandSlash.BigBurger : {
 
