@@ -33,6 +33,7 @@
     "opusscript": "^0.0.8",
     "sodium": "^3.0.2",
     "sodium-native": "^3.4.1",
+    "staticmaps": "^1.10.0",
     "tweetnacl": "^1.0.3",
     "ytsr": "^3.8.0"
   },
@@ -43,6 +44,7 @@
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
     "@types/jest": "^29.0.0",
+    "@types/staticmaps": "^1.5.2",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "c8": "^7.12.0",

@@ -104,8 +104,9 @@ export class FuelCommand {
 
 		const fuelEmbed = new EmbedFuel(response, fuel);
 		const embeds = fuelEmbed.getEmbed();
+		const images = await fuelEmbed.getImages();
 
-		interaction.editReply({ embeds: embeds });
+		interaction.editReply({ embeds: embeds, files: images });
 	};
 
 }
