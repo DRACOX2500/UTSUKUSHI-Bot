@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionsBitField } from 'discord.js';
 import { BotClient } from '../../../class/BotClient';
 
 export class NotifyCommand {
@@ -13,6 +13,14 @@ export class NotifyCommand {
 				.setRequired(true));
 
 	static readonly result = async (interaction:ChatInputCommandInteraction, client: BotClient): Promise<void> => {
+
+		const m = <GuildMember>interaction.member;
+		if (!m.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+			interaction.reply('🔒 You do not have permission to manage the guild')
+				.then(() => { setTimeout(() => interaction.deleteReply().catch(error => console.log(error.message)), 3000); },);
+			return;
+		}
+
 		const channelId = <string | null>interaction.options.get('channel')?.value;
 
 		if (interaction.guild) {
