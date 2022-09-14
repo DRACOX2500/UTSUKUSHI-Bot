@@ -21,14 +21,23 @@ export class NotifyCommand {
 			return;
 		}
 
+		await interaction.deferReply();
 		const channelId = <string | null>interaction.options.get('channel')?.value;
 
-		if (interaction.guild) {
-			client.getDatabase().setCacheByGuild(interaction.guild, { vocalNotifyChannel:  channelId });
-			interaction.reply('🔔 Channel setup successfully !');
+		if (interaction.guild && channelId) {
+			const channelIdInCache = await client.getDatabase().getCacheByGuild(interaction.guild);
+
+			if (channelIdInCache?.vocalNotifyChannel === channelId) {
+				client.getDatabase().setCacheByGuild(interaction.guild, { vocalNotifyChannel:  null });
+				interaction.editReply('🔔 Notify Channel Removed successfully !');
+			}
+			else {
+				client.getDatabase().setCacheByGuild(interaction.guild, { vocalNotifyChannel:  channelId });
+				interaction.editReply('🔕 Channel setup successfully !');
+			}
 		}
 		else {
-			interaction.reply('🔕 Channel setup Failed !');
+			interaction.editReply('❌ Channel setup Failed !');
 		}
 
 	};
