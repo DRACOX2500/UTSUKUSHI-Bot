@@ -1,18 +1,20 @@
 /* eslint-disable no-case-declarations */
-import { EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
+import { Interaction, ChatInputCommandInteraction, ButtonInteraction, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
 import { PingCommand } from './commands/PingCommand/ping';
 import { BigBurgerCommand } from './commands/BigBurgerCommand/big-burger';
 import { GitCommand } from './commands/GitCommand/git';
 import { SnoringCommand } from './commands/SnoringCommand/snoring';
 import { PlayCommand } from './commands/PlayCommand/play';
 import { ActivityCommand } from './commands/ActivityCommand/activity';
-import { CommandSlash } from './enum';
+import { CommandButton, CommandSlash } from './enum';
 import { BotClient } from 'src/class/BotClient';
 import { CacheCommand } from './commands/CacheCommand/cache';
 import { NotifyCommand } from './commands/NotifyCommand/notify';
 import { FuelCommand } from './commands/FuelCommand/fuel';
 import { NotifyEvent } from './events/NotifyEvent';
 import { DeleteContext } from './contexts/DeleteContext';
+import { ButtonPause } from './button/play/ButtonPause';
+import { ButtonVolume } from './button/play/ButtonVolumeDown';
 
 export class CommandSetup {
 
@@ -59,50 +61,29 @@ export class CommandSetup {
 		}
 	}
 
-	private async interactionButton(interaction: ButtonInteraction, client: BotClient): Promise<InteractionResponse<boolean> | undefined> {
+	private async interactionButton(interaction: ButtonInteraction, client: BotClient): Promise<void> {
 		switch (interaction.customId) {
 
-		case 'vdown':
-			if (!client.connection.botPlayer?.resource || interaction.message.embeds[0].data.fields === undefined) return interaction.reply('❌ No Song available !');
-			client.connection.botPlayer.volumeDown();
+		case CommandButton.VolumeDown :
 
-			interaction.message.embeds[0].data.fields[5].value = (client.connection.botPlayer.getVolume() * 100) + '%';
-
-			const vDownEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vDownEmbed] });
-
-			await interaction.deferUpdate();
+			await new ButtonVolume(interaction, client).getDownEffect();
 			break;
-		case 'stop':
+		case CommandButton.Stop :
 
 			client.connection.killConnection();
 			await interaction.deferUpdate();
 			break;
-		case 'pause':
-			if (!client.connection.botPlayer) return interaction.reply('❌ No Song available !');
+		case CommandButton.Pause :
 
-			const playerStatus = client.connection.botPlayer.player.state.status;
-			if (playerStatus === 'paused')
-				client.connection.botPlayer.player.unpause();
-			else if (playerStatus === 'playing')
-				client.connection.botPlayer.player.pause();
-
-			await interaction.deferUpdate();
+			await new ButtonPause(interaction, client).getEffect();
 			break;
-		case 'skip':
+		case CommandButton.Skip :
 
 			// TODO : skip command
 			break;
-		case 'vup':
-			if (!client.connection.botPlayer?.resource || interaction.message.embeds[0].data.fields === undefined) return interaction.reply('❌ No Song available !');
-			client.connection.botPlayer.volumeUp();
+		case CommandButton.VolumeUp :
 
-			interaction.message.embeds[0].data.fields[5].value = (client.connection.botPlayer.getVolume() * 100) + '%';
-
-			const vUpEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vUpEmbed] });
-
-			await interaction.deferUpdate();
+			await new ButtonVolume(interaction, client).getUpEffect();
 			break;
 		}
 	}
