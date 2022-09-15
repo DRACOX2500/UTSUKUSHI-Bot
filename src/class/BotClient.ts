@@ -5,6 +5,7 @@ import { TWITCH_LINK } from '../utils/const';
 import { VocalConnection } from './VocalConnection';
 import { COMMANDS, CommandSetup } from '../modules/setup';
 import { BotFirebase, FirebaseAuth } from '../Database/Firebase';
+import { BotErrorManager } from '../error/BotErrorManager';
 
 config({ path: '.env' });
 
@@ -21,6 +22,8 @@ export class BotClient extends Client {
 	isRemoving = false;
 
 	private setup: CommandSetup = new CommandSetup();
+
+	private errorManager!: BotErrorManager;
 
 	private defaultActivity: Activity = {
 		status: ':]',
@@ -51,6 +54,7 @@ export class BotClient extends Client {
 	}
 
 	private init(test: boolean): void {
+		this.errorManager = new BotErrorManager(this);
 		this.initEvents();
 		this.loadCommands(!test);
 		this.setup.initCommand(this);
