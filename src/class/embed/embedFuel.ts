@@ -5,16 +5,17 @@ import StaticMaps from 'staticmaps';
 
 export class EmbedFuel {
 
-	apiResponse!: DataEconomieGouvResponseRecord[];
+	apiResponse!: DataEconomieGouvResponseRecord;
 	fuelType!: string;
-	imagePath: AttachmentBuilder[] = [];
+	imagePath!: AttachmentBuilder;
 
-	constructor(response: DataEconomieGouvResponseRecord[], fuelType: string) {
+	constructor(response: DataEconomieGouvResponseRecord, fuelType: string) {
 		this.apiResponse = response;
 		this.fuelType = fuelType;
 	}
 
-	async getMap(data: DataEconomieGouvResponseRecord, res: number): Promise<void> {
+	async getMap(index: number): Promise<AttachmentBuilder> {
+		const data = this.apiResponse;
 		const options = {
 			width: 400,
 			height: 400,
@@ -24,47 +25,34 @@ export class EmbedFuel {
 		const center = [data.geometry.coordinates[0], data.geometry.coordinates[1]];
 
 		await map.render(center, zoom);
-		await map.image.save(`assets/fuel${res}.webp`);
+		await map.image.save(`assets/fuel${index}.webp`);
 
-		this.imagePath.push(new AttachmentBuilder(`assets/fuel${res}.webp`));
+		return new AttachmentBuilder(`assets/fuel${index}.webp`);
 	}
 
-	async getImages(): Promise<AttachmentBuilder[]> {
-		let res = 0;
-		for (const data of this.apiResponse) {
-			res += 1;
-			await this.getMap(data, res);
-		}
-		return this.imagePath;
+	async getImages(index: number): Promise<AttachmentBuilder> {
+		return this.getMap(index);
 	}
 
-	getEmbed(): EmbedBuilder[] {
-		const embeds: EmbedBuilder[] = [];
-		let res = 0;
+	getEmbed(index: number): EmbedBuilder {
 
-		for (const data of this.apiResponse) {
-			res += 1;
+		const data = this.apiResponse;
 
-			embeds.push(
-				new EmbedBuilder()
-					.setAuthor({ name: `Result#${res}`, iconURL: RED_FUEL_PUMP })
-					.setColor(0x2B1291)
-					.setDescription(
-						`**Address** : ${data.fields.adresse}\n` +
-                        `**Services** : ${data.fields.services_service.replaceAll('//', ', ')}\n` +
-                        '⛽---------------------------------------------------------------🚙💨\n' +
+		return new EmbedBuilder()
+			.setAuthor({ name: `Result#${index + 1}`, iconURL: RED_FUEL_PUMP })
+			.setColor(0x2B1291)
+			.setDescription(
+				`**Address** : ${data.fields.adresse}\n` +
+                        `**Services** : ${data.fields.services_service?.replaceAll('//', ', ')}\n` +
+                        '⛽---------------------------------------------🚙💨\n' +
                         `**Last Data Updated** : ${time(new Date(data.fields.prix_maj))}`
-					)
-					.addFields(
-						{ name: 'Fuel cost', value: `${this.fuelType} : ${data.fields.prix_valeur}€/L` },
-						{ name: 'City :', value: data.fields.ville, inline: true },
-						{ name: 'Department :', value: `(${data.fields.dep_code}) ${data.fields.dep_name}`, inline: true },
-						{ name: 'Region', value: data.fields.reg_name, inline: true },
-					)
-					.setImage(`attachment://fuel${res}.webp`)
-			);
-		}
-
-		return embeds;
+			)
+			.addFields(
+				{ name: 'Fuel cost', value: `${this.fuelType} : ${data.fields.prix_valeur}€/L` },
+				{ name: 'City :', value: data.fields.ville, inline: true },
+				{ name: 'Department :', value: `(${data.fields.dep_code}) ${data.fields.dep_name}`, inline: true },
+				{ name: 'Region', value: data.fields.reg_name, inline: true },
+			)
+			.setImage(`attachment://fuel${index}.webp`);
 	}
 }

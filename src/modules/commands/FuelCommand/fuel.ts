@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption, TextChannel } from 'discord.js';
 import { EmbedFuel } from '../../../class/embed/embedFuel';
 import { API } from '../../../utils/const';
 import { FuelAPI } from '../../../api/fuel-fr/FuelAPI';
@@ -102,11 +102,20 @@ export class FuelCommand {
 			return;
 		}
 
-		const fuelEmbed = new EmbedFuel(response, fuel);
-		const embeds = fuelEmbed.getEmbed();
-		const images = await fuelEmbed.getImages();
+		const channel = <TextChannel>interaction.channel;
 
-		interaction.editReply({ embeds: embeds, files: images });
+		let i = 0;
+		for (const data of response) {
+
+			const fuelEmbed = new EmbedFuel(data, fuel);
+			const embed = fuelEmbed.getEmbed(i);
+			const image = await fuelEmbed.getImages(i);
+
+			channel.send({ embeds: [embed], files: [image] });
+
+			i++;
+		}
+		interaction.editReply(`⛽ ${i} fuel source ${ i > 1 ? 'have' : 'has'} been found !`);
 	};
 
 }
