@@ -42,7 +42,7 @@ export class YtbStream {
 
 	getStreamSources(): Promise<any> {
 		const quality = process.env.YTDL_CORE_QUALITY || 'lowest';
-		return Promise.resolve(ytdl(this.source.url, { filter: 'audioonly', highWaterMark: 1 << 33, quality: quality }));
+		return Promise.resolve(ytdl(this.source.url, { filter: 'audioonly', highWaterMark: 1 << 25, quality: quality }));
 	}
 
 	async searchByKeyword(keyword: string) : Promise<void> {

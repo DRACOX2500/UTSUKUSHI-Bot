@@ -48,7 +48,7 @@ Buttons menu :
 ### **/cache *action: cache_action***: manage your user data
 >         cache_action: CLEAR
 
-### **/notify *channel***: choose a channel, and UTSUKUSHI will notify you when someone enters a voice channel
+### **/notify *channel: channel_name***: choose a channel, and UTSUKUSHI will notify you when someone enters a voice channel
 ![](./notify.png)
 
 ### **/fuel *fuel: fuel_type search: search_method value: search_value***: (Only French Data) search fuel cost by search method and fuel type
