@@ -32,7 +32,7 @@ export class EmbedPlayer {
 		this.data.category = data.player_response.microformat.playerMicroformatRenderer.category;
 		this.data.publishDate = new Date(data.player_response.microformat.playerMicroformatRenderer.publishDate);
 		this.data.videoUrl = data.videoDetails.video_url;
-		this.data.videoLikeCount = data.videoDetails.likes.toString() || '-1';
+		this.data.videoLikeCount = data.videoDetails.likes?.toString() || '-1';
 		this.data.thumbnailUrl = data.videoDetails.thumbnails[3].url;
 
 		this.data.author = data.videoDetails.author.name;

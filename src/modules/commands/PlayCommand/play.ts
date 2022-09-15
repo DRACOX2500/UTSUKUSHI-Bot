@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SlashCommandBuilder, InteractionResponse, Message } from 'discord.js';
+import { SlashCommandBuilder, InteractionResponse, Message, ButtonInteraction } from 'discord.js';
 import { EmbedPlayer } from '../../../class/embed/embedPlayer';
 import { BotClient } from '../../../class/BotClient';
 import { YtbStream } from '../../../class/ytbStream';
-import { BotCacheGuild } from 'src/model/BotCache';
+import { BotCacheGuild } from '../../../model/BotCache';
 
 export class PlayCommand {
 
@@ -21,8 +21,8 @@ export class PlayCommand {
 	static readonly result = async (interaction: any, client: BotClient): Promise<Message<boolean> | InteractionResponse<boolean> | void> => {
 		if (!interaction || !interaction.member) return;
 
-		const channel = interaction.member.voice.channel;
-		if (!channel) return interaction.reply('❌ You are not in a voice channel');
+		const VoiceChannel = interaction.member.voice.channel;
+		if (!VoiceChannel) return interaction.reply('❌ You are not in a voice channel');
 
 		await interaction.deferReply();
 
@@ -45,7 +45,7 @@ export class PlayCommand {
 
 			const embed = embedPlayer.getEmbed();
 			const comp = embedPlayer.getButtonMenu();
-			await interaction.editReply({ embeds: [embed], components: [comp] });
+			interaction.editReply({ embeds: [embed], components: [comp] });
 
 			client.getDatabase().setCacheByGuild(interaction.guild, { lastPlayURL: stream.source.url });
 			const keywordsCache = client.getDatabase().userDataCache.userdata.get(interaction.user.id)?.keywords;
@@ -53,7 +53,21 @@ export class PlayCommand {
 				client.getDatabase().setUserData(interaction.user, { keyword: url });
 		});
 
-		client.connection.join(channel);
-		client.connection.newBotPlayer()?.playMusic(stream.get(), opti);
+		client.connection.join(VoiceChannel);
+		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get(), opti);
+	};
+
+	static readonly reload = async (interaction: ButtonInteraction, client: BotClient): Promise<InteractionResponse | void> => {
+		if (!interaction) return;
+
+		const url = <string>interaction.message.embeds[0].url;
+		const stream = new YtbStream();
+		await stream.init(url);
+
+		const VoiceChannel = (<any>interaction).member.voice.channel;
+		if (!VoiceChannel) return interaction.deferUpdate();
+
+		client.connection.join(VoiceChannel);
+		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get());
 	};
 }

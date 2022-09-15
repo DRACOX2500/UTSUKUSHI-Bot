@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, NoSubscriberBehavior, VoiceConnection } from '@discordjs/voice';
+import { Message } from 'discord.js';
 
 export class BotPlayer {
 
@@ -9,8 +10,11 @@ export class BotPlayer {
 
 	connection!: VoiceConnection;
 
-	constructor(connection: VoiceConnection) {
+	origin!: Message;
+
+	constructor(origin: Message, connection: VoiceConnection) {
 		this.connection = connection;
+		this.origin = origin;
 
 		this.player = createAudioPlayer({
 			behaviors: {

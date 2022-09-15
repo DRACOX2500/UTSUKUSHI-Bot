@@ -26,6 +26,6 @@ export class SnoringCommand {
 		});
 
 		client.connection.join(channel);
-		client.connection.newBotPlayer()?.playMusic(stream.get(), true);
+		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get(), true);
 	};
 }
