@@ -29,11 +29,11 @@ export class NotifyCommand {
 
 			if (channelIdInCache?.vocalNotifyChannel === channelId) {
 				client.getDatabase().setCacheByGuild(interaction.guild, { vocalNotifyChannel:  null });
-				interaction.editReply('🔔 Notify Channel Removed successfully !');
+				interaction.editReply('🔕 Notify Channel Removed successfully !');
 			}
 			else {
 				client.getDatabase().setCacheByGuild(interaction.guild, { vocalNotifyChannel:  channelId });
-				interaction.editReply('🔕 Channel setup successfully !');
+				interaction.editReply('🔔 Channel setup successfully !');
 			}
 		}
 		else {
