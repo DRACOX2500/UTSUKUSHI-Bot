@@ -61,6 +61,7 @@ jobs:
       with:
         node-version: 16
     - run: npm ci
+    - run: npm i typescript -g
     - name: Coverage Index
       run: npm run c8-start
     - name: Coverage Test

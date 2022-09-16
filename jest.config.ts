@@ -163,10 +163,7 @@ export default {
 
 	// An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
 	testPathIgnorePatterns: [
-		'\\\\node_modules\\\\',
-		'\\\\dist\\\\',
-		'\\node_modules\\',
-		'\\dist\\',
+		'\\{1,2}(node_modules)|(dist)\\{1,2}',
 	],
 
 	// The regexp pattern or array of patterns that Jest uses to detect test files
