@@ -46,23 +46,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  coverage:
-    runs-on: ubuntu-latest
-    strategy:
-       matrix:
-         node-version: ['16.x']
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - run: npm ci
-    - run: npm i typescript
-    - name: Coverage Index
-      run: npm run c8-start
-    - name: Coverage Test
-      run: npm run c8-test
