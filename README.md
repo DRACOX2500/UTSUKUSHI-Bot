@@ -1,6 +1,6 @@
 # UTSUKUSHI BOT (Discord-Bot)
 ![](https://img.shields.io/badge/Discord%20JS-14-blueviolet)
-![](https://img.shields.io/badge/Version-1.1.0_Snapshot-success)
+![](https://img.shields.io/badge/Version-1.1.0-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
@@ -17,8 +17,8 @@ Discord Bot for my private Discord Server & friends server.
 - **[Axios](https://www.npmjs.com/package/axios)** : 0.27.2                             # Http Requests
 - **[Discord.js](https://www.npmjs.com/package/discord.js)** : 14.3.0                   # Discord API
 - **[Dotenv](https://www.npmjs.com/package/dotenv)** : 16.0.1                           # Manage Environments Variables
-- **[staticmaps](https://www.npmjs.com/package/staticmaps)** : 1.10.0                   # Get Static Map Images
-- **[ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
+- **[Staticmaps](https://www.npmjs.com/package/staticmaps)** : 1.10.0                   # Get Static Map Images
+- **[Ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
 
 ## Interaction
 ![](https://img.shields.io/badge/Slash_Commands-9-success)
