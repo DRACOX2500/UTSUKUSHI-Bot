@@ -49,7 +49,9 @@ export class BotClient extends Client {
 			process.env.DB_PASSWORD || ''
 		);
 
-		this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
+		const authDB = !!+(process.argv[2] ?? 1);
+		if (authDB)
+			this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
 
 		this.init(test);
 	}
@@ -63,8 +65,8 @@ export class BotClient extends Client {
 	}
 
 	loginBot(): void {
-		const login = process.argv[2] || 1;
-		if (login !== '0') this.login();
+		const login = !!+(process.argv[2] ?? 1);
+		if (login) this.login();
 	}
 
 	private initEvents(): void {
