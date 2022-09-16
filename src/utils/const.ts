@@ -6,6 +6,13 @@ export const LOGO_MUSIC_BLUE = 'https://emojipedia-us.s3.dualstack.us-west-1.ama
 export const LOGO_MUSIC_PURPLE = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/facebook/65/multiple-musical-notes_1f3b6.png';
 export const RED_FUEL_PUMP = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/google/313/fuel-pump_26fd.png';
 
+export const BUTTON = {
+	PLAY_RESPONSE: {
+		content:'❌ This song is not available !',
+		ephemeral: true,
+	},
+};
+
 export const API = {
 	FUEL: {
 		URL: 'https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-carburants-fichier-instantane-test-ods-copie',

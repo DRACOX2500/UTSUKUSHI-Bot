@@ -10,7 +10,7 @@ export interface ApiFuelResponse {
     cp: string;
     dep_code: string;
     ville: string;
-    services_service: string;
+    services_service: string | null;
     dep_name: string;
     epci_name: string;
     geom: [ number, number ],

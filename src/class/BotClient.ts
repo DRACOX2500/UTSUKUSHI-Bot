@@ -3,8 +3,9 @@ import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusDa
 import { Activity } from '../model/Activity';
 import { TWITCH_LINK } from '../utils/const';
 import { VocalConnection } from './VocalConnection';
-import { COMMANDS, CommandSetup } from '../commands/setup';
+import { COMMANDS, CommandSetup } from '../modules/setup';
 import { BotFirebase, FirebaseAuth } from '../Database/Firebase';
+import { BotErrorManager } from '../error/BotErrorManager';
 
 config({ path: '.env' });
 
@@ -18,7 +19,11 @@ export class BotClient extends Client {
 
 	connection: VocalConnection = new VocalConnection();
 
+	isRemoving = false;
+
 	private setup: CommandSetup = new CommandSetup();
+
+	private errorManager!: BotErrorManager;
 
 	private defaultActivity: Activity = {
 		status: ':]',
@@ -26,7 +31,7 @@ export class BotClient extends Client {
 		url: TWITCH_LINK,
 	};
 
-	constructor(test = false) {
+	constructor(readonly test = false) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -43,12 +48,16 @@ export class BotClient extends Client {
 			process.env.DB_EMAIL || '',
 			process.env.DB_PASSWORD || ''
 		);
-		this.database = new BotFirebase(this.FIREBASE_TOKEN, auth);
+
+		const authDB = !!+(process.argv[2] ?? 1);
+		if (authDB)
+			this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
 
 		this.init(test);
 	}
 
 	private init(test: boolean): void {
+		this.errorManager = new BotErrorManager(this);
 		this.initEvents();
 		this.loadCommands(!test);
 		this.setup.initCommand(this);
@@ -56,8 +65,8 @@ export class BotClient extends Client {
 	}
 
 	loginBot(): void {
-		const login = process.argv[2] || 1;
-		if (login !== '0') this.login();
+		const login = !!+(process.argv[2] ?? 1);
+		if (login) this.login();
 	}
 
 	private initEvents(): void {

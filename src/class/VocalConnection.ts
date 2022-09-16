@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice';
+import { Message } from 'discord.js';
 import { BotPlayer } from './BotPlayer';
 
 export class VocalConnection {
@@ -26,14 +27,15 @@ export class VocalConnection {
 		});
 	}
 
-	newBotPlayer(): BotPlayer | null {
+	newBotPlayer(message: Message): BotPlayer | null {
 		if (!this.connection) return null;
-		this.botPlayer = new BotPlayer(this.connection);
+		this.botPlayer = new BotPlayer(message, this.connection);
 		return this.botPlayer;
 	}
 
 	killConnection(): void {
 		this.botPlayer?.player.stop();
+		this.botPlayer = null;
 		this.connection?.destroy();
 	}
 }

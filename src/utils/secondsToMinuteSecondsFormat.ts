@@ -1,4 +1,4 @@
-export function minuteSecondsFormater(seconds: number) {
+export function minuteSecondsFormater(seconds: number): string {
 
 	const min = Math.floor(seconds / 60);
 	const sec = seconds % 60;

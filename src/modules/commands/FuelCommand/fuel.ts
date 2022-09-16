@@ -1,8 +1,8 @@
 /* eslint-disable no-shadow */
-import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
-import { EmbedFuel } from '../../class/embed/embedFuel';
-import { API } from '../../utils/const';
-import { FuelAPI } from '../../api/fuel-fr/FuelAPI';
+import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption, TextChannel } from 'discord.js';
+import { EmbedFuel } from '../../../class/embed/embedFuel';
+import { API } from '../../../utils/const';
+import { FuelAPI } from '../../../api/fuel-fr/FuelAPI';
 
 enum FuelType {
 
@@ -58,13 +58,13 @@ export class FuelCommand {
 				.setDescription('Value to search')
 				.setRequired(true));
 
-	static readonly result = async (interaction: ChatInputCommandInteraction): Promise<void> => {
+	static readonly result = async (interaction: ChatInputCommandInteraction | null): Promise<void> => {
 
-		await interaction.deferReply();
+		await interaction?.deferReply();
 
-		const fuel = <string>interaction.options.get('fuel')?.value;
-		const search = <number>interaction.options.get('search')?.value;
-		const value = <string>interaction.options.get('value')?.value;
+		const fuel = <string>interaction?.options.get('fuel')?.value ?? 'Gazole';
+		const search = <number>interaction?.options.get('search')?.value ?? 1;
+		const value = <string>interaction?.options.get('value')?.value ?? 'Paris';
 
 		const api = new FuelAPI();
 
@@ -97,15 +97,27 @@ export class FuelCommand {
 		}
 
 		const response = await api.getReponse();
+		if (!interaction) return;
+
 		if (typeof response === 'string' || response.length === 0) {
 			interaction.editReply(API.FUEL.ERROR);
 			return;
 		}
 
-		const fuelEmbed = new EmbedFuel(response, fuel);
-		const embeds = fuelEmbed.getEmbed();
+		const channel = <TextChannel>interaction?.channel;
 
-		interaction.editReply({ embeds: embeds });
+		let i = 0;
+		for (const data of response) {
+
+			const fuelEmbed = new EmbedFuel(data, fuel);
+			const embed = fuelEmbed.getEmbed(i);
+			const image = await fuelEmbed.getImages(i);
+
+			channel.send({ embeds: [embed], files: [image] });
+
+			i++;
+		}
+		interaction.editReply(`⛽ ${i} fuel source ${ i > 1 ? 'have' : 'has'} been found !`);
 	};
 
 }

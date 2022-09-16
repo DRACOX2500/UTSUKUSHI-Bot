@@ -12,11 +12,11 @@ export enum CommandSlash {
     Fuel = 'fuel'
 }
 
-export enum EmbedPlayerCommand {
+export enum CommandButton {
 
-    VolumeUp = 'vup',
     VolumeDown = 'vdown',
     Stop = 'stop',
     Pause = 'pause',
     Skip = 'skip',
+    VolumeUp = 'vup',
 }

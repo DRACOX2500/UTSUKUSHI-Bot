@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder } from 'discord.js';
-import { BotClient } from '../../class/BotClient';
-import { YtbStream } from '../../class/ytbStream';
+import { BotClient } from '../../../class/BotClient';
+import { YtbStream } from '../../../class/ytbStream';
 
 const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
 
@@ -26,6 +26,6 @@ export class SnoringCommand {
 		});
 
 		client.connection.join(channel);
-		client.connection.newBotPlayer()?.playMusic(stream.get(), true);
+		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get(), true);
 	};
 }

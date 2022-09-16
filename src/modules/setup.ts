@@ -1,17 +1,20 @@
 /* eslint-disable no-case-declarations */
-import { bold, italic, EmbedBuilder, Interaction, ChatInputCommandInteraction, ButtonInteraction, InteractionResponse, CacheType, AutocompleteInteraction, TextBasedChannel, VoiceChannel, Guild, ChannelType } from 'discord.js';
-import { PingCommand } from './PingCommand/ping';
-import { BigBurgerCommand } from './BigBurgerCommand/big-burger';
-import { GitCommand } from './GitCommand/git';
-import { SnoringCommand } from './SnoringCommand/snoring';
-import { PlayCommand } from './PlayCommand/play';
-import { ActivityCommand } from './ActivityCommand/activity';
-import { CommandSlash } from './enum';
-import { BotClient } from 'src/class/BotClient';
-import { CacheCommand } from './CacheCommand/cache';
-import { EmbedNotify } from '../class/embed/embedNotify';
-import { NotifyCommand } from './NotifyCommand/notify';
-import { FuelCommand } from './FuelCommand/fuel';
+import { Interaction, ChatInputCommandInteraction, ButtonInteraction, CacheType, AutocompleteInteraction, ChannelType, ContextMenuCommandInteraction } from 'discord.js';
+import { PingCommand } from './commands/PingCommand/ping';
+import { BigBurgerCommand } from './commands/BigBurgerCommand/big-burger';
+import { GitCommand } from './commands/GitCommand/git';
+import { SnoringCommand } from './commands/SnoringCommand/snoring';
+import { PlayCommand } from './commands/PlayCommand/play';
+import { ActivityCommand } from './commands/ActivityCommand/activity';
+import { CommandButton, CommandSlash } from './enum';
+import { BotClient } from '../class/BotClient';
+import { CacheCommand } from './commands/CacheCommand/cache';
+import { NotifyCommand } from './commands/NotifyCommand/notify';
+import { FuelCommand } from './commands/FuelCommand/fuel';
+import { NotifyEvent } from './events/NotifyEvent';
+import { DeleteContext } from './contexts/DeleteContext';
+import { ButtonPause } from './button/play/ButtonPause';
+import { ButtonVolume } from './button/play/ButtonVolumeDown';
 
 export class CommandSetup {
 
@@ -20,13 +23,7 @@ export class CommandSetup {
 
 		case CommandSlash.Ping :
 
-			await interaction.reply(
-				italic(
-					bold(
-						PingCommand.result(client)
-					)
-				)
-			);
+			PingCommand.result(interaction, client);
 			break;
 		case CommandSlash.BigBurger : {
 
@@ -64,55 +61,34 @@ export class CommandSetup {
 		}
 	}
 
-	private async interactionButton(interaction: ButtonInteraction, client: BotClient): Promise<InteractionResponse<boolean> | undefined> {
+	private async interactionButton(interaction: ButtonInteraction, client: BotClient): Promise<void> {
 		switch (interaction.customId) {
 
-		case 'vdown':
-			if (!client.connection.botPlayer?.resource || interaction.message.embeds[0].data.fields === undefined) return interaction.reply('❌ No Song available !');
-			client.connection.botPlayer.volumeDown();
+		case CommandButton.VolumeDown :
 
-			interaction.message.embeds[0].data.fields[5].value = (client.connection.botPlayer.getVolume() * 100) + '%';
-
-			const vDownEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vDownEmbed] });
-
-			await interaction.deferUpdate();
+			await new ButtonVolume(interaction, client).getDownEffect();
 			break;
-		case 'stop':
+		case CommandButton.Stop :
 
 			client.connection.killConnection();
 			await interaction.deferUpdate();
 			break;
-		case 'pause':
-			if (!client.connection.botPlayer) return interaction.reply('❌ No Song available !');
+		case CommandButton.Pause :
 
-			const playerStatus = client.connection.botPlayer.player.state.status;
-			if (playerStatus === 'paused')
-				client.connection.botPlayer.player.unpause();
-			else if (playerStatus === 'playing')
-				client.connection.botPlayer.player.pause();
-
-			await interaction.deferUpdate();
+			await new ButtonPause(interaction, client).getEffect();
 			break;
-		case 'skip':
+		case CommandButton.Skip :
 
 			// TODO : skip command
 			break;
-		case 'vup':
-			if (!client.connection.botPlayer?.resource || interaction.message.embeds[0].data.fields === undefined) return interaction.reply('❌ No Song available !');
-			client.connection.botPlayer.volumeUp();
+		case CommandButton.VolumeUp :
 
-			interaction.message.embeds[0].data.fields[5].value = (client.connection.botPlayer.getVolume() * 100) + '%';
-
-			const vUpEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vUpEmbed] });
-
-			await interaction.deferUpdate();
+			await new ButtonVolume(interaction, client).getUpEffect();
 			break;
 		}
 	}
 
-	async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
+	private async interactionAutocomplete(interaction: AutocompleteInteraction<CacheType>, client: BotClient) {
 		if (interaction.commandName === CommandSlash.Play) {
 			const focusedOption = interaction.options.getFocused(true);
 			let choices: string[] | undefined;
@@ -146,6 +122,12 @@ export class CommandSetup {
 		}
 	}
 
+	private async interactionContext(interaction: ContextMenuCommandInteraction, client: BotClient): Promise<void> {
+
+		if (interaction.isMessageContextMenuCommand())
+			DeleteContext.result(interaction, client);
+	}
+
 	initCommand(client: BotClient) {
 		client.on('interactionCreate', async (interaction: Interaction<CacheType>) => {
 
@@ -160,20 +142,12 @@ export class CommandSetup {
 			else if (interaction.isAutocomplete()) {
 				await this.interactionAutocomplete(interaction, client);
 			}
+			else if (interaction.isContextMenuCommand()) {
+				console.log('[' + interaction.user.username + '] use constext : ' + interaction.commandName);
+				await this.interactionContext(interaction, client);
+			}
 
 		});
-	}
-
-	async notifyGuild(client: BotClient, user: string, channelId: string, guild: Guild): Promise<void> {
-		const data = await client.getDatabase().getCacheByGuild(guild);
-		if (data?.vocalNotifyChannel) {
-			const channelNotify: TextBasedChannel = await guild.channels.fetch(data.vocalNotifyChannel).then((result) => {return <TextBasedChannel>result; });
-			const userJoin = (await guild.members.fetch(user)).user;
-			const channel = await guild.channels.fetch(channelId).then((result) => {return <VoiceChannel>result; });
-			const embedNotify = new EmbedNotify(userJoin, channel);
-			const embed = embedNotify.getEmbed();
-			channelNotify?.send({ embeds: [embed] });
-		}
 	}
 
 	initBotEvents(client: BotClient) {
@@ -191,7 +165,7 @@ export class CommandSetup {
 				const channelId = <string>newState.channelId;
 				const guild = newState.guild;
 
-				this.notifyGuild(client, user, channelId, guild);
+				new NotifyEvent().notifyGuild(client, user, channelId, guild);
 
 			}
 			if (newState.channelId === null) {
@@ -211,4 +185,5 @@ export const COMMANDS = [
 	CacheCommand.slash,
 	NotifyCommand.slash,
 	FuelCommand.slash,
+	DeleteContext.context,
 ];

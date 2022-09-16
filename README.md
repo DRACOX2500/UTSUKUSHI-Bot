@@ -1,42 +1,46 @@
-# Discord-Bot
+# UTSUKUSHI BOT (Discord-Bot)
 ![](https://img.shields.io/badge/Discord%20JS-14-blueviolet)
-![](https://img.shields.io/badge/Version-1.1.0_Snapshot-success)
+![](https://img.shields.io/badge/Version-1.1.0-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
 ![](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)
 
-My first Discord Bot for my private Discord Server & friends server.
+Discord Bot for my private Discord Server & friends server.
 
+![](https://img.shields.io/badge/JS-v1.0.0-323330?logo=javascript&logoColor=F7DF1E)
+![](https://img.shields.io/badge/TS-v1.1.0+-323330?logo=typescript&logoColor=007ACC)
 
 ## Dependency
+- **[@Discordjs/voice](https://www.npmjs.com/package/@discordjs/voice)** : 0.11.0       # Manage Voice Channel Connection and Audio Player
+- **[@distube/ytdl-core](https://www.npmjs.com/package/@distube/ytdl-core)** : 4.11.1   # Youtube Downloader
 - **[Axios](https://www.npmjs.com/package/axios)** : 0.27.2                             # Http Requests
 - **[Discord.js](https://www.npmjs.com/package/discord.js)** : 14.3.0                   # Discord API
 - **[Dotenv](https://www.npmjs.com/package/dotenv)** : 16.0.1                           # Manage Environments Variables
-- **[@Discordjs/voice](https://www.npmjs.com/package/@discordjs/voice)** : 0.11.0       # Manage Voice Channel Connection and Audio Player
-- **[@distube/ytdl-core](https://www.npmjs.com/package/@distube/ytdl-core)** : 4.11.1                     # Youtube Downloader
-- **[ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
+- **[Staticmaps](https://www.npmjs.com/package/staticmaps)** : 1.10.0                   # Get Static Map Images
+- **[Ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
 
-## Command
-![](https://img.shields.io/badge/Commands-5-success)
-### **/big-burger**: generate a random burger picture.
-### **/git**: get the URL GitHub repo
-### **/snoring**: bot come in your voice channel and snores very loudly
-### **/play *song:url_or_keywords***: search music by URL or Keywords and play it in your voice channel
-![](./.github/readme/play.png)
+## Interaction
+![](https://img.shields.io/badge/Slash_Commands-9-success)
+![](https://img.shields.io/badge/Context_Menus-1-success)
 
-*Embed inspired from [Scathach Bot](https://github.com/sinkaroid/scathachhh) !*
+### Commands
 
-Buttons menu :
+Commands détails available in **[Commands.md](./.github/readme/commands.md)**
 
-- **Volume up**: Increase audio player volume
-- **Stop**: Stops the audio player
-- **Pause/Resume**: Pause or Resume audio player
-- **Skip**: ❌ Disabled
-- **Volume Down**: Lower the volume of the audio player
+### Context Menus
 
-### **/activity *type: activity_type* *status: text***: change bot activity
-     PLAYING / LISTENING / STREAMING / COMPETING / WATCHING
+#### What is a context menu ?
+
+*"Context Menus are application commands which appear when right clicking or tapping a user or a message, in the Apps submenu."*
+
+source: [discordjs.guide](https://discordjs.guide/interactions/context-menus.html)
+
+#### Delete Up To This
+
+![](./.github/readme/ContextMenu.png)
+
+Select a message, right click and select this options to delete all messages until selected message (selected message include)
 
 ## CI
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
-import { BotClient } from 'src/class/BotClient';
+import { ChatInputCommandInteraction, InteractionResponse, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
+import { BotClient } from '../../../class/BotClient';
 
 enum CacheType {
     Clear = 0,
@@ -19,11 +19,11 @@ export class CacheCommand {
 				)
 				.setRequired(true));
 
-	static readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient) => {
+	static readonly result = async (interaction: ChatInputCommandInteraction | null, client: BotClient): Promise<InteractionResponse | void> => {
 
-		const code = <number>interaction.options.get('action')?.value;
+		const code = (<number>interaction?.options.get('action')?.value) ?? -1;
 
-		if (code === 0) {
+		if (code === 0 && interaction) {
 			client.getDatabase().userDataCache.clean(interaction.user);
 			const clearBoolean = await client.getDatabase().resetUserData(interaction.user);
 			if (clearBoolean)
