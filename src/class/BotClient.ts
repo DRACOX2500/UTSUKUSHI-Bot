@@ -31,7 +31,7 @@ export class BotClient extends Client {
 		url: TWITCH_LINK,
 	};
 
-	constructor(test = false) {
+	constructor(readonly test = false) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -48,7 +48,8 @@ export class BotClient extends Client {
 			process.env.DB_EMAIL || '',
 			process.env.DB_PASSWORD || ''
 		);
-		this.database = new BotFirebase(this.FIREBASE_TOKEN, auth);
+
+		this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
 
 		this.init(test);
 	}

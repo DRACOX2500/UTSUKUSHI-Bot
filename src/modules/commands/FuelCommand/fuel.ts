@@ -58,13 +58,13 @@ export class FuelCommand {
 				.setDescription('Value to search')
 				.setRequired(true));
 
-	static readonly result = async (interaction: ChatInputCommandInteraction): Promise<void> => {
+	static readonly result = async (interaction: ChatInputCommandInteraction | null): Promise<void> => {
 
-		await interaction.deferReply();
+		await interaction?.deferReply();
 
-		const fuel = <string>interaction.options.get('fuel')?.value;
-		const search = <number>interaction.options.get('search')?.value;
-		const value = <string>interaction.options.get('value')?.value;
+		const fuel = <string>interaction?.options.get('fuel')?.value ?? 'Gazole';
+		const search = <number>interaction?.options.get('search')?.value ?? 1;
+		const value = <string>interaction?.options.get('value')?.value ?? 'Paris';
 
 		const api = new FuelAPI();
 
@@ -97,12 +97,14 @@ export class FuelCommand {
 		}
 
 		const response = await api.getReponse();
+		if (!interaction) return;
+
 		if (typeof response === 'string' || response.length === 0) {
 			interaction.editReply(API.FUEL.ERROR);
 			return;
 		}
 
-		const channel = <TextChannel>interaction.channel;
+		const channel = <TextChannel>interaction?.channel;
 
 		let i = 0;
 		for (const data of response) {

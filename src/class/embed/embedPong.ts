@@ -14,9 +14,9 @@ export class EmbedPong {
 	private timestamp: number;
 	private wsPing: number;
 
-	constructor(message: Message, interaction: ChatInputCommandInteraction, client: BotClient) {
+	constructor(message: Message | null, interaction: ChatInputCommandInteraction | null, client: BotClient) {
 
-		this.timestamp = this.getPongLatency(message.createdTimestamp, interaction.createdTimestamp);
+		this.timestamp = this.getPongLatency(message?.createdTimestamp ?? 0, interaction?.createdTimestamp ?? 0);
 		this.wsPing = this.getWsPing(client);
 	}
 

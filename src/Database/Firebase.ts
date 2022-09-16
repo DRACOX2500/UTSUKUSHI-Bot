@@ -62,7 +62,7 @@ export class BotFirebase {
 
 	userDataCache = new FirebaseCache();
 
-	constructor(key: string, firebaseAuth: FirebaseAuth) {
+	constructor(key: string, firebaseAuth: FirebaseAuth, test: boolean) {
 		this.firebaseConfig.apiKey = key;
 
 		// Initialize Firebase
@@ -75,7 +75,7 @@ export class BotFirebase {
 		)
 			.then((userCredential: UserCredential) => {
 				this.user = userCredential.user;
-				console.log('Connect to Firebase !');
+				if (!test) console.log('Connect to Firebase !');
 			})
 			.catch((error) => {
 				console.error(error);
