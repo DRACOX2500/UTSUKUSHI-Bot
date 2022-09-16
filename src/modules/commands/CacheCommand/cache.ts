@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { ChatInputCommandInteraction, InteractionResponse, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
-import { BotClient } from 'src/class/BotClient';
+import { BotClient } from '../../../class/BotClient';
 
 enum CacheType {
     Clear = 0,

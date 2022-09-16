@@ -3,8 +3,8 @@ import { FirebaseApp, initializeApp } from 'firebase/app';
 import { doc, Firestore, getDoc, getFirestore, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { Auth, getAuth, signInWithEmailAndPassword, User, UserCredential } from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
-import { BotCacheGlobal, BotCacheGuild, BotCacheGuildTypes } from 'src/model/BotCache';
-import { BotUserData, BotUserDataTypes } from 'src/model/BotUserData';
+import { BotCacheGlobal, BotCacheGuild, BotCacheGuildTypes } from '../model/BotCache';
+import { BotUserData, BotUserDataTypes } from '../model/BotUserData';
 import { initBotUserData } from '../model/BotUserData';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

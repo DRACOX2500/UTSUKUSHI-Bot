@@ -7,7 +7,7 @@ import { SnoringCommand } from './commands/SnoringCommand/snoring';
 import { PlayCommand } from './commands/PlayCommand/play';
 import { ActivityCommand } from './commands/ActivityCommand/activity';
 import { CommandButton, CommandSlash } from './enum';
-import { BotClient } from 'src/class/BotClient';
+import { BotClient } from '../class/BotClient';
 import { CacheCommand } from './commands/CacheCommand/cache';
 import { NotifyCommand } from './commands/NotifyCommand/notify';
 import { FuelCommand } from './commands/FuelCommand/fuel';
