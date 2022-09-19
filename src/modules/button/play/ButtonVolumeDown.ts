@@ -16,7 +16,8 @@ export class ButtonVolume {
 	private isNotOK() {
 		return !this.client.connection.botPlayer?.resource ||
 		this.interaction.message.embeds[0].data.fields === undefined ||
-		this.interaction.message.id !== this.client.connection.botPlayer?.origin.id;
+		(this.client.connection.botPlayer?.origin &&
+		this.interaction.message.id !== this.client.connection.botPlayer?.origin?.id);
 	}
 
 	async getDownEffect(): Promise<InteractionResponse | void> {
