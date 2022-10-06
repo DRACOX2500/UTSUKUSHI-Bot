@@ -15,15 +15,15 @@ export class SnoringCommand implements UtsukushiSlashCommand {
 	readonly result = async (interaction: any, client: BotClient): Promise<void> => {
 
 		const channel = interaction.member.voice.channel;
-		if (!channel) return interaction.reply('🚫 I\'m not tired !');
+		if (!channel) return interaction.reply({ content: '🚫 I\'m not tired !', ephemeral: true });
 
-		await interaction.deferReply();
+		await interaction.deferReply({ ephemeral: true });
 
 		const stream = new YtbStream();
 		await stream.init(url);
 
 		stream.setInfoEvent(() => {
-			return interaction.editReply('💤💤💤');
+			return interaction.editReply({ content: '💤💤💤' });
 		});
 
 		client.connection.join(channel);
