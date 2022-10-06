@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DataEconomieGouvResponse, DataEconomieGouvResponseRecord } from '../../model/DataEconomieGouv';
+import { DataEconomieGouvResponse, DataEconomieGouvResponseRecord } from '../../models/DataEconomieGouv';
 import { API } from '../../utils/const';
 
 export class FuelAPI {

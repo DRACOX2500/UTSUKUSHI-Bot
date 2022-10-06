@@ -4,7 +4,7 @@
 import { config } from 'dotenv';
 import ytdl from '@distube/ytdl-core';
 import ytsr from 'ytsr';
-import { StreamSource } from '../model/StreamSource';
+import { StreamSource } from '../models/StreamSource';
 import { YOUTUBE_VIDEO_LINK_REGEX } from '../utils/const';
 
 config({ path: '.env' });

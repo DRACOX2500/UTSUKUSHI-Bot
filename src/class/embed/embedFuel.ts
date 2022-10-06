@@ -1,6 +1,6 @@
 import { AttachmentBuilder, EmbedBuilder, time } from 'discord.js';
 import { RED_FUEL_PUMP } from '../../utils/const';
-import { DataEconomieGouvResponseRecord } from '../../model/DataEconomieGouv';
+import { DataEconomieGouvResponseRecord } from '../../models/DataEconomieGouv';
 import StaticMaps from 'staticmaps';
 
 export class EmbedFuel {

@@ -3,7 +3,7 @@ import { SlashCommandBuilder, InteractionResponse, Message, ButtonInteraction } 
 import { EmbedPlayer } from '../../../class/embed/embedPlayer';
 import { BotClient } from '../../../class/BotClient';
 import { YtbStream } from '../../../class/ytbStream';
-import { BotCacheGuild } from '../../../model/BotCache';
+import { BotCacheGuild } from '../../../models/BotCache';
 
 export class PlayCommand {
 

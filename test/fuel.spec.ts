@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmbedFuel } from '../src/class/embed/embedFuel';
-import { DataEconomieGouvResponseRecord } from '../src/model/DataEconomieGouv';
+import { DataEconomieGouvResponseRecord } from '../src/models/DataEconomieGouv';
 import { FuelAPI } from '../src/api/fuel-fr/FuelAPI';
 import { FuelCommand } from '../src/modules/commands/FuelCommand/fuel';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
