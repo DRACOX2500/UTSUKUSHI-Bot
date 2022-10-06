@@ -28,9 +28,9 @@ export class CacheCommand implements UtsukushiSlashCommand {
 			client.getDatabase().userDataCache.clean(interaction.user);
 			const clearBoolean = await client.getDatabase().resetUserData(interaction.user);
 			if (clearBoolean)
-				await interaction.reply('☑️ Cache Clear !');
+				await interaction.reply({ content: '☑️ Cache Clear !', ephemeral: true });
 			else
-				await interaction.reply('❌ Cache Clear Failed !');
+				await interaction.reply({ content: '❌ Cache Clear Failed !', ephemeral: true });
 		}
 
 	};

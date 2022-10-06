@@ -36,7 +36,7 @@ export class ActivityCommand implements UtsukushiSlashCommand {
 		client.setActivity(newActivity);
 
 		client.getDatabase().setCacheGlobal({ activity: newActivity });
-		interaction.reply('🤖 Bot activity has been change !');
+		interaction.reply({ content: '🤖 Bot activity has been change !', ephemeral: true });
 	};
 }
 

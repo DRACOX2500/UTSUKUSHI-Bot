@@ -61,7 +61,7 @@ export class FuelCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (interaction: ChatInputCommandInteraction): Promise<void> => {
 
-		await interaction?.deferReply();
+		await interaction.deferReply();
 
 		const fuel = <string>interaction?.options.get('fuel')?.value ?? 'Gazole';
 		const search = <number>interaction?.options.get('search')?.value ?? 1;
@@ -98,7 +98,6 @@ export class FuelCommand implements UtsukushiSlashCommand {
 		}
 
 		const response = await api.getReponse();
-		if (!interaction) return;
 
 		if (typeof response === 'string' || response.length === 0) {
 			interaction.editReply(API.FUEL.ERROR);
