@@ -2,10 +2,11 @@ import { SlashCommandBuilder, ActivityType, SlashCommandIntegerOption, ChatInput
 import { BotClient } from 'src/BotClient';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
+import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
 
-export class ActivityCommand {
+export class ActivityCommand implements UtsukushiSlashCommand {
 
-	static readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('activity')
 		.setDescription('Change bot activity 🤖!')
 		.addIntegerOption((option : SlashCommandIntegerOption) =>
@@ -24,8 +25,7 @@ export class ActivityCommand {
 				.setDescription('Statis of bot activity')
 				.setRequired(true));
 
-	static readonly result = (interaction: ChatInputCommandInteraction | null, client: BotClient): string => {
-		if (!interaction) return '❌🤖 Bot activity not change !';
+	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient): Promise<void> => {
 
 		const newActivity: Activity = {
 			status: interaction.options.get('status')?.value?.toString() || 'Test',
@@ -36,6 +36,8 @@ export class ActivityCommand {
 		client.setActivity(newActivity);
 
 		client.getDatabase().setCacheGlobal({ activity: newActivity });
-		return '🤖 Bot activity has been change !';
+		interaction.reply('🤖 Bot activity has been change !');
 	};
 }
+
+export const command = new ActivityCommand();

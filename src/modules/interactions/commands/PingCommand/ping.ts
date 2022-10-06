@@ -1,20 +1,26 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, InteractionResponse } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { EmbedPong } from '@modules/system/embeds/embedPong';
+import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
 
-export class PingCommand {
+export class PingCommand implements UtsukushiSlashCommand {
 
-	static readonly slash: SlashCommandBuilder = new SlashCommandBuilder()
+	readonly slash: SlashCommandBuilder = new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Replies with Pong 🏓!');
 
-	static readonly result = async (interaction: ChatInputCommandInteraction | null, client: BotClient | null): Promise<InteractionResponse | number | void> => {
-		if (!client) return interaction?.reply('‼️🤖 No Client found !') ?? 1;
+	readonly result = async (interaction: ChatInputCommandInteraction, client?: BotClient): Promise<void> => {
+		if (!client) {
+			interaction.reply('‼️🤖 No Client found !');
+			return;
+		}
 
-		const sent = await interaction?.reply({ content: 'Pinging...', fetchReply: true }) ?? null;
+		const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true }) ?? null;
 
 		const embedPong = new EmbedPong(sent, interaction, client);
-		interaction?.editReply({ content: '', embeds: [embedPong.getEmbed()] });
+		interaction.editReply({ content: '', embeds: [embedPong.getEmbed()] });
 	};
 
 }
+
+export const command = new PingCommand();

@@ -12,45 +12,37 @@ import {
 	ChannelType,
 	ContextMenuCommandInteraction,
 	Collection,
-	SlashCommandBuilder,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { PingCommand } from './commands/PingCommand/ping';
-import { BigBurgerCommand } from './commands/BigBurgerCommand/big-burger';
-import { GitCommand } from './commands/GitCommand/git';
-import { SnoringCommand } from './commands/SnoringCommand/snoring';
-import { PlayCommand } from './commands/PlayCommand/play';
-import { ActivityCommand } from './commands/ActivityCommand/activity';
 import { CommandButton, CommandSlash } from './enum';
-
-import { CacheCommand } from './commands/CacheCommand/cache';
-import { NotifyCommand } from './commands/NotifyCommand/notify';
-import { FuelCommand } from './commands/FuelCommand/fuel';
 import { NotifyEvent } from './events/NotifyEvent';
 import { DeleteContext } from './contexts/DeleteContext';
 import { ButtonPause } from './button/play/ButtonPause';
 import { ButtonVolume } from './button/play/ButtonVolumeDown';
+import { UtsukushiSlashCommand } from 'src/models/UtsukushiSlashCommand';
 
 export class CommandManager {
-	commands!: Collection<string, SlashCommandBuilder>;
+	commands!: Collection<string, UtsukushiSlashCommand>;
 
 	constructor(private readonly client: BotClient) {
 		this.commands = new Collection();
+		this.loadSlashCommand();
 	}
 
 	private loadSlashCommand() {
+		const commandFiles: string[][] = [];
 		const commandsPath = path.join(__dirname, 'commands');
-		const commandFiles = fs.readdirSync(commandsPath);
-		// .filter((file) => file.endsWith('.ts'));
+		const commandFolders = fs.readdirSync(commandsPath);
+		commandFolders.forEach(
+			(folder) => commandFiles.push(fs.readdirSync(`${commandsPath}\\${folder}`)
+				.map(file => `${commandsPath}\\${folder}\\${file}`)
+				.filter(file => file.endsWith('.js')))
+		);
 
-		console.log(commandFiles);
+		for (const file of commandFiles.flat()) {
+			const command: UtsukushiSlashCommand = require(file).command;
 
-		for (const file of commandFiles) {
-			const filePath = path.join(commandsPath, file);
-			const command = require(filePath);
-			// Set a new item in the Collection
-			// With the key as the command name and the value as the exported module
-			this.client.commands.set(command.data.name, command);
+			this.commands.set(command.slash.name, command);
 		}
 	}
 
@@ -58,37 +50,55 @@ export class CommandManager {
 		interaction: ChatInputCommandInteraction,
 		client: BotClient
 	): Promise<void> {
-		switch (interaction.commandName) {
-		case CommandSlash.Ping:
-			PingCommand.result(interaction, client);
-			break;
-		case CommandSlash.BigBurger: {
-			await BigBurgerCommand.result(interaction);
-			break;
+
+		const command = this.commands.get(interaction.commandName);
+
+		if (!command) return;
+
+		try {
+			await Promise.resolve(command.result(interaction, client));
 		}
-		case CommandSlash.Git:
-			await interaction.reply(GitCommand.result());
-			break;
-		case CommandSlash.Snoring:
-			await SnoringCommand.result(interaction, client);
-			break;
-		case CommandSlash.Play:
-			await PlayCommand.result(interaction, client);
-			break;
-		case CommandSlash.Activity:
-			await interaction.reply(ActivityCommand.result(interaction, client));
-			break;
-		case CommandSlash.Cache:
-			await CacheCommand.result(interaction, client);
-			break;
-		case CommandSlash.Notify:
-			NotifyCommand.result(interaction, client);
-			break;
-		case CommandSlash.Fuel:
-			FuelCommand.result(interaction);
-			break;
+		catch (error) {
+			console.error(error);
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	}
+
+	// private async interactionChatInput(
+	// 	interaction: ChatInputCommandInteraction,
+	// 	client: BotClient
+	// ): Promise<void> {
+	// 	switch (interaction.commandName) {
+	// 	case CommandSlash.Ping:
+	// 		PingCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.BigBurger: {
+	// 		await BigBurgerCommand.result(interaction);
+	// 		break;
+	// 	}
+	// 	case CommandSlash.Git:
+	// 		await interaction.reply(GitCommand.result());
+	// 		break;
+	// 	case CommandSlash.Snoring:
+	// 		await SnoringCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.Play:
+	// 		await PlayCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.Activity:
+	// 		await ActivityCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.Cache:
+	// 		await CacheCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.Notify:
+	// 		NotifyCommand.result(interaction, client);
+	// 		break;
+	// 	case CommandSlash.Fuel:
+	// 		FuelCommand.result(interaction);
+	// 		break;
+	// 	}
+	// }
 
 	private async interactionButton(
 		interaction: ButtonInteraction,
@@ -237,16 +247,3 @@ export class CommandManager {
 		});
 	}
 }
-
-export const COMMANDS = [
-	PingCommand.slash,
-	BigBurgerCommand.slash,
-	GitCommand.slash,
-	SnoringCommand.slash,
-	PlayCommand.slash,
-	ActivityCommand.slash,
-	CacheCommand.slash,
-	NotifyCommand.slash,
-	FuelCommand.slash,
-	DeleteContext.context,
-];

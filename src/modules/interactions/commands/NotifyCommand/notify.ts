@@ -1,9 +1,10 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionsBitField } from 'discord.js';
 import { BotClient } from 'src/BotClient';
+import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
 
-export class NotifyCommand {
+export class NotifyCommand implements UtsukushiSlashCommand {
 
-	static readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('notify')
 		.setDescription('Notify when someone join a voice channel 🔔!')
 		.addStringOption(option =>
@@ -12,7 +13,7 @@ export class NotifyCommand {
 				.setAutocomplete(true)
 				.setRequired(true));
 
-	static readonly result = async (interaction:ChatInputCommandInteraction, client: BotClient): Promise<void> => {
+	readonly result = async (interaction:ChatInputCommandInteraction, client: BotClient): Promise<void> => {
 
 		const m = <GuildMember>interaction.member;
 		if (!m.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
@@ -43,3 +44,5 @@ export class NotifyCommand {
 	};
 
 }
+
+export const command = new NotifyCommand();

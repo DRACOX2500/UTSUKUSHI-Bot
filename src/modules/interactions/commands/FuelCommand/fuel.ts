@@ -3,6 +3,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOp
 import { EmbedFuel } from '@modules/system/embeds/embedFuel';
 import { API } from '@utils/const';
 import { FuelAPI } from '@api/fuel-fr/FuelAPI';
+import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
 
 enum FuelType {
 
@@ -24,9 +25,9 @@ enum SearchType {
     REGION = 5,
 }
 
-export class FuelCommand {
+export class FuelCommand implements UtsukushiSlashCommand {
 
-	static readonly slash:Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly slash:Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('fuel')
 		.setDescription('Get some data about fuel (Only in France) 🚗!')
 		.addStringOption((option : SlashCommandStringOption) =>
@@ -58,7 +59,7 @@ export class FuelCommand {
 				.setDescription('Value to search')
 				.setRequired(true));
 
-	static readonly result = async (interaction: ChatInputCommandInteraction | null): Promise<void> => {
+	readonly result = async (interaction: ChatInputCommandInteraction): Promise<void> => {
 
 		await interaction?.deferReply();
 
@@ -121,3 +122,5 @@ export class FuelCommand {
 	};
 
 }
+
+export const command = new FuelCommand();

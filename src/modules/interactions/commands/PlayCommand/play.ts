@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SlashCommandBuilder, InteractionResponse, Message, ButtonInteraction } from 'discord.js';
+import { SlashCommandBuilder, InteractionResponse, ButtonInteraction } from 'discord.js';
 import { EmbedPlayer } from '@modules/system/embeds/embedPlayer';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
 import { BotCacheGuild } from '@models/BotCache';
+import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
 
-export class PlayCommand {
+export class PlayCommand implements UtsukushiSlashCommand {
 
-	static readonly slash = new SlashCommandBuilder()
+	readonly slash = new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Play Music 🎵!')
 		.addStringOption(option =>
@@ -18,7 +19,7 @@ export class PlayCommand {
 			option.setName('optimization')
 				.setDescription('Optimize the player\'s performance but disabled volume settings'));
 
-	static readonly result = async (interaction: any, client: BotClient): Promise<Message<boolean> | InteractionResponse<boolean> | void> => {
+	readonly result = async (interaction: any, client: BotClient): Promise<void> => {
 		if (!interaction || !interaction.member) return;
 
 		const VoiceChannel = interaction.member.voice.channel;
@@ -71,3 +72,5 @@ export class PlayCommand {
 		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get());
 	};
 }
+
+export const command = new PlayCommand();

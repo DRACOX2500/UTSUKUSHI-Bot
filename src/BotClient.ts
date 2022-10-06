@@ -1,11 +1,12 @@
 import { config } from 'dotenv';
-import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData } from 'discord.js';
+import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder } from 'discord.js';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
-import { COMMANDS, CommandManager } from '@modules/interactions/CommandManager';
+import { CommandManager } from '@modules/interactions/CommandManager';
 import { BotFirebase, FirebaseAuth } from '@database/Firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
+import { UtsukushiSlashCommand } from './models/UtsukushiSlashCommand';
 
 config({ path: '.env' });
 
@@ -21,7 +22,7 @@ export class BotClient extends Client {
 
 	isRemoving = false;
 
-	private commandManager: CommandManager = new CommandManager(this);
+	private commandManager!: CommandManager;
 
 	private errorManager!: BotErrorManager;
 
@@ -59,7 +60,9 @@ export class BotClient extends Client {
 	private init(test: boolean): void {
 		this.errorManager = new BotErrorManager(this);
 		this.initEvents();
-		this.loadCommands(!test);
+
+		this.commandManager = new CommandManager(this);
+		this.deployCommands(!test);
 		this.commandManager.initCommand(this);
 		this.commandManager.initBotEvents(this);
 	}
@@ -83,16 +86,23 @@ export class BotClient extends Client {
 		this.on('warn', console.warn);
 	}
 
-	protected async loadCommands(log: boolean): Promise<number> {
+	protected async deployCommands(log: boolean): Promise<number> {
 
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
+
+		const slashCommands: SlashCommandBuilder[] = [];
+
+		for (const iterator of this.commandManager.commands) {
+			const value = this.commandManager.commands.get(iterator[0]);
+			if (value) slashCommands.push(<SlashCommandBuilder>value.slash);
+		}
 
 		return (async (): Promise<number> => {
 			try {
 				if (log)
 					console.log('Started refreshing application (/) commands.');
 
-				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: COMMANDS });
+				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: slashCommands });
 
 				if (log)
 					console.log('Successfully reloaded application (/) commands.');
