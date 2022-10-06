@@ -1,5 +1,5 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder, GuildMember, Message, MessageContextMenuCommandInteraction, MessageManager, PermissionsBitField, TextBasedChannel } from 'discord.js';
-import { BotClient } from '../../class/BotClient';
+import { BotClient } from '@class/BotClient';
 
 export class DeleteContext {
 	static readonly context: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, InteractionResponse } from 'discord.js';
-import { BotClient } from '../../../class/BotClient';
-import { EmbedPong } from '../../../class/embed/embedPong';
+import { BotClient } from '@class/BotClient';
+import { EmbedPong } from '@class/embed/embedPong';
 
 export class PingCommand {
 

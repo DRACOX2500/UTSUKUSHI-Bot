@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import { ChatInputCommandInteraction, EmbedBuilder, Message } from 'discord.js';
-import { getRandomInt } from '../../utils/getRandomInt';
-import { BotClient } from '../BotClient';
+import { getRandomInt } from '@utils/getRandomInt';
+import { BotClient } from '@class/BotClient';
 
 enum Color {
     Green = 0x41DF19,

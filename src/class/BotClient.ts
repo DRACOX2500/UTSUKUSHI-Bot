@@ -1,11 +1,11 @@
 import { config } from 'dotenv';
 import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData } from 'discord.js';
-import { Activity } from '../models/Activity';
-import { TWITCH_LINK } from '../utils/const';
+import { Activity } from '@models/Activity';
+import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from './VocalConnection';
-import { COMMANDS, CommandSetup } from '../modules/setup';
-import { BotFirebase, FirebaseAuth } from '../Database/Firebase';
-import { BotErrorManager } from '../errors/BotErrorManager';
+import { COMMANDS, CommandSetup } from '@modules/setup';
+import { BotFirebase, FirebaseAuth } from '@database/Firebase';
+import { BotErrorManager } from '@errors/BotErrorManager';
 
 config({ path: '.env' });
 

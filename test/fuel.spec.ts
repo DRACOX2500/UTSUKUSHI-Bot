@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EmbedFuel } from '../src/class/embed/embedFuel';
-import { DataEconomieGouvResponseRecord } from '../src/models/DataEconomieGouv';
-import { FuelAPI } from '../src/api/fuel-fr/FuelAPI';
-import { FuelCommand } from '../src/modules/commands/FuelCommand/fuel';
+import { EmbedFuel } from '@class/embed/embedFuel';
+import { DataEconomieGouvResponseRecord } from '@models/api/DataEconomieGouv';
+import { FuelAPI } from '@api/fuel-fr/FuelAPI';
+import { FuelCommand } from '@modules/commands/FuelCommand/fuel';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 async function getApiResponse(): Promise<DataEconomieGouvResponseRecord[] | null> {

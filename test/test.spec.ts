@@ -2,9 +2,9 @@
 /* eslint-disable no-undef */
 // TEST
 
-import { getRandomInt } from '../src/utils/getRandomInt';
-import { BotClient } from '../src/class/BotClient';
-import { minuteSecondsFormater } from '../src/utils/secondsToMinuteSecondsFormat';
+import { getRandomInt } from '@utils/getRandomInt';
+import { BotClient } from '@class/BotClient';
+import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
 
 export const client = new BotClient(true);
 

@@ -1,4 +1,4 @@
-import { BotClient } from '../class/BotClient';
+import { BotClient } from '@class/BotClient';
 
 export class BotErrorManager {
 

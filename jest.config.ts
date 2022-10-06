@@ -91,7 +91,18 @@ export default {
 	// ],
 
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-	// moduleNameMapper: {},
+	moduleNameMapper: {
+		'^\\*/(.*)$': '<rootDir>/node_modules/$1',
+		'^src/(.*)$': '<rootDir>/src/$1',
+		'^@api/(.*)$': '<rootDir>/src/api/$1',
+		'^@class/(.*)$': '<rootDir>/src/class/$1',
+		'^@database/(.*)$': '<rootDir>/src/database/$1',
+		'^@errors/(.*)$': '<rootDir>/src/errors/$1',
+		'^@models/(.*)$': '<rootDir>/src/models/$1',
+		'^@modules/(.*)$': '<rootDir>/src/modules/$1',
+		'^@utils/(.*)$': '<rootDir>/src/utils/$1',
+		'^test/(.*)$': '<rootDir>/tes/$1',
+	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
 	// modulePathIgnorePatterns: [],

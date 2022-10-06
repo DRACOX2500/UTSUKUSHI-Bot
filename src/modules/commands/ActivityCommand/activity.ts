@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, ActivityType, SlashCommandIntegerOption, ChatInputCommandInteraction } from 'discord.js';
-import { BotClient } from '../../../class/BotClient';
-import { Activity } from '../../../models/Activity';
-import { TWITCH_LINK } from '../../../utils/const';
+import { BotClient } from '@class/BotClient';
+import { Activity } from '@models/Activity';
+import { TWITCH_LINK } from '@utils/const';
 
 export class ActivityCommand {
 

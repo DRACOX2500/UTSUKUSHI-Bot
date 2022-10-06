@@ -1,4 +1,4 @@
-import { GitCommand } from '../src/modules/commands/GitCommand/git';
+import { GitCommand } from '@modules/commands/GitCommand/git';
 
 describe('Git Module', () => {
 

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { BotClient } from 'src/class/BotClient';
+import { BotClient } from '@class/BotClient';
 
 export interface UtsukushiSlashCommand {
 

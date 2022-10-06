@@ -1,6 +1,6 @@
 import { Guild, TextBasedChannel, VoiceChannel } from 'discord.js';
-import { BotClient } from '../../class/BotClient';
-import { EmbedNotify } from '../../class/embed/embedNotify';
+import { BotClient } from '@class/BotClient';
+import { EmbedNotify } from '@class/embed/embedNotify';
 
 export class NotifyEvent {
 

@@ -1,7 +1,7 @@
 import { APIEmbedField, ButtonInteraction, EmbedBuilder, InteractionResponse } from 'discord.js';
-import { BotPlayer } from '../../../class/BotPlayer';
-import { BotClient } from '../../../class/BotClient';
-import { BUTTON } from '../../../utils/const';
+import { BotPlayer } from '@class/BotPlayer';
+import { BotClient } from '@class/BotClient';
+import { BUTTON } from '@utils/const';
 
 export class ButtonVolume {
 

@@ -1,5 +1,5 @@
-import { API } from '../../utils/const';
-import { ApiBurgerReponse } from '../../models/ApiBurgerResponse';
+import { API } from '@utils/const';
+import { ApiBurgerReponse } from '@models/api/ApiBurgerResponse';
 import axios from 'axios';
 
 export class BurgerAPI {
