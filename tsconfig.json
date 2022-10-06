@@ -1,17 +1,20 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "CommonJS",
 		"declaration": false,
 		"removeComments": false,
 		"allowSyntheticDefaultImports": true,
 		"target": "es2022",
 		"outDir": "./dist",
-		"baseUrl": "./",
+		"baseUrl": ".",
+		"pretty": true,
 		"incremental": true,
 		"moduleResolution": "node",
 		"esModuleInterop": true,
+		"skipLibCheck": true,
 		"strict": true,
-		"sourceMap": false
+		"sourceMap": true
 	},
+	"include": ["index.ts", "src/**/*.ts", "test/**/*.ts"],
 	"exclude": ["node_modules", "dist"]
 }
