@@ -1,6 +1,6 @@
 import { ButtonInteraction, InteractionResponse } from 'discord.js';
-import { PlayCommand } from '@modules/commands/PlayCommand/play';
-import { BotClient } from '@class/BotClient';
+import { PlayCommand } from '@modules/interactions/commands/PlayCommand/play';
+import { BotClient } from 'src/BotClient';
 
 export class ButtonPause {
 

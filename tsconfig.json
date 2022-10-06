@@ -11,7 +11,6 @@
             "*": ["node_modules/*"],
             "src/*": ["src/*"],
             "@api/*": ["src/api/*"],
-            "@class/*": ["src/class/*"],
             "@database/*": ["src/database/*"],
             "@errors/*": ["src/errors/*"],
             "@models/*": ["src/models/*"],

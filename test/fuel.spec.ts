@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EmbedFuel } from '@class/embed/embedFuel';
+import { EmbedFuel } from '@modules/system/embeds/embedFuel';
 import { DataEconomieGouvResponseRecord } from '@models/api/DataEconomieGouv';
 import { FuelAPI } from '@api/fuel-fr/FuelAPI';
-import { FuelCommand } from '@modules/commands/FuelCommand/fuel';
+import { FuelCommand } from '@modules/interactions/commands/FuelCommand/fuel';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 async function getApiResponse(): Promise<DataEconomieGouvResponseRecord[] | null> {

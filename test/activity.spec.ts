@@ -1,5 +1,5 @@
 import { client } from './test.spec';
-import { ActivityCommand } from '@modules/commands/ActivityCommand/activity';
+import { ActivityCommand } from '@modules/interactions/commands/ActivityCommand/activity';
 
 describe('Activity Module', () => {
 

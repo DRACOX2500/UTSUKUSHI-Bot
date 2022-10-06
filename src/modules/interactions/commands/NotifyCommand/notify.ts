@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionsBitField } from 'discord.js';
-import { BotClient } from '@class/BotClient';
+import { BotClient } from 'src/BotClient';
 
 export class NotifyCommand {
 

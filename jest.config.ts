@@ -95,7 +95,6 @@ export default {
 		'^\\*/(.*)$': '<rootDir>/node_modules/$1',
 		'^src/(.*)$': '<rootDir>/src/$1',
 		'^@api/(.*)$': '<rootDir>/src/api/$1',
-		'^@class/(.*)$': '<rootDir>/src/class/$1',
 		'^@database/(.*)$': '<rootDir>/src/database/$1',
 		'^@errors/(.*)$': '<rootDir>/src/errors/$1',
 		'^@models/(.*)$': '<rootDir>/src/models/$1',

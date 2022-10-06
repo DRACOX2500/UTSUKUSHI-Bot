@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOption, SlashCommandStringOption, TextChannel } from 'discord.js';
-import { EmbedFuel } from '@class/embed/embedFuel';
+import { EmbedFuel } from '@modules/system/embeds/embedFuel';
 import { API } from '@utils/const';
 import { FuelAPI } from '@api/fuel-fr/FuelAPI';
 

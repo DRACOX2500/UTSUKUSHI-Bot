@@ -3,7 +3,7 @@
 // TEST
 
 import { getRandomInt } from '@utils/getRandomInt';
-import { BotClient } from '@class/BotClient';
+import { BotClient } from 'src/BotClient';
 import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
 
 export const client = new BotClient(true);

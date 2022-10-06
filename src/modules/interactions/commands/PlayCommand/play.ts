@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, InteractionResponse, Message, ButtonInteraction } from 'discord.js';
-import { EmbedPlayer } from '@class/embed/embedPlayer';
-import { BotClient } from '@class/BotClient';
-import { YtbStream } from '@class/ytbStream';
+import { EmbedPlayer } from '@modules/system/embeds/embedPlayer';
+import { BotClient } from 'src/BotClient';
+import { YtbStream } from '@modules/system/audio/ytbStream';
 import { BotCacheGuild } from '@models/BotCache';
 
 export class PlayCommand {

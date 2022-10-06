@@ -1,4 +1,4 @@
-import { BotClient } from '@class/BotClient';
+import { BotClient } from 'src/BotClient';
 
 const client = new BotClient();
 
