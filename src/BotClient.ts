@@ -4,7 +4,7 @@ import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
 import { CommandManager } from '@modules/interactions/CommandManager';
-import { BotFirebase, FirebaseAuth } from 'src/data/Firebase';
+import { BotFirebase, FirebaseAuth } from 'src/database/Firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
 import { UtsukushiSlashCommand } from './models/UtsukushiSlashCommand';
 
