@@ -3,7 +3,8 @@
   "version": "1.1.1",
   "main": "index.ts",
   "scripts": {
-    "start": "tsc & node dist/index.js",
+    "build": "tsc",
+    "start": "npm run build & node dist/index.js",
     "test": "jest",
     "c8-start": "npx c8 npm run-script start -- 0",
     "c8-test": "npx c8 npm test",
