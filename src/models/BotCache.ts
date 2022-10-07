@@ -1,16 +1,12 @@
 import { Activity } from './Activity';
+import { SoundEffect } from './SoundEffect';
 
-export type BotCacheGlobal = {
-    activity: Activity;
+export interface BotCacheGlobal {
+    activity?: Activity
+    soundEffects?: SoundEffect[]
 }
 
 export interface BotCacheGuild {
-    lastPlayURL: string | null
-    vocalNotifyChannel: string | null;
-}
-
-export type BotCacheGuildTypes = {
-    lastPlayURL: string | null
-} | {
-    vocalNotifyChannel: string | null;
+    lastPlayURL?: string | null,
+    vocalNotifyChannel?: string | null
 }

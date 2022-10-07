@@ -4,13 +4,22 @@ import {
 	SlashCommandBuilder,
 	ChatInputCommandInteraction,
 	ContextMenuCommandInteraction,
+	SlashCommandSubcommandsOnlyBuilder,
+	AutocompleteInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 
-type UtsukushiCommandType =
+type UtsukushiSlashCommandType =
 	| SlashCommandBuilder
 	| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
+	| SlashCommandSubcommandsOnlyBuilder;
+
+type UtsukushiContextCommandType =
 	| ContextMenuCommandBuilder;
+
+type UtsukushiCommandType =
+	| UtsukushiSlashCommandType
+	| UtsukushiContextCommandType;
 
 export interface UtsukushiCommandOptions {
 	test_error?: boolean;
@@ -27,9 +36,7 @@ export interface UtsukushiCommand<T extends CommandInteraction> {
 
 export interface UtsukushiSlashCommand
 	extends UtsukushiCommand<ChatInputCommandInteraction> {
-	readonly command:
-		| SlashCommandBuilder
-		| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+	readonly command: UtsukushiSlashCommandType;
 	readonly result: (
 		interaction: ChatInputCommandInteraction,
 		client: BotClient,
@@ -44,5 +51,13 @@ export interface UtsukushiContextCommand
 		interaction: ContextMenuCommandInteraction,
 		client: BotClient,
 		options?: UtsukushiCommandOptions
+	) => Promise<void>;
+}
+
+export interface UtsukushiAutocompleteSlashCommand
+	extends UtsukushiSlashCommand {
+	readonly autocomplete: (
+		interaction: AutocompleteInteraction,
+		client: BotClient
 	) => Promise<void>;
 }

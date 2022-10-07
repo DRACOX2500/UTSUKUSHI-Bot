@@ -11,16 +11,16 @@ import {
 	ButtonInteraction,
 	CacheType,
 	AutocompleteInteraction,
-	ChannelType,
 	ContextMenuCommandInteraction,
 	Collection,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { CommandButton, CommandSlash } from './enum';
+import { CommandButton } from './enum';
 import { NotifyEvent } from './events/NotifyEvent';
 import { ButtonPause } from './button/play/ButtonPause';
 import { ButtonVolume } from './button/play/ButtonVolumeDown';
 import {
+	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
 	UtsukushiContextCommand,
 	UtsukushiSlashCommand,
@@ -38,7 +38,10 @@ export class CommandManager {
 	}
 
 	get allCollection(): Collection<string, UtsukushiCommand<any>> {
-		return new Collection<string, UtsukushiCommand<any>>().concat(this.commands, this.contexts);
+		return new Collection<string, UtsukushiCommand<any>>().concat(
+			this.commands,
+			this.contexts
+		);
 	}
 
 	private loadCommand(
@@ -113,6 +116,16 @@ export class CommandManager {
 		}
 	}
 
+	private async interactionAutocomplete(
+		interaction: AutocompleteInteraction<CacheType>,
+		client: BotClient
+	) {
+		(<UtsukushiAutocompleteSlashCommand>(
+			this.commands.get(interaction.commandName)
+		))?.autocomplete(interaction, client);
+	}
+
+	// TODO : auto button management
 	private async interactionButton(
 		interaction: ButtonInteraction,
 		client: BotClient
@@ -134,56 +147,6 @@ export class CommandManager {
 		case CommandButton.VolumeUp:
 			await new ButtonVolume(interaction, client).getUpEffect();
 			break;
-		}
-	}
-
-	private async interactionAutocomplete(
-		interaction: AutocompleteInteraction<CacheType>,
-		client: BotClient
-	) {
-		if (interaction.commandName === CommandSlash.Play) {
-			const focusedOption = interaction.options.getFocused(true);
-			let choices: string[] | undefined;
-
-			let keywordsCache = client
-				.getDatabase()
-				.userDataCache.userdata.get(interaction.user.id);
-			if (!keywordsCache) {
-				const data = await client.getDatabase().getUserData(interaction.user);
-				if (data) {
-					client
-						.getDatabase()
-						.userDataCache.userdata.set(interaction.user.id, data);
-					keywordsCache = client
-						.getDatabase()
-						.userDataCache.userdata.get(interaction.user.id);
-				}
-			}
-
-			if (focusedOption.name === 'song') {
-				choices = keywordsCache?.keywords;
-			}
-
-			if (!choices) return;
-			const filtered = choices.filter((choice) =>
-				choice.toLowerCase().includes(focusedOption.value.toLowerCase())
-			);
-			await interaction.respond(
-				filtered.map((choice) => ({ name: choice, value: choice }))
-			);
-		}
-		else if (interaction.commandName === CommandSlash.Notify) {
-			const textchannel = interaction.guild?.channels.cache.filter(
-				(channel) => channel.type === ChannelType.GuildText
-			);
-			if (textchannel) {
-				await interaction.respond(
-					textchannel.map((choice) => ({
-						name: choice.name,
-						value: choice.id,
-					}))
-				);
-			}
 		}
 	}
 

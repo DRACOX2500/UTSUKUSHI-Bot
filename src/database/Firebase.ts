@@ -1,18 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FirebaseApp, initializeApp } from 'firebase/app';
-import { doc, Firestore, getDoc, getFirestore, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { Auth, getAuth, signInWithEmailAndPassword, User, UserCredential } from 'firebase/auth';
+import {
+	doc,
+	Firestore,
+	getDoc,
+	getFirestore,
+	setDoc,
+	updateDoc,
+	arrayUnion,
+} from 'firebase/firestore';
+import {
+	Auth,
+	getAuth,
+	signInWithEmailAndPassword,
+	User,
+	UserCredential,
+} from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
-import { BotCacheGlobal, BotCacheGuild, BotCacheGuildTypes } from '@models/BotCache';
-import { BotUserData, BotUserDataTypes } from '@models/BotUserData';
-import { initBotUserData } from '@models/BotUserData';
+import { BotCacheGlobal, BotCacheGuild } from '@models/BotCache';
+import {
+	BotUserData,
+	BotUserDataTypes,
+	initBotUserData,
+} from '@models/BotUserData';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const NOT_FOUND_ERROR = 'not-found';
 
 class FirebaseCache {
-
 	readonly userdata!: Map<string, BotUserData>;
 
 	constructor() {
@@ -29,11 +45,9 @@ class FirebaseCache {
 	clean(user: DiscordUser) {
 		this.userdata.delete(user.id);
 	}
-
 }
 
 export class FirebaseAuth {
-
 	email!: string;
 	password!: string;
 
@@ -44,7 +58,6 @@ export class FirebaseAuth {
 }
 
 export class BotFirebase {
-
 	// Your web app's Firebase configuration
 	private firebaseConfig = {
 		apiKey: '',
@@ -82,22 +95,44 @@ export class BotFirebase {
 			});
 
 		this.db = getFirestore();
-
 	}
 
 	async setCacheGlobal(cache: BotCacheGlobal): Promise<void> {
 		const document = doc(this.db, 'cache/global');
-		setDoc(document, cache, { merge: true })
-			.then(() => {
-				console.log('[Cache Global] : Cache Saved Success !');
-			})
-			.catch(() => {
-				console.error('[Cache Global] : Cache Saved Failure !');
-			});
+
+		if (cache.soundEffects) {
+			updateDoc(document, 'soundEffects', arrayUnion(cache.soundEffects.at(0)))
+				.then(() => {
+					console.log(
+						'[Cache Global] : Updated Success !'
+					);
+				})
+				.catch((error) => {
+					console.error(
+						'[Cache Global] : Updated Failure !'
+					);
+					if (error.code === NOT_FOUND_ERROR) {
+						console.log('[Cache Global] : Try to create doc...');
+						setDoc(document, { soundEffects: [cache.soundEffects?.at(0)] })
+							.then(() => console.log('[Cache Global] : Success !'))
+							.catch(() =>
+								console.log('[Cache Global] : Failed !')
+							);
+					}
+				});
+		}
+		else {
+			setDoc(document, cache, { merge: true })
+				.then(() => {
+					console.log('[Cache Global] : Cache Saved Success !');
+				})
+				.catch(() => {
+					console.error('[Cache Global] : Cache Saved Failure !');
+				});
+		}
 	}
 
-	async setCacheByGuild(guild: Guild, cache: BotCacheGuildTypes): Promise<void> {
-
+	async setCacheByGuild(guild: Guild, cache: BotCacheGuild): Promise<void> {
 		const document = doc(this.db, 'cache/' + guild.id);
 		setDoc(document, cache, { merge: true })
 			.then(() => {
@@ -114,20 +149,25 @@ export class BotFirebase {
 		if (cache.keyword) {
 			updateDoc(document, 'keywords', arrayUnion(cache.keyword))
 				.then(() => {
-					console.log('[UserData ' + user.id + '] : UserData Updated Success !');
+					console.log(
+						'[UserData ' + user.id + '] : UserData Updated Success !'
+					);
 				})
 				.catch((error) => {
-					console.error('[UserData ' + user.id + '] : UserData Updated Failure !');
+					console.error(
+						'[UserData ' + user.id + '] : UserData Updated Failure !'
+					);
 					if (error.code === NOT_FOUND_ERROR) {
 						console.log('[UserData ' + user.id + '] : Try to create doc...');
 						setDoc(document, { keywords: [cache.keyword] })
 							.then(() => console.log('[UserData ' + user.id + '] : Success !'))
-							.catch(() => console.log('[UserData ' + user.id + '] : Failed !'));
+							.catch(() =>
+								console.log('[UserData ' + user.id + '] : Failed !')
+							);
 					}
 				});
 			this.userDataCache.userdata.delete(user.id);
-		}
-		else {
+		} else {
 			setDoc(document, cache, { merge: true })
 				.then(() => {
 					console.log('[Cache ' + user.id + '] : Cache Saved Success !');
@@ -174,5 +214,4 @@ export class BotFirebase {
 				return false;
 			});
 	}
-
 }

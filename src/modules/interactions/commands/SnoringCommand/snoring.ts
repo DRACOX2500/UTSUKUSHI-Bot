@@ -4,7 +4,7 @@ import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
 import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
-const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
+const url = '';
 
 export class SnoringCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
