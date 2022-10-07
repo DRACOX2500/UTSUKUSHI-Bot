@@ -10,36 +10,24 @@ export class DeleteContext {
 
 		const m = <GuildMember>interaction.member;
 		if (!m.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-			interaction.reply('🔒 You do not have permission to manage messages')
+			interaction.reply({ content:'🔒 You do not have permission to manage messages', ephemeral: true })
 				.then(() => { setTimeout(() => interaction.deleteReply().catch(error => console.log(error.message)), 3000); },);
 			return;
 		}
 
-
 		const message: Message = interaction.targetMessage;
-		const channelMessages: MessageManager | null = interaction.channel?.messages || null;
-		if (!channelMessages) return;
-		if (client.isRemoving) {
+		const messagesManager: MessageManager | null = interaction.channel?.messages || null;
+		if (!messagesManager) return;
+		if (client.removerManager.isFull) {
 			interaction.reply('❌💣 I\'m already deleting somewhere, please try later')
 				.then(() => { setTimeout(() => interaction.deleteReply().catch(error => console.log(error.message)), 3000); },);
 			return;
 		}
-
-		client.isRemoving = true;
 		interaction.deferReply();
-		let deleteMessage = 0;
 
-		await channelMessages?.fetch({ after: message.id }).then(
-			async (messages) => {
-				const interactionId = await interaction.fetchReply();
-				messages.delete(interactionId.id);
-				messages.forEach(mes => mes.delete());
-				await message.delete();
-				deleteMessage = messages.size + 1;
-			}
-		);
+		const remover = client.removerManager.addRemover(interaction.channelId);
+		const deleteMessage = await remover?.run(interaction, messagesManager, message);
 
-		client.isRemoving = false;
 		interaction.editReply(
 			`💣 I Deleted **${deleteMessage}** Message${ deleteMessage === 1 ? '' : 's' } !\n\n` +
 			'(*===This message will self-destruct in **3** seconds===*)'

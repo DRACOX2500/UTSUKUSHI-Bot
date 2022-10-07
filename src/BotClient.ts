@@ -6,7 +6,7 @@ import { VocalConnection } from '@modules/system/audio/VocalConnection';
 import { CommandManager } from '@modules/interactions/CommandManager';
 import { BotFirebase, FirebaseAuth } from 'src/database/Firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
-import { UtsukushiSlashCommand } from './models/UtsukushiSlashCommand';
+import { BotRemoverManager } from 'src/modules/system/System';
 
 config({ path: '.env' });
 
@@ -20,7 +20,7 @@ export class BotClient extends Client {
 
 	connection: VocalConnection = new VocalConnection();
 
-	isRemoving = false;
+	removerManager!: BotRemoverManager;
 
 	private commandManager!: CommandManager;
 
@@ -44,6 +44,8 @@ export class BotClient extends Client {
 		this.DISCORD_TOKEN = process.env.DISCORD_TOKEN || '';
 		this.CLIENT_ID = process.env.CLIENT_ID || '';
 		this.FIREBASE_TOKEN = process.env.FIREBASE_TOKEN || '';
+
+		this.removerManager = new BotRemoverManager(+(process.env.MAX_REMOVER_INSTANCES || 3));
 
 		const auth = new FirebaseAuth(
 			process.env.DB_EMAIL || '',
