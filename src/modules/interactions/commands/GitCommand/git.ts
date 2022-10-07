@@ -1,9 +1,9 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
-export class GitCommand implements UtsukushiSlashCommand {
+export class GitCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash: SlashCommandBuilder = new SlashCommandBuilder()
+	readonly command: SlashCommandBuilder = new SlashCommandBuilder()
 		.setName('git')
 		.setDescription('Get GitHub Repository 🛠️!');
 

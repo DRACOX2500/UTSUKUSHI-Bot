@@ -10,3 +10,7 @@ dist/
 #local
 .env
 assets/*.webp
+
+#IDE
+.vscode/
+.idea/

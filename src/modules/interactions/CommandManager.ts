@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-case-declarations */
 import fs from 'node:fs';
@@ -16,33 +18,58 @@ import {
 import { BotClient } from 'src/BotClient';
 import { CommandButton, CommandSlash } from './enum';
 import { NotifyEvent } from './events/NotifyEvent';
-import { DeleteContext } from './contexts/DeleteContext';
 import { ButtonPause } from './button/play/ButtonPause';
 import { ButtonVolume } from './button/play/ButtonVolumeDown';
-import { UtsukushiSlashCommand } from 'src/models/UtsukushiSlashCommand';
+import {
+	UtsukushiCommand,
+	UtsukushiContextCommand,
+	UtsukushiSlashCommand,
+} from '@models/UtsukushiCommand';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
+	contexts!: Collection<string, UtsukushiContextCommand>;
 
 	constructor(private readonly client: BotClient) {
 		this.commands = new Collection();
-		this.loadSlashCommand();
+		this.contexts = new Collection();
+		this.loadCommand('commands', this.commands);
+		this.loadCommand('contexts', this.contexts);
 	}
 
-	private loadSlashCommand() {
-		const commandFiles: string[][] = [];
-		const commandsPath = path.join(__dirname, 'commands');
-		const commandFolders = fs.readdirSync(commandsPath);
-		commandFolders.forEach(
-			(folder) => commandFiles.push(fs.readdirSync(`${commandsPath}\\${folder}`)
-				.map(file => `${commandsPath}\\${folder}\\${file}`)
-				.filter(file => file.endsWith('.js')))
-		);
+	get allCollection(): Collection<string, UtsukushiCommand<any>> {
+		return new Collection<string, UtsukushiCommand<any>>().concat(this.commands, this.contexts);
+	}
 
-		for (const file of commandFiles.flat()) {
-			const command: UtsukushiSlashCommand = require(file).command;
+	private loadCommand(
+		folderTitle: string,
+		collection: Collection<string, any>
+	) {
+		const filesList: string[][] = [];
+		const commandsPath = path.join(__dirname, folderTitle);
 
-			this.commands.set(command.slash.name, command);
+		this.load(filesList, commandsPath);
+
+		for (const file of filesList.flat()) {
+			const command: UtsukushiCommand<any> = require(file).command;
+
+			collection.set(command.command.name, command);
+		}
+	}
+
+	private load(filesList: string[][], absolutePath: string): void {
+		try {
+			fs.readdirSync(absolutePath).forEach((filefolder) => {
+				const pathFile = path.join(absolutePath, filefolder);
+				if (filefolder.endsWith('.js')) filesList.push([pathFile]);
+				else if (fs.statSync(pathFile).isDirectory()) {
+					this.load(filesList, pathFile);
+				}
+			});
+		}
+		catch (err) {
+			// Not .js files
+			return;
 		}
 	}
 
@@ -50,7 +77,6 @@ export class CommandManager {
 		interaction: ChatInputCommandInteraction,
 		client: BotClient
 	): Promise<void> {
-
 		const command = this.commands.get(interaction.commandName);
 
 		if (!command) return;
@@ -60,45 +86,32 @@ export class CommandManager {
 		}
 		catch (error) {
 			console.error(error);
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			await interaction.reply({
+				content: 'There was an error while executing this command!',
+				ephemeral: true,
+			});
 		}
 	}
 
-	// private async interactionChatInput(
-	// 	interaction: ChatInputCommandInteraction,
-	// 	client: BotClient
-	// ): Promise<void> {
-	// 	switch (interaction.commandName) {
-	// 	case CommandSlash.Ping:
-	// 		PingCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.BigBurger: {
-	// 		await BigBurgerCommand.result(interaction);
-	// 		break;
-	// 	}
-	// 	case CommandSlash.Git:
-	// 		await interaction.reply(GitCommand.result());
-	// 		break;
-	// 	case CommandSlash.Snoring:
-	// 		await SnoringCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.Play:
-	// 		await PlayCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.Activity:
-	// 		await ActivityCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.Cache:
-	// 		await CacheCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.Notify:
-	// 		NotifyCommand.result(interaction, client);
-	// 		break;
-	// 	case CommandSlash.Fuel:
-	// 		FuelCommand.result(interaction);
-	// 		break;
-	// 	}
-	// }
+	private async interactionContext(
+		interaction: ContextMenuCommandInteraction,
+		client: BotClient
+	): Promise<void> {
+		const command = this.contexts.get(interaction.commandName);
+
+		if (!command) return;
+
+		try {
+			await Promise.resolve(command.result(interaction, client));
+		}
+		catch (error) {
+			console.error(error);
+			await interaction.reply({
+				content: 'There was an error while executing this command!',
+				ephemeral: true,
+			});
+		}
+	}
 
 	private async interactionButton(
 		interaction: ButtonInteraction,
@@ -174,33 +187,19 @@ export class CommandManager {
 		}
 	}
 
-	private async interactionContext(
-		interaction: ContextMenuCommandInteraction,
-		client: BotClient
-	): Promise<void> {
-		if (interaction.isMessageContextMenuCommand())
-			DeleteContext.result(interaction, client);
-	}
-
 	initCommand(client: BotClient) {
 		client.on(
 			'interactionCreate',
 			async (interaction: Interaction<CacheType>) => {
 				if (interaction.isChatInputCommand()) {
 					console.log(
-						'[' +
-							interaction.user.username +
-							'] use commands : ' +
-							interaction.commandName
+						`[${interaction.user.username}] use command : ${interaction.commandName}`
 					);
 					await this.interactionChatInput(interaction, client);
 				}
 				else if (interaction.isButton()) {
 					console.log(
-						'[' +
-							interaction.user.username +
-							'] use button : ' +
-							interaction.customId
+						`[${interaction.user.username}] use button : ${interaction.customId}`
 					);
 					await this.interactionButton(interaction, client);
 				}
@@ -209,10 +208,7 @@ export class CommandManager {
 				}
 				else if (interaction.isContextMenuCommand()) {
 					console.log(
-						'[' +
-							interaction.user.username +
-							'] use constext : ' +
-							interaction.commandName
+						`[${interaction.user.username}] use constext : ${interaction.commandName}`
 					);
 					await this.interactionContext(interaction, client);
 				}

@@ -2,11 +2,11 @@ import { SlashCommandBuilder, ActivityType, SlashCommandIntegerOption, ChatInput
 import { BotClient } from 'src/BotClient';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
-export class ActivityCommand implements UtsukushiSlashCommand {
+export class ActivityCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly command: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('activity')
 		.setDescription('Change bot activity 🤖!')
 		.addIntegerOption((option : SlashCommandIntegerOption) =>

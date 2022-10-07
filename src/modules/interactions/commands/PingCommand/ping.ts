@@ -1,11 +1,11 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { EmbedPong } from '@modules/system/embeds/embedPong';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
-export class PingCommand implements UtsukushiSlashCommand {
+export class PingCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash: SlashCommandBuilder = new SlashCommandBuilder()
+	readonly command: SlashCommandBuilder = new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Replies with Pong 🏓!');
 

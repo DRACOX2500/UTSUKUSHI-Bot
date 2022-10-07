@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder } from 'discord.js';
+import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder, ContextMenuCommandBuilder } from 'discord.js';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
@@ -92,11 +92,11 @@ export class BotClient extends Client {
 
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
 
-		const slashCommands: SlashCommandBuilder[] = [];
+		const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] = [];
 
-		for (const iterator of this.commandManager.commands) {
-			const value = this.commandManager.commands.get(iterator[0]);
-			if (value) slashCommands.push(<SlashCommandBuilder>value.slash);
+		for (const iterator of this.commandManager.allCollection) {
+			const value = this.commandManager.allCollection.get(iterator[0]);
+			if (value) botCommands.push(<SlashCommandBuilder | ContextMenuCommandBuilder>value.command);
 		}
 
 		return (async (): Promise<number> => {
@@ -104,7 +104,7 @@ export class BotClient extends Client {
 				if (log)
 					console.log('Started refreshing application (/) commands.');
 
-				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: slashCommands });
+				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: botCommands });
 
 				if (log)
 					console.log('Successfully reloaded application (/) commands.');

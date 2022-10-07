@@ -1,10 +1,10 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionsBitField } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
-export class NotifyCommand implements UtsukushiSlashCommand {
+export class NotifyCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly command: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('notify')
 		.setDescription('Notify when someone join a voice channel 🔔!')
 		.addStringOption(option =>

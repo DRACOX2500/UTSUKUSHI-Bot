@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
 const url = 'https://www.youtube.com/watch?v=V4ibUx_Vg28';
 
-export class SnoringCommand implements UtsukushiSlashCommand {
+export class SnoringCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash = new SlashCommandBuilder()
+	readonly command = new SlashCommandBuilder()
 		.setName('snoring')
 		.setDescription('Snores in Vocal Channel 💤!');
 
-	readonly result = async (interaction: any, client: BotClient): Promise<void> => {
+	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient): Promise<void> => {
 
-		const channel = interaction.member.voice.channel;
-		if (!channel) return interaction.reply({ content: '🚫 I\'m not tired !', ephemeral: true });
+		const channel = (<any>interaction.member).voice.channel;
+		if (!channel) {
+			interaction.reply({ content: '🚫 I\'m not tired !', ephemeral: true });
+			return;
+		}
 
 		await interaction.deferReply({ ephemeral: true });
 
@@ -27,7 +30,7 @@ export class SnoringCommand implements UtsukushiSlashCommand {
 		});
 
 		client.connection.join(channel);
-		client.connection.newBotPlayer(interaction.message)?.playMusic(stream.get(), true);
+		client.connection.newBotPlayer((<any>interaction).message)?.playMusic(stream.get(), true);
 	};
 }
 

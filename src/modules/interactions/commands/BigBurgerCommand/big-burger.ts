@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BurgerAPI } from '@api/burger/BurgerAPI';
-import { UtsukushiSlashCommand, UtsukushiSlashCommandOptions } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand, UtsukushiCommandOptions } from '@models/UtsukushiCommand';
 import { BotClient } from 'src/BotClient';
 
-export class BigBurgerCommand implements UtsukushiSlashCommand {
+export class BigBurgerCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash = new SlashCommandBuilder()
+	readonly command = new SlashCommandBuilder()
 		.setName('big-burger')
 		.setDescription('Random Burger 🍔!');
 
-	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient, options?: UtsukushiSlashCommandOptions): Promise<void> => {
+	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient, options?: UtsukushiCommandOptions): Promise<void> => {
 
 		await interaction.reply('🍔 Burger loading...');
 

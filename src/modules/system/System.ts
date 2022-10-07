@@ -12,7 +12,7 @@ class BotRemover {
 		channelMessages: MessageManager,
 		message: Message
 	) {
-		channelMessages.fetch({ after: message.id }).then(async (messages) => {
+		await channelMessages.fetch({ after: message.id }).then(async (messages) => {
 			const interactionId = await interaction.fetchReply();
 			messages.delete(interactionId.id);
 			messages.forEach((mes) => mes.delete());
@@ -55,5 +55,9 @@ export class BotRemoverManager {
 		const remover = new BotRemover();
 		this.removerMap.set(channelId, remover);
 		return remover;
+	}
+
+	deleteRemover(channelId: string): void {
+		this.removerMap.delete(channelId);
 	}
 }

@@ -1,15 +1,15 @@
 /* eslint-disable no-shadow */
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
 enum CacheType {
     Clear = 0,
 }
 
-export class CacheCommand implements UtsukushiSlashCommand {
+export class CacheCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly command: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('cache')
 		.setDescription('Manage your user cache from UTSUKUSHI-BOT 📁!')
 		.addIntegerOption((option : SlashCommandIntegerOption) =>

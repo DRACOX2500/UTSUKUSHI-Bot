@@ -3,7 +3,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, SlashCommandIntegerOp
 import { EmbedFuel } from '@modules/system/embeds/embedFuel';
 import { API } from '@utils/const';
 import { FuelAPI } from '@api/fuel-fr/FuelAPI';
-import { UtsukushiSlashCommand } from '@models/UtsukushiSlashCommand';
+import { UtsukushiCommand } from '@models/UtsukushiCommand';
 
 enum FuelType {
 
@@ -25,9 +25,9 @@ enum SearchType {
     REGION = 5,
 }
 
-export class FuelCommand implements UtsukushiSlashCommand {
+export class FuelCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
 
-	readonly slash:Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
+	readonly command:Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
 		.setName('fuel')
 		.setDescription('Get some data about fuel (Only in France) 🚗!')
 		.addStringOption((option : SlashCommandStringOption) =>
