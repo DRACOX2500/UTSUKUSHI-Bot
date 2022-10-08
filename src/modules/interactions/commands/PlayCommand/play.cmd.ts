@@ -73,7 +73,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		const stream = new YtbStream();
 		await stream.init(url, interaction);
 
-		if (!stream.source.found) {
+		if (!stream.isFound) {
 			interaction.editReply('❌ Music not found !');
 			return;
 		}
@@ -88,7 +88,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 			client
 				.getDatabase()
 				.setCacheByGuild((<any>interaction).guild, {
-					lastPlayURL: stream.source.url,
+					lastPlayURL: stream.video.url,
 				});
 			const keywordsCache = client
 				.getDatabase()
