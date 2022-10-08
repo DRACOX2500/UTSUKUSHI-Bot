@@ -7,9 +7,9 @@ import {
 	SlashCommandSubcommandsOnlyBuilder,
 	AutocompleteInteraction,
 	UserContextMenuCommandInteraction,
+	MessageContextMenuCommandInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { MessageContextMenuCommandInteraction } from 'discord.js';
 
 type UtsukushiSlashCommandType =
 	| SlashCommandBuilder

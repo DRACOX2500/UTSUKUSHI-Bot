@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { cyan, green, lightGreen, lightYellow, red, yellow } from 'ansicolor';
+import { cyan, green, lightGreen, lightYellow } from 'ansicolor';
 import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder, ContextMenuCommandBuilder } from 'discord.js';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
