@@ -1,5 +1,5 @@
 import { client } from './test.spec';
-import { PingCommand } from '@modules/interactions/commands/PingCommand/ping';
+import { PingCommand } from 'src/modules/interactions/commands/PingCommand/ping.cmd';
 
 describe('Ping Module', () => {
 

@@ -1,5 +1,5 @@
 import { client } from './test.spec';
-import { CacheCommand } from '@modules/interactions/commands/CacheCommand/cache';
+import { CacheCommand } from 'src/modules/interactions/commands/CacheCommand/cache.cmd';
 
 describe('Cache Module', () => {
 

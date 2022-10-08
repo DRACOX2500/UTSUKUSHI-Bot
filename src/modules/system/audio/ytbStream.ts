@@ -6,6 +6,7 @@ import ytdl from '@distube/ytdl-core';
 import ytsr from 'ytsr';
 import { StreamSource } from '@models/StreamSource';
 import { YOUTUBE_VIDEO_LINK_REGEX } from '@utils/const';
+import { YtVideoItem } from 'src/models/YtVideoItem';
 
 config({ path: '.env' });
 
@@ -22,6 +23,8 @@ export class YtbStream {
 	private stream: any | null = null;
 
 	async init(urlKeywords: string, interaction?: any): Promise<void> {
+		console.log('kw', urlKeywords);
+		console.log(!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX));
 
 		if (!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX))
 			await this.searchByKeyword(urlKeywords);
@@ -40,7 +43,7 @@ export class YtbStream {
 			);
 	}
 
-	getStreamSources(): Promise<any> {
+	async getStreamSources(): Promise<any> {
 		const quality = process.env.YTDL_CORE_QUALITY || 'lowest';
 		return Promise.resolve(ytdl(this.source.url, { filter: 'audioonly', highWaterMark: 1 << 25, quality: quality }));
 	}
@@ -61,6 +64,12 @@ export class YtbStream {
 		}
 
 		this.setSource(result.items[0]);
+	}
+
+	static async getYtVideoDataByURL(url: string): Promise<YtVideoItem> {
+		const vId = url.split('https://www.youtube.com/watch?v=')[1].split('&')[0];
+		const res = await ytsr(`https://www.youtube.com/watch?v=${vId}`, { limit: 1 });
+		return <YtVideoItem>(<unknown>res.items[0]);
 	}
 
 	setSource(object: any): void {

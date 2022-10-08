@@ -64,7 +64,7 @@ export class CommandManager {
 		try {
 			fs.readdirSync(absolutePath).forEach((filefolder) => {
 				const pathFile = path.join(absolutePath, filefolder);
-				if (filefolder.endsWith('.js')) filesList.push([pathFile]);
+				if (filefolder.endsWith('.cmd.js')) filesList.push([pathFile]);
 				else if (fs.statSync(pathFile).isDirectory()) {
 					this.load(filesList, pathFile);
 				}
