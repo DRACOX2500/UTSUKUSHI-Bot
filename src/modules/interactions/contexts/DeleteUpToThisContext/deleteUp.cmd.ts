@@ -1,20 +1,23 @@
-import { ApplicationCommandType, ContextMenuCommandBuilder, GuildMember, Message, MessageContextMenuCommandInteraction, MessageManager, PermissionsBitField, TextBasedChannel } from 'discord.js';
+import { ApplicationCommandType, ContextMenuCommandBuilder, Message, MessageContextMenuCommandInteraction, MessageManager, PermissionsBitField, TextBasedChannel } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiCommand } from 'src/models/UtsukushiCommand';
+import { UtsukushiMessageContextCommand } from 'src/models/UtsukushiCommand';
 
-export class DeleteContext implements UtsukushiCommand<MessageContextMenuCommandInteraction> {
+/**
+ * @SlashCommand `soundeffect`
+ * @AutocompleteInteraction
+ *  - `soundeffect play [effect]` : Play sound effect
+ *  - `soundeffect add [key] [url]` : Add sound effect to the database
+ */
+export class DeleteContext implements UtsukushiMessageContextCommand {
 	readonly command: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()
 		.setName('Delete Up To This')
-		.setType(ApplicationCommandType.Message);
+		.setType(ApplicationCommandType.Message)
+		.setDMPermission(true)
+		.setDefaultMemberPermissions(
+			PermissionsBitField.Flags.ManageMessages
+		);
 
 	readonly result = async (interaction: MessageContextMenuCommandInteraction, client: BotClient): Promise<void> => {
-
-		const m = <GuildMember>interaction.member;
-		if (!m.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-			interaction.reply({ content:'🔒 You do not have permission to manage messages', ephemeral: true })
-				.then(() => { setTimeout(() => interaction.deleteReply().catch(error => console.error(error.message)), 3000); },);
-			return;
-		}
 
 		const message: Message = interaction.targetMessage;
 		const messagesManager: MessageManager | null = interaction.channel?.messages || null;

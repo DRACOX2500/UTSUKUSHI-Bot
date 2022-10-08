@@ -1,11 +1,16 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { UtsukushiCommand } from '@models/UtsukushiCommand';
+import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
 
-export class GitCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
+/**
+ * @SlashCommand `git`
+ *  - `git` : get Github repository
+ */
+export class GitCommand implements UtsukushiSlashCommand {
 
 	readonly command: SlashCommandBuilder = new SlashCommandBuilder()
 		.setName('git')
-		.setDescription('Get GitHub Repository 🛠️!');
+		.setDescription('Get GitHub Repository 🛠️!')
+		.setDMPermission(true);
 
 	readonly result = async (interaction: ChatInputCommandInteraction): Promise<void> => {
 		interaction.reply({ content: 'https://github.com/DRACOX2500/Discord-Bot', ephemeral: true });

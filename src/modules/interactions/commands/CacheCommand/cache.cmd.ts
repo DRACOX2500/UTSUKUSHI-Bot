@@ -17,29 +17,31 @@ enum CacheType {
 	Show = 1,
 }
 
+/**
+ * @SlashCommand `cache`
+ *  - `cache [action]` : Manage user cache from database !
+ */
 export class CacheCommand implements UtsukushiSlashCommand {
-	readonly command: Omit<
-		SlashCommandBuilder,
-		'addSubcommand' | 'addSubcommandGroup'
-	> = new SlashCommandBuilder()
-			.setName('cache')
-			.setDescription('Manage your user cache from UTSUKUSHI-BOT 📁!')
-			.addIntegerOption((option: SlashCommandIntegerOption) =>
-				option
-					.setName('action')
-					.setDescription('What action to perform ?')
-					.addChoices(
-						{
-							name: 'Clear | clear all data from your user cache',
-							value: CacheType.Clear,
-						},
-						{
-							name: 'Show | Utsukushi send you in DM, your cache data',
-							value: CacheType.Show,
-						}
-					)
-					.setRequired(true)
-			);
+	readonly command = new SlashCommandBuilder()
+		.setName('cache')
+		.setDescription('Manage your user cache from UTSUKUSHI-BOT 📁!')
+		.setDMPermission(true)
+		.addIntegerOption((option: SlashCommandIntegerOption) =>
+			option
+				.setName('action')
+				.setDescription('What action to perform ?')
+				.addChoices(
+					{
+						name: 'Clear | clear all data from your user cache',
+						value: CacheType.Clear,
+					},
+					{
+						name: 'Show | Utsukushi send you in DM, your cache data',
+						value: CacheType.Show,
+					}
+				)
+				.setRequired(true)
+		);
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,

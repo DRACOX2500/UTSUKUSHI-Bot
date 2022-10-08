@@ -13,6 +13,8 @@ import {
 	AutocompleteInteraction,
 	ContextMenuCommandInteraction,
 	Collection,
+	MessageContextMenuCommandInteraction,
+	UserContextMenuCommandInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { CommandButton } from './enum';
@@ -28,7 +30,7 @@ import {
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
-	contexts!: Collection<string, UtsukushiContextCommand>;
+	contexts!: Collection<string, UtsukushiContextCommand<MessageContextMenuCommandInteraction|UserContextMenuCommandInteraction>>;
 
 	constructor(private readonly client: BotClient) {
 		this.commands = new Collection();
@@ -105,7 +107,7 @@ export class CommandManager {
 		if (!command) return;
 
 		try {
-			await Promise.resolve(command.result(interaction, client));
+			await Promise.resolve(command.result(<any>interaction, client));
 		}
 		catch (error) {
 			console.error(error);

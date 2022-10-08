@@ -12,7 +12,7 @@ import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 import { NotifyCommandOptions, NotifySubCommand } from './notify.sub';
 
 /**
- * @SlashCommand
+ * @SlashCommand `notify`
  * @AutocompleteInteraction
  * @DefaultMemberPermissions `ManageGuild`
  * - `notify [channel]` : set **TextChannel** to notify when guild members join voice channel
@@ -22,6 +22,7 @@ export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocomp
 	readonly command = new SlashCommandBuilder()
 		.setName('notify')
 		.setDescription('Notify when someone join a voice channel 🔔!')
+		.setDMPermission(false)
 		.setDefaultMemberPermissions(
 			PermissionsBitField.Flags.ManageGuild
 		)

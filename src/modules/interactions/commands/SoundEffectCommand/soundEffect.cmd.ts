@@ -15,7 +15,7 @@ import {
 } from './soundEffect.sub';
 
 /**
- * @SlashCommand
+ * @SlashCommand `soundeffect`
  * @AutocompleteInteraction
  *  - `soundeffect play [effect]` : Play sound effect
  *  - `soundeffect add [key] [url]` : Add sound effect to the database
@@ -26,6 +26,7 @@ export class SoundEffectCommand
 	readonly command = new SlashCommandBuilder()
 		.setName('soundeffect')
 		.setDescription('Sound Effect in Vocal Channel 🎶!')
+		.setDMPermission(false)
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('play')

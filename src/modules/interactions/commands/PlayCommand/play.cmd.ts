@@ -13,10 +13,16 @@ import { YtbStream } from '@modules/system/audio/ytbStream';
 import { BotCacheGuild } from '@models/BotCache';
 import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 
+/**
+ * @SlashCommand `play`
+ * @AutocompleteInteraction
+ *  - `play [song] [opti]?` : Play music
+ */
 export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 	readonly command = new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Play Music 🎵!')
+		.setDMPermission(false)
 		.addStringOption((option) =>
 			option
 				.setName('song')
