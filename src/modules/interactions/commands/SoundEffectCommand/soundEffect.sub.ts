@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatInputCommandInteraction, CacheType, bold } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { YtbStream } from 'src/modules/system/audio/ytbStream';
-import { YOUTUBE_VIDEO_LINK_REGEX } from 'src/utils/const';
-import { durationStringToNumber } from 'src/utils/durationStringToNumber';
+import { YtbStream } from '@modules/system/audio/ytbStream';
+import { YOUTUBE_VIDEO_LINK_REGEX } from '@utils/const';
+import { durationStringToNumber } from '@utils/durationStringToNumber';
 
 /**
  * @Options
