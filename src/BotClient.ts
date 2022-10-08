@@ -53,8 +53,7 @@ export class BotClient extends Client {
 		);
 
 		const authDB = !!+(process.argv[2] ?? 1);
-		if (authDB)
-			this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
+		if (authDB) this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
 
 		this.init(test);
 	}
