@@ -27,6 +27,7 @@ import {
 	UtsukushiContextCommand,
 	UtsukushiSlashCommand,
 } from '@models/UtsukushiCommand';
+import { cyan, lightMagenta, magenta } from 'ansicolor';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
@@ -158,13 +159,13 @@ export class CommandManager {
 			async (interaction: Interaction<CacheType>) => {
 				if (interaction.isChatInputCommand()) {
 					console.log(
-						`[${interaction.user.username}] use command : ${interaction.commandName}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use command : ${magenta(interaction.commandName)}`
 					);
 					await this.interactionChatInput(interaction, client);
 				}
 				else if (interaction.isButton()) {
 					console.log(
-						`[${interaction.user.username}] use button : ${interaction.customId}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use button : ${magenta(interaction.customId)}`
 					);
 					await this.interactionButton(interaction, client);
 				}
@@ -173,7 +174,7 @@ export class CommandManager {
 				}
 				else if (interaction.isContextMenuCommand()) {
 					console.log(
-						`[${interaction.user.username}] use constext : ${interaction.commandName}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use context : ${magenta(interaction.commandName)}`
 					);
 					await this.interactionContext(interaction, client);
 				}

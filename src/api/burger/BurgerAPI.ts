@@ -1,12 +1,12 @@
 import { API } from '@utils/const';
 import { ApiBurgerReponse } from '@models/api/ApiBurgerResponse';
 import axios from 'axios';
+import { red } from 'ansicolor';
 
 export class BurgerAPI {
 
 	private burgerError(err?: Error) {
-		if (err)
-			console.error('[Big-Burger] Error: ' + err.message);
+		if (err) console.error(red(`[Big-Burger] Error: ${err.message}`));
 		return API.BURGER.ERROR;
 	}
 

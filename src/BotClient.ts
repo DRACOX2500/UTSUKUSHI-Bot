@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import { cyan, green, lightGreen, lightYellow, red, yellow } from 'ansicolor';
 import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder, ContextMenuCommandBuilder } from 'discord.js';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
@@ -76,7 +77,7 @@ export class BotClient extends Client {
 	private initEvents(): void {
 
 		this.on('ready', async () => {
-			console.log(`Logged in as ${this.user?.tag}!`);
+			console.log(lightYellow(`Logged in as ${cyan(this.user?.tag)}!`));
 			const cache = await this.database.getCacheGlobal();
 			if (cache?.activity)
 				this.setActivity(cache?.activity || this.defaultActivity);
@@ -100,13 +101,11 @@ export class BotClient extends Client {
 
 		return (async (): Promise<number> => {
 			try {
-				if (log)
-					console.log('Started refreshing application (/) commands.');
+				if (log) console.log(lightGreen('Started refreshing application (/) commands...'));
 
 				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: botCommands });
 
-				if (log)
-					console.log('Successfully reloaded application (/) commands.');
+				if (log) console.log(green('Successfully reloaded application (/) commands !'));
 			}
 			catch (error) {
 				console.error(error);

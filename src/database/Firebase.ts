@@ -23,6 +23,7 @@ import {
 	BotUserDataTypes,
 	initBotUserData,
 } from '@models/BotUserData';
+import { green, red } from 'ansicolor';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -88,7 +89,7 @@ export class BotFirebase {
 		)
 			.then((userCredential: UserCredential) => {
 				this.user = userCredential.user;
-				if (!test) console.log('Connect to Firebase !');
+				if (!test) console.log(green('Connect to Firebase !'));
 			})
 			.catch((error) => {
 				console.error(error);
@@ -104,19 +105,19 @@ export class BotFirebase {
 			updateDoc(document, 'soundEffects', arrayUnion(cache.soundEffects.at(0)))
 				.then(() => {
 					console.log(
-						'[Cache Global] : Updated Success !'
+						green('[Cache Global] : Updated Success !')
 					);
 				})
 				.catch((error) => {
 					console.error(
-						'[Cache Global] : Updated Failure !'
+						red('[Cache Global] : Updated Failure !')
 					);
 					if (error.code === NOT_FOUND_ERROR) {
 						console.log('[Cache Global] : Try to create doc...');
 						setDoc(document, { soundEffects: [cache.soundEffects?.at(0)] })
-							.then(() => console.log('[Cache Global] : Success !'))
+							.then(() => console.log(green('[Cache Global] : Success !')))
 							.catch(() =>
-								console.log('[Cache Global] : Failed !')
+								console.log(red('[Cache Global] : Failed !'))
 							);
 					}
 				});
@@ -124,10 +125,10 @@ export class BotFirebase {
 		else {
 			setDoc(document, cache, { merge: true })
 				.then(() => {
-					console.log('[Cache Global] : Cache Saved Success !');
+					console.log(green('[Cache Global] : Cache Saved Success !'));
 				})
 				.catch(() => {
-					console.error('[Cache Global] : Cache Saved Failure !');
+					console.error(red('[Cache Global] : Cache Saved Failure !'));
 				});
 		}
 	}
@@ -136,10 +137,10 @@ export class BotFirebase {
 		const document = doc(this.db, 'cache/' + guild.id);
 		setDoc(document, cache, { merge: true })
 			.then(() => {
-				console.log('[Cache ' + guild.id + '] : Cache Saved Success !');
+				console.log(green(`[Cache ${guild.id}] : Cache Saved Success !`));
 			})
 			.catch(() => {
-				console.error('[Cache ' + guild.id + '] : Cache Saved Failure !');
+				console.error(red(`[Cache ${guild.id}] : Cache Saved Failure !`));
 			});
 	}
 
@@ -150,19 +151,19 @@ export class BotFirebase {
 			updateDoc(document, 'keywords', arrayUnion(cache.keyword))
 				.then(() => {
 					console.log(
-						'[UserData ' + user.id + '] : UserData Updated Success !'
+						green('[UserData ' + user.id + '] : UserData Updated Success !')
 					);
 				})
 				.catch((error) => {
 					console.error(
-						'[UserData ' + user.id + '] : UserData Updated Failure !'
+						red('[UserData ' + user.id + '] : UserData Updated Failure !')
 					);
 					if (error.code === NOT_FOUND_ERROR) {
 						console.log('[UserData ' + user.id + '] : Try to create doc...');
 						setDoc(document, { keywords: [cache.keyword] })
-							.then(() => console.log('[UserData ' + user.id + '] : Success !'))
+							.then(() => console.log(green('[UserData ' + user.id + '] : Success !')))
 							.catch(() =>
-								console.log('[UserData ' + user.id + '] : Failed !')
+								console.log(red('[UserData ' + user.id + '] : Failed !'))
 							);
 					}
 				});
@@ -171,10 +172,10 @@ export class BotFirebase {
 		else {
 			setDoc(document, cache, { merge: true })
 				.then(() => {
-					console.log('[Cache ' + user.id + '] : Cache Saved Success !');
+					console.log(green('[Cache ' + user.id + '] : Cache Saved Success !'));
 				})
 				.catch(() => {
-					console.error('[Cache ' + user.id + '] : Cache Saved Failure !');
+					console.error(red('[Cache ' + user.id + '] : Cache Saved Failure !'));
 				});
 		}
 	}
@@ -183,7 +184,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'cache/global');
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGlobal>caches.data();
-		else console.error('[Cache Global] : Cache Not Found !');
+		else console.error(red('[Cache Global] : Cache Not Found !'));
 		return null;
 	}
 
@@ -191,7 +192,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'cache/' + guild.id);
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGuild>caches.data();
-		else console.error('[Cache ' + guild.id + '] : Cache Not Found !');
+		else console.error(red('[Cache ' + guild.id + '] : Cache Not Found !'));
 		return null;
 	}
 
@@ -199,7 +200,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'user-data/' + user.id);
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotUserData>caches.data();
-		else console.error('[UserData ' + user.id + '] : UserData Not Found !');
+		else console.error(red('[UserData ' + user.id + '] : UserData Not Found !'));
 		return null;
 	}
 
@@ -207,11 +208,11 @@ export class BotFirebase {
 		const document = doc(this.db, 'user-data/' + user.id);
 		return setDoc(document, initBotUserData)
 			.then(() => {
-				console.log('[UserData ' + user.id + '] : Cache Clear Success !');
+				console.log(green('[UserData ' + user.id + '] : Cache Clear Success !'));
 				return true;
 			})
 			.catch(() => {
-				console.error('[UserData ' + user.id + '] : Cache Clear Failure !');
+				console.error(red('[UserData ' + user.id + '] : Cache Clear Failure !'));
 				return false;
 			});
 	}

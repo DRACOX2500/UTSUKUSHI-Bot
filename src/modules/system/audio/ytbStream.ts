@@ -7,6 +7,7 @@ import ytsr from 'ytsr';
 import { StreamSource } from '@models/StreamSource';
 import { YOUTUBE_VIDEO_LINK_REGEX } from '@utils/const';
 import { YtVideoItem } from 'src/models/YtVideoItem';
+import { red } from 'ansicolor';
 
 config({ path: '.env' });
 
@@ -84,7 +85,7 @@ export class YtbStream {
 
 	initEvents(interaction?: any): void {
 		this.stream.on('error', (error: Error) => {
-			console.error('[Stream] Error:', error.message);
+			console.error(red(`[Stream] Error : ${error.message}`));
 			if (interaction && error.message === 'Sign in to confirm your age')
 				interaction.editReply('🔞 Sorry, but I can\'t play age restricted videos !');
 		});

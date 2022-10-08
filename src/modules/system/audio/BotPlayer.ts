@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, NoSubscriberBehavior, VoiceConnection } from '@discordjs/voice';
+import { red, yellow } from 'ansicolor';
 import { Message } from 'discord.js';
 
 export class BotPlayer {
@@ -28,7 +29,7 @@ export class BotPlayer {
 
 	private initEvents() {
 		this.player?.on('stateChange', (oldState, newState) => {
-			console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
+			console.log(yellow(`Audio player transitioned from ${oldState.status} to ${newState.status}`));
 		});
 
 		this.player?.on(AudioPlayerStatus.Idle, () => {
@@ -37,7 +38,7 @@ export class BotPlayer {
 		});
 
 		this.player?.on('error', error => {
-			console.error('[Player] Error:', error.message);
+			console.error(red(`[Player] Error : ${error.message}`));
 		});
 	}
 

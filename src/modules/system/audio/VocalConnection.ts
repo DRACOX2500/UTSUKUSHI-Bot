@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice';
+import { blue, red } from 'ansicolor';
 import { Message } from 'discord.js';
 import { BotPlayer } from './BotPlayer';
 
@@ -19,11 +20,11 @@ export class VocalConnection {
 
 	private initEvents(): void {
 		this.connection?.on('stateChange', (oldState, newState) => {
-			console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
+			console.log(blue(`Connection transitioned from ${oldState.status} to ${newState.status}`));
 		});
 
 		this.connection?.on('error', error => {
-			console.error('[Connection] Error:', error.message);
+			console.error(red(`[Connection] Error : ${error.message}`));
 		});
 	}
 

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { DataEconomieGouvResponse, DataEconomieGouvResponseRecord } from '@models/api/DataEconomieGouv';
 import { API } from '@utils/const';
+import { red } from 'ansicolor';
 
 export class FuelAPI {
 
@@ -16,7 +17,7 @@ export class FuelAPI {
 
 	private fuelError(err?: Error) {
 		if (err)
-			console.error('[Fuel API] Error: ' + err.message);
+			console.error(red(`[Fuel API] Error: ${err.message}`));
 		return API.FUEL.ERROR;
 	}
 
