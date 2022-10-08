@@ -9,6 +9,7 @@ import {
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
+import { NotifyCommandOptions, NotifySubCommand } from './notify.sub';
 
 /**
  * @SlashCommand
@@ -16,19 +17,30 @@ import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
  * @DefaultMemberPermissions `ManageGuild`
  * - `notify [channel]` : set **TextChannel** to notify when guild members join voice channel
  */
-export class NotifyCommand implements UtsukushiAutocompleteSlashCommand {
+export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocompleteSlashCommand {
+
 	readonly command = new SlashCommandBuilder()
 		.setName('notify')
 		.setDescription('Notify when someone join a voice channel 🔔!')
-		.addStringOption((option) =>
-			option
-				.setName('channel')
-				.setDescription('The channel you want me to notify')
-				.setAutocomplete(true)
-				.setRequired(true)
-		)
 		.setDefaultMemberPermissions(
 			PermissionsBitField.Flags.ManageGuild
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName('on')
+				.setDescription('Notify when someone join a voice channel 🔔!')
+				.addStringOption((option) =>
+					option
+						.setName('channel')
+						.setDescription('Disable the notification system in your guild 🔕!')
+						.setAutocomplete(true)
+						.setRequired(true)
+				)
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName('off')
+				.setDescription('Play Sound Effect in Vocal Channel 🔊🎶!')
 		);
 
 	readonly result = async (
@@ -36,28 +48,22 @@ export class NotifyCommand implements UtsukushiAutocompleteSlashCommand {
 		client: BotClient
 	): Promise<void> => {
 
-		await interaction.deferReply();
-		const channelId = <string | null>interaction.options.get('channel')?.value;
+		const subCommand = interaction.options.getSubcommand();
 
-		if (interaction.guild && channelId) {
-
-			if (channelId === '-1') {
-				client
-					.getDatabase()
-					.setCacheByGuild(interaction.guild, { vocalNotifyChannel: null });
-				interaction.editReply('🔕 Notify Channel Removed successfully !');
+		// SubCommand  => On
+		if (subCommand === 'on') {
+			const options: NotifyCommandOptions = {
+				channel: interaction.options.getString('channel') ?? '',
+			};
+			if (options.channel === '') {
+				interaction.reply('❌ Channel setup Failed !');
+				return;
 			}
-			else {
-				client
-					.getDatabase()
-					.setCacheByGuild(interaction.guild, {
-						vocalNotifyChannel: channelId,
-					});
-				interaction.editReply('🔔 Channel setup successfully !');
-			}
+			await this.on(interaction, client, options);
 		}
-		else {
-			interaction.editReply('❌ Channel setup Failed !');
+		// SubCommand  => off
+		else if (subCommand === 'off') {
+			await this.off(interaction, client);
 		}
 	};
 

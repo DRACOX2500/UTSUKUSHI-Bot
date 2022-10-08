@@ -167,7 +167,8 @@ export class BotFirebase {
 					}
 				});
 			this.userDataCache.userdata.delete(user.id);
-		} else {
+		}
+		else {
 			setDoc(document, cache, { merge: true })
 				.then(() => {
 					console.log('[Cache ' + user.id + '] : Cache Saved Success !');
