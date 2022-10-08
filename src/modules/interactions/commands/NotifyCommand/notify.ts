@@ -2,7 +2,6 @@
 import {
 	SlashCommandBuilder,
 	ChatInputCommandInteraction,
-	GuildMember,
 	PermissionsBitField,
 	AutocompleteInteraction,
 	CacheType,
@@ -11,50 +10,38 @@ import {
 import { BotClient } from 'src/BotClient';
 import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 
+/**
+ * @SlashCommand
+ * @AutocompleteInteraction
+ * @DefaultMemberPermissions `ManageGuild`
+ * - `notify [channel]` : set **TextChannel** to notify when guild members join voice channel
+ */
 export class NotifyCommand implements UtsukushiAutocompleteSlashCommand {
-	readonly command: Omit<
-		SlashCommandBuilder,
-		'addSubcommand' | 'addSubcommandGroup'
-	> = new SlashCommandBuilder()
-			.setName('notify')
-			.setDescription('Notify when someone join a voice channel 🔔!')
-			.addStringOption((option) =>
-				option
-					.setName('channel')
-					.setDescription('The channel you want me to notify')
-					.setAutocomplete(true)
-					.setRequired(true)
-			);
+	readonly command = new SlashCommandBuilder()
+		.setName('notify')
+		.setDescription('Notify when someone join a voice channel 🔔!')
+		.addStringOption((option) =>
+			option
+				.setName('channel')
+				.setDescription('The channel you want me to notify')
+				.setAutocomplete(true)
+				.setRequired(true)
+		)
+		.setDefaultMemberPermissions(
+			PermissionsBitField.Flags.ManageGuild
+		);
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
 		client: BotClient
 	): Promise<void> => {
-		const m = <GuildMember>interaction.member;
-		if (!m.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-			interaction
-				.reply('🔒 You do not have permission to manage the guild')
-				.then(() => {
-					setTimeout(
-						() =>
-							interaction
-								.deleteReply()
-								.catch((error) => console.log(error.message)),
-						3000
-					);
-				});
-			return;
-		}
 
 		await interaction.deferReply();
 		const channelId = <string | null>interaction.options.get('channel')?.value;
 
 		if (interaction.guild && channelId) {
-			const channelIdInCache = await client
-				.getDatabase()
-				.getCacheByGuild(interaction.guild);
 
-			if (channelIdInCache?.vocalNotifyChannel === channelId) {
+			if (channelId === '-1') {
 				client
 					.getDatabase()
 					.setCacheByGuild(interaction.guild, { vocalNotifyChannel: null });
@@ -82,12 +69,15 @@ export class NotifyCommand implements UtsukushiAutocompleteSlashCommand {
 			(channel) => channel.type === ChannelType.GuildText
 		);
 		if (textchannel) {
-			await interaction.respond(
-				textchannel.map((choice) => ({
-					name: choice.name,
-					value: choice.id,
-				}))
+
+			const res = textchannel.map((choice) => ({
+				name: choice.name,
+				value: choice.id,
+			}));
+			res.unshift(
+				{ name: '---', value: '-1' }
 			);
+			await interaction.respond(res);
 		}
 	};
 }
