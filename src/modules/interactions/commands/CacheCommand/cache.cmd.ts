@@ -1,40 +1,94 @@
 /* eslint-disable no-shadow */
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandIntegerOption } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	codeBlock,
+	SlashCommandBuilder,
+	SlashCommandIntegerOption,
+} from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiCommand } from '@models/UtsukushiCommand';
+import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
 
+/**
+ * - `Clear`| clear all data from your user cache
+ * - `Show`	| send user data cache to user
+ */
 enum CacheType {
-    Clear = 0,
+	Clear = 0,
+	Show = 1,
 }
 
-export class CacheCommand implements UtsukushiCommand<ChatInputCommandInteraction> {
+export class CacheCommand implements UtsukushiSlashCommand {
+	readonly command: Omit<
+		SlashCommandBuilder,
+		'addSubcommand' | 'addSubcommandGroup'
+	> = new SlashCommandBuilder()
+			.setName('cache')
+			.setDescription('Manage your user cache from UTSUKUSHI-BOT 📁!')
+			.addIntegerOption((option: SlashCommandIntegerOption) =>
+				option
+					.setName('action')
+					.setDescription('What action to perform ?')
+					.addChoices(
+						{
+							name: 'Clear | clear all data from your user cache',
+							value: CacheType.Clear,
+						},
+						{
+							name: 'Show | Utsukushi send you in DM, your cache data',
+							value: CacheType.Show,
+						}
+					)
+					.setRequired(true)
+			);
 
-	readonly command: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> = new SlashCommandBuilder()
-		.setName('cache')
-		.setDescription('Manage your user cache from UTSUKUSHI-BOT 📁!')
-		.addIntegerOption((option : SlashCommandIntegerOption) =>
-			option.setName('action')
-				.setDescription('Type of bot activity')
-				.addChoices(
-					{ name: 'Clear', value: CacheType.Clear },
-				)
-				.setRequired(true));
+	readonly result = async (
+		interaction: ChatInputCommandInteraction,
+		client: BotClient
+	): Promise<void> => {
+		const code = interaction?.options.getInteger('action') ?? -1;
 
-	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient): Promise<void> => {
-
-		const code = (<number>interaction?.options.get('action')?.value) ?? -1;
-
-		if (code === 0 && interaction) {
+		switch (code) {
+		case CacheType.Clear: {
+			await interaction.deferReply({ ephemeral: true });
 			client.getDatabase().userDataCache.clean(interaction.user);
-			const clearBoolean = await client.getDatabase().resetUserData(interaction.user);
+			const clearBoolean = await client
+				.getDatabase()
+				.resetUserData(interaction.user);
 			if (clearBoolean)
-				await interaction.reply({ content: '☑️ Cache Clear !', ephemeral: true });
+				await interaction.editReply({
+					content: '✅ Cache Clear !',
+				});
 			else
-				await interaction.reply({ content: '❌ Cache Clear Failed !', ephemeral: true });
+				await interaction.editReply({
+					content: '❌ Cache Clear Failed !',
+				});
+			break;
 		}
-
+		case CacheType.Show: {
+			await interaction.deferReply({ ephemeral: true });
+			const data = await client
+				.getDatabase()
+				.getUserData(interaction.user);
+			if (data) {
+				await interaction.user.send(codeBlock('json', JSON.stringify(data, null, '\t')));
+				await interaction.editReply({
+					content: '✅ Data sent',
+				});
+			}
+			else
+				await interaction.editReply({
+					content: '❌ Cache Show Failed ! Maybe you don\'t have data in my database ?',
+				});
+			break;
+		}
+		default:
+			await interaction.reply({
+				content: '❌ Command Failed !',
+				ephemeral: true,
+			});
+			break;
+		}
 	};
-
 }
 
 export const command = new CacheCommand();
