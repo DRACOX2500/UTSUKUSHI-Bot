@@ -23,8 +23,6 @@ export class YtbStream {
 	private stream: any | null = null;
 
 	async init(urlKeywords: string, interaction?: any): Promise<void> {
-		console.log('kw', urlKeywords);
-		console.log(!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX));
 
 		if (!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX))
 			await this.searchByKeyword(urlKeywords);
