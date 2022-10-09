@@ -1,6 +1,5 @@
 import {
 	bold,
-	codeBlock,
 	EmbedBuilder,
 	Guild,
 	italic,
