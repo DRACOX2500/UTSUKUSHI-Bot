@@ -17,6 +17,7 @@ export class LocaleCommand implements UtsukushiSlashCommand {
 				value: key,
 			});
 		}
+		choices.sort((a, b) => a.name.localeCompare(b.name));
 		return choices;
 	}
 
@@ -30,7 +31,7 @@ export class LocaleCommand implements UtsukushiSlashCommand {
 		.addStringOption((option) =>
 			option
 				.setName('locale')
-				.setDescription('The sound effect you want to play')
+				.setDescription('Change the locale of the guild (only 25 first locale in alphabetical order)')
 				.addChoices(
 					...this.getAllLocale()
 				)
