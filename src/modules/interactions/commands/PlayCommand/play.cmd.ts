@@ -10,7 +10,7 @@ import {
 import { EmbedPlayer } from '@modules/system/embeds/embedPlayer';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
-import { BotCacheGuild } from '@models/BotCache';
+import { BotCacheGuild } from 'src/models/database/BotCache';
 import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 
 /**

@@ -58,6 +58,7 @@ export class CommandManager {
 
 		for (const file of filesList.flat()) {
 			const command: UtsukushiCommand<any> = require(file).command;
+			if (!command) continue;
 
 			collection.set(command.command.name, command);
 		}
@@ -95,7 +96,15 @@ export class CommandManager {
 			await interaction.reply({
 				content: 'There was an error while executing this command!',
 				ephemeral: true,
-			});
+			}).catch(
+				async (error: Error) => {
+					if (error.name === 'InteractionAlreadyReplied') {
+						await interaction.editReply({
+							content: 'There was an error while executing this command!',
+						});
+					}
+				}
+			);
 		}
 	}
 

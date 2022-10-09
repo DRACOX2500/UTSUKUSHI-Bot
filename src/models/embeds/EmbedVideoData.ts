@@ -1,4 +1,4 @@
-export interface EmbedData {
+export interface EmbedVideoData {
     title: string;
     duration: number;
     view: string;

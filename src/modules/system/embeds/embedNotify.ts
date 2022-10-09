@@ -1,4 +1,5 @@
 import { bold, EmbedBuilder, User, VoiceChannel } from 'discord.js';
+import { BotClient } from 'src/BotClient';
 
 export class EmbedNotify {
 

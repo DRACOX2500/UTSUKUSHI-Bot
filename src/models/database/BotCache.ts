@@ -1,5 +1,5 @@
-import { Activity } from './Activity';
-import { SoundEffect } from './SoundEffect';
+import { Activity } from '../Activity';
+import { SoundEffect } from '../SoundEffect';
 
 export interface BotCacheGlobal {
     activity?: Activity

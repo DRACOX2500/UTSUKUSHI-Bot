@@ -17,12 +17,12 @@ import {
 	UserCredential,
 } from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
-import { BotCacheGlobal, BotCacheGuild } from '@models/BotCache';
+import { BotCacheGlobal, BotCacheGuild } from 'src/models/database/BotCache';
 import {
 	BotUserData,
 	BotUserDataTypes,
 	initBotUserData,
-} from '@models/BotUserData';
+} from '@models/database/BotUserData';
 import { green, red } from 'ansicolor';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
