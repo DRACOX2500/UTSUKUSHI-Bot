@@ -20,8 +20,29 @@ Discord Bot for my private Discord Server & friends server.
 - **[Staticmaps](https://www.npmjs.com/package/staticmaps)** : 1.10.0                   # Get Static Map Images
 - **[Ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
 
+## Installation
+
+1. Clone projet : `git clone https://github.com/DRACOX2500/Discord-Bot.git`
+
+2. Install / Update packages manager  
+- Install **NodeJS** latest LTS version (*current : 17.10.1*)
+- Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 8.19.2*)
+- *Only Linux* : `apt install libtool` 
+
+3. Install dependencies
+- Execute following command : `npm i`
+- Install TypeScript (Global) : `npm i -g typescript`
+- If an **Opus error** is returned, try to remone project directory and reclone project
+
+4. Start Utsukushi Project
+- Build : `npm run build`
+- Start : `npm start`
+- Build + Start : `npm restart`
+
+![](./.github/readme/start.png)
+
 ## Interaction
-![](https://img.shields.io/badge/Slash_Commands-9-success)
+![](https://img.shields.io/badge/Slash_Commands-13-success)
 ![](https://img.shields.io/badge/Context_Menus-1-success)
 
 ### Commands
