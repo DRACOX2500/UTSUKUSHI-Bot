@@ -23,7 +23,7 @@ type CommandDeployerOptions = {
 
 export class CommandDeployer {
 	/** Collection<CommandName, Command> */
-	commands!: Collection<string, UtsukushiSlashCommand>;
+	globals!: Collection<string, UtsukushiSlashCommand>;
 
 	/** Map<GuildID, Collection<CommandName, Command>> */
 	commandGuilds!: Map<string, Map<string, UtsukushiSlashCommand>>;
@@ -39,7 +39,7 @@ export class CommandDeployer {
 	constructor(
 		private DISCORD_TOKEN: string,
 		private CLIENT_ID: string,
-		commands: Collection<string, UtsukushiSlashCommand>,
+		readonly commands: Collection<string, UtsukushiSlashCommand>,
 		contexts: Collection<
 			string,
 			UtsukushiContextCommand<
@@ -47,13 +47,13 @@ export class CommandDeployer {
 			>
 		>
 	) {
-		this.commands = commands;
+		this.globals = commands.clone();
 		this.contexts = contexts;
 		this.commandGuilds = new Map();
 
-		const tmp = this.commands;
+		const tmp = this.globals;
 
-		this.commands.forEach((value, key) => {
+		this.globals.forEach((value, key) => {
 			const guildIDs = (<UtsukushiPrivateCommand>(<unknown>value)).guildId;
 			if (guildIDs) {
 				guildIDs.forEach((guild) => {
@@ -70,7 +70,7 @@ export class CommandDeployer {
 
 	get globalAndContext(): Collection<string, UtsukushiCommand<any>> {
 		return new Collection<string, UtsukushiCommand<any>>().concat(
-			this.commands,
+			this.globals,
 			this.contexts
 		);
 	}
