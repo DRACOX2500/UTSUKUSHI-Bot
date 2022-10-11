@@ -34,7 +34,11 @@ Discord Bot for my private Discord Server & friends server.
 - Install TypeScript & TypeScriptPath (Global) : `npm i -g typescript tspath`
 - If an **Opus error** is returned, try to remone project directory and reclone project
 
-4. Start Utsukushi Project
+4. Environment Variables
+- Copy or Rename `.env.example` into `.env`
+- Complete the *.env file* with your values
+
+5. Start Utsukushi Project
 - Build : `npm run build`
 - Start : `npm start`
 - Build + Start : `npm restart`
