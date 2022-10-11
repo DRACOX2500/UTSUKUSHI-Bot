@@ -31,7 +31,7 @@ Discord Bot for my private Discord Server & friends server.
 
 3. Install dependencies
 - Execute following command : `npm i`
-- Install TypeScript (Global) : `npm i -g typescript`
+- Install TypeScript & TypeScriptPath (Global) : `npm i -g typescript tspath`
 - If an **Opus error** is returned, try to remone project directory and reclone project
 
 4. Start Utsukushi Project
