@@ -12,7 +12,7 @@ import config from 'root/utsukushi.config.json';
  */
 export class BotCommand extends BotSubCommand implements UtsukushiSlashCommand, UtsukushiPrivateCommand {
 
-	readonly guildId = config.privateCommands[0].bot ?? null;
+	readonly guildId = config.privateCommands[0].bot.length ? config.privateCommands[0].bot : null;
 
 	readonly command = new SlashCommandBuilder()
 		.setName('bot')
