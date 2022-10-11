@@ -51,8 +51,6 @@ export class CommandDeployer {
 		this.contexts = contexts;
 		this.commandGuilds = new Map();
 
-		const tmp = this.globals;
-
 		this.globals.forEach((value, key) => {
 			const guildIDs = (<UtsukushiPrivateCommand>(<unknown>value)).guildId;
 			if (guildIDs) {
@@ -63,7 +61,7 @@ export class CommandDeployer {
 						guildscommand ? guildscommand.set(key, value) : new Map().set(key, value)
 					);
 				});
-				tmp.delete(key);
+				this.globals.delete(key);
 			}
 		});
 	}
