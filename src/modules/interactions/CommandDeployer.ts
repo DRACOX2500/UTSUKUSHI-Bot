@@ -104,7 +104,7 @@ export class CommandDeployer {
 
 				if (options?.enableLogs ?? true)
 					console.log(
-						green(`Successfully reloaded ${botCommands.length} application global (/) commands !`)
+						green(`Successfully reloaded application ${botCommands.length} global (/) commands !`)
 					);
 			}
 			catch (error) {
@@ -146,7 +146,7 @@ export class CommandDeployer {
 					if (options?.enableLogs ?? true)
 						console.log(
 							magenta(
-								`Successfully reloaded ${botCommands.length} application private [${key}] (/) commands !`
+								`Successfully reloaded application ${botCommands.length} private [${key}] (/) commands !`
 							)
 						);
 				}
