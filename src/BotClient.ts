@@ -1,18 +1,23 @@
 import { config } from 'dotenv';
-import { cyan, green, lightGreen, lightYellow } from 'ansicolor';
-import { Client, GatewayIntentBits, ActivityType, REST, Routes, PresenceStatusData, SlashCommandBuilder, ContextMenuCommandBuilder } from 'discord.js';
+import { cyan, lightYellow } from 'ansicolor';
+import {
+	Client,
+	GatewayIntentBits,
+	ActivityType,
+	PresenceStatusData,
+} from 'discord.js';
 import { Activity } from '@models/Activity';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
 import { CommandManager } from '@modules/interactions/CommandManager';
-import { BotFirebase, FirebaseAuth } from 'src/database/Firebase';
+import { BotFirebase, FirebaseAuth } from '@database/Firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
-import { BotRemoverManager } from 'src/modules/system/System';
+import { BotRemoverManager } from '@modules/system/System';
+import { CommandDeployer } from '@modules/interactions/CommandDeployer';
 
 config({ path: '.env' });
 
 export class BotClient extends Client {
-
 	private DISCORD_TOKEN!: string;
 	private CLIENT_ID!: string;
 
@@ -24,6 +29,8 @@ export class BotClient extends Client {
 	removerManager!: BotRemoverManager;
 
 	private commandManager!: CommandManager;
+
+	private commandDeployer!: CommandDeployer;
 
 	private errorManager!: BotErrorManager;
 
@@ -46,7 +53,9 @@ export class BotClient extends Client {
 		this.CLIENT_ID = process.env.CLIENT_ID || '';
 		this.FIREBASE_TOKEN = process.env.FIREBASE_TOKEN || '';
 
-		this.removerManager = new BotRemoverManager(+(process.env.MAX_REMOVER_INSTANCES || 3));
+		this.removerManager = new BotRemoverManager(
+			+(process.env.MAX_REMOVER_INSTANCES || 3)
+		);
 
 		const auth = new FirebaseAuth(
 			process.env.DB_EMAIL || '',
@@ -54,7 +63,8 @@ export class BotClient extends Client {
 		);
 
 		const authDB = !!+(process.argv[2] ?? 1);
-		if (authDB) this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
+		if (authDB)
+			this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
 
 		this.init(test);
 	}
@@ -64,7 +74,14 @@ export class BotClient extends Client {
 		this.initEvents();
 
 		this.commandManager = new CommandManager(this);
-		this.deployCommands(!test);
+		this.commandDeployer = new CommandDeployer(
+			this.DISCORD_TOKEN,
+			this.CLIENT_ID,
+			this.commandManager.commands,
+			this.commandManager.contexts
+		);
+		this.commandDeployer.deployGlobal();
+		this.commandDeployer.deployPrivate();
 		this.commandManager.initCommand(this);
 		this.commandManager.initBotEvents(this);
 	}
@@ -75,7 +92,6 @@ export class BotClient extends Client {
 	}
 
 	private initEvents(): void {
-
 		this.on('ready', async () => {
 			console.log(lightYellow(`Logged in as ${cyan(this.user?.tag)}!`));
 			const cache = await this.database.getCacheGlobal();
@@ -86,33 +102,6 @@ export class BotClient extends Client {
 		});
 		this.on('error', console.error);
 		this.on('warn', console.warn);
-	}
-
-	protected async deployCommands(log: boolean): Promise<number> {
-
-		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
-
-		const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] = [];
-
-		for (const iterator of this.commandManager.allCollection) {
-			const value = this.commandManager.allCollection.get(iterator[0]);
-			if (value) botCommands.push(<SlashCommandBuilder | ContextMenuCommandBuilder>value.command);
-		}
-
-		return (async (): Promise<number> => {
-			try {
-				if (log) console.log(lightGreen('Started refreshing application (/) commands...'));
-
-				await rest.put(Routes.applicationCommands(this.CLIENT_ID), { body: botCommands });
-
-				if (log) console.log(green('Successfully reloaded application (/) commands !'));
-			}
-			catch (error) {
-				console.error(error);
-				return 1;
-			}
-			return 0;
-		})();
 	}
 
 	setActivity(activity: Activity): void {

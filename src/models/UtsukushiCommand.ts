@@ -26,6 +26,17 @@ export interface UtsukushiCommandOptions {
 	test_error?: boolean;
 }
 
+/**
+ * Command to deploy on specific guild
+ */
+export interface UtsukushiPrivateCommand {
+	/**
+	 * Set guild ID if you want to deploy this command on a specific guild,
+	 * else this command will be deploy globally
+	 */
+	readonly guildId: string[] | null | undefined;
+}
+
 export interface UtsukushiCommand<T extends CommandInteraction> {
 	/**
 	 * @Command SlashCommand | ContextMenuCommand

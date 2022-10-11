@@ -3,6 +3,7 @@ import { SoundEffect } from '../SoundEffect';
 
 export interface BotCacheGlobal {
     activity?: Activity
+    status?: string;
     soundEffects?: SoundEffect[]
 }
 

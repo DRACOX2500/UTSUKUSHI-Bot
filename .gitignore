@@ -10,6 +10,7 @@ dist/
 #local
 .env
 assets/*.webp
+utsukushi.config.json
 
 #IDE
 .vscode/

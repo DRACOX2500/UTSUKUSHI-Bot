@@ -9,7 +9,9 @@
         "baseUrl": ".",
         "paths": {
             "*": ["node_modules/*"],
+            "root/*": ["./*"],
             "src/*": ["src/*"],
+            "assets/*": ["assets/*"],
             "@api/*": ["src/api/*"],
             "@database/*": ["src/database/*"],
             "@errors/*": ["src/errors/*"],
