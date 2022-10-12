@@ -57,10 +57,10 @@ export class BotClient extends Client {
 			+(process.env.MAX_REMOVER_INSTANCES || 3)
 		);
 
-		const auth = new FirebaseAuth(
-			process.env.DB_EMAIL || '',
-			process.env.DB_PASSWORD || ''
-		);
+		const auth: FirebaseAuth = {
+			email: process.env.DB_EMAIL || '',
+			password: process.env.DB_PASSWORD || '',
+		};
 
 		const authDB = !!+(process.argv[2] ?? 1);
 		if (authDB)

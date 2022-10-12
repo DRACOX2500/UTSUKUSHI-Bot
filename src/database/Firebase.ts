@@ -17,7 +17,7 @@ import {
 	UserCredential,
 } from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
-import { BotCacheGlobal, BotCacheGuild } from 'src/models/database/BotCache';
+import { BotCacheGlobal, BotCacheGlobalGuildEmoji, BotCacheGlobalSoundEffect, BotCacheGuild, initBotCacheGuild } from '@models/database/BotCache';
 import {
 	BotUserData,
 	BotUserDataTypes,
@@ -48,14 +48,9 @@ class FirebaseCache {
 	}
 }
 
-export class FirebaseAuth {
-	email!: string;
-	password!: string;
-
-	constructor(email: string, password: string) {
-		this.email = email;
-		this.password = password;
-	}
+export interface FirebaseAuth {
+	email: string;
+	password: string;
 }
 
 export class BotFirebase {
@@ -98,43 +93,78 @@ export class BotFirebase {
 		this.db = getFirestore();
 	}
 
+	/**
+	 * Default set Utsukushi Document
+	 */
 	async setCacheGlobal(cache: BotCacheGlobal): Promise<void> {
-		const document = doc(this.db, 'cache/global');
+		const document = doc(this.db, 'global/utsukushi');
 
-		if (cache.soundEffects) {
-			updateDoc(document, 'soundEffects', arrayUnion(cache.soundEffects.at(0)))
+		setDoc(document, cache, { merge: true })
+			.then(() => {
+				console.log(green('[Cache Global] : Cache Saved Success !'));
+			})
+			.catch(() => {
+				console.error(red('[Cache Global] : Cache Saved Failure !'));
+			});
+	}
+
+	async setCacheGlobalSoundEffect(cache: BotCacheGlobalSoundEffect): Promise<void> {
+		const document = doc(this.db, 'global/sound-effect');
+
+		if (cache) {
+			updateDoc(document, 'soundEffects', arrayUnion(cache))
 				.then(() => {
 					console.log(
-						green('[Cache Global] : Updated Success !')
+						green('[Cache Global SoundEffect] : Updated Success !')
 					);
 				})
 				.catch((error) => {
 					console.error(
-						red('[Cache Global] : Updated Failure !')
+						red('[Cache Global SoundEffect] : Updated Failure !')
 					);
 					if (error.code === NOT_FOUND_ERROR) {
-						console.log('[Cache Global] : Try to create doc...');
-						setDoc(document, { soundEffects: [cache.soundEffects?.at(0)] })
-							.then(() => console.log(green('[Cache Global] : Success !')))
+						console.log('[Cache Global SoundEffect] : Try to create doc...');
+						setDoc(document, cache)
+							.then(() => console.log(green('[Cache Global SoundEffect] : Success !')))
 							.catch(() =>
-								console.log(red('[Cache Global] : Failed !'))
+								console.log(red('[Cache Global SoundEffect] : Failed !'))
 							);
 					}
 				});
 		}
 		else {
-			setDoc(document, cache, { merge: true })
+			console.error(red('[Cache Global SoundEffect] : Updated Failure !'));
+		}
+	}
+
+	async setCacheGlobalEmoji(cache: BotCacheGlobalGuildEmoji): Promise<void> {
+		const document = doc(this.db, 'global/emoji');
+
+		if (cache.guildId) {
+			updateDoc(document, 'soundEffects', arrayUnion(cache))
 				.then(() => {
-					console.log(green('[Cache Global] : Cache Saved Success !'));
+					console.log(
+						green('[Cache Global Emoji] : Updated Success !')
+					);
 				})
-				.catch(() => {
-					console.error(red('[Cache Global] : Cache Saved Failure !'));
+				.catch((error) => {
+					console.error(
+						red('[Cache Global Emoji] : Updated Failure !')
+					);
+					if (error.code === NOT_FOUND_ERROR) {
+						console.log('[Cache Global Emoji] : Try to create doc...');
+						setDoc(document, cache)
+							.then(() => console.log(green('[Cache Global Emoji] : Success !')))
+							.catch(() =>
+								console.log(red('[Cache Global Emoji] : Failed !'))
+							);
+					}
 				});
 		}
 	}
 
 	async setCacheByGuild(guild: Guild, cache: BotCacheGuild): Promise<void> {
-		const document = doc(this.db, 'cache/' + guild.id);
+		const document = doc(this.db, 'guild-data/' + guild.id);
 		setDoc(document, cache, { merge: true })
 			.then(() => {
 				console.log(green(`[Cache ${guild.id}] : Cache Saved Success !`));
@@ -181,15 +211,31 @@ export class BotFirebase {
 	}
 
 	async getCacheGlobal(): Promise<BotCacheGlobal | null> {
-		const document = doc(this.db, 'cache/global');
+		const document = doc(this.db, 'global/utsukushi');
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGlobal>caches.data();
 		else console.error(red('[Cache Global] : Cache Not Found !'));
 		return null;
 	}
 
+	async getCacheGlobalSounEffect(): Promise<BotCacheGlobalSoundEffect[] | null> {
+		const document = doc(this.db, 'global/sound-effect');
+		const caches = await getDoc(document);
+		if (caches.exists()) return <BotCacheGlobalSoundEffect[]>caches.data();
+		else console.error(red('[Cache Global] : Cache Not Found !'));
+		return null;
+	}
+
+	async getCacheGlobalEmoji(): Promise<BotCacheGlobalGuildEmoji[] | null> {
+		const document = doc(this.db, 'global/emoji');
+		const caches = await getDoc(document);
+		if (caches.exists()) return <BotCacheGlobalGuildEmoji[]>caches.data();
+		else console.error(red('[Cache Global] : Cache Not Found !'));
+		return null;
+	}
+
 	async getCacheByGuild(guild: Guild): Promise<BotCacheGuild | null> {
-		const document = doc(this.db, 'cache/' + guild.id);
+		const document = doc(this.db, 'guild-data/' + guild.id);
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGuild>caches.data();
 		else console.error(red('[Cache ' + guild.id + '] : Cache Not Found !'));
@@ -213,6 +259,19 @@ export class BotFirebase {
 			})
 			.catch(() => {
 				console.error(red('[UserData ' + user.id + '] : Cache Clear Failure !'));
+				return false;
+			});
+	}
+
+	async resetGuildData(guild: Guild): Promise<boolean> {
+		const document = doc(this.db, 'guild-data/' + guild.id);
+		return setDoc(document, initBotCacheGuild)
+			.then(() => {
+				console.log(green('[UserData ' + guild.id + '] : Cache Clear Success !'));
+				return true;
+			})
+			.catch(() => {
+				console.error(red('[UserData ' + guild.id + '] : Cache Clear Failure !'));
 				return false;
 			});
 	}
