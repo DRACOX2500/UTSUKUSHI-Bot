@@ -58,7 +58,7 @@ export class BotCommand extends BotSubCommand implements UtsukushiSlashCommand, 
 
 		const subCommand = interaction.options.getSubcommand();
 		const options: BotCommandOptions = {
-			activityType: interaction.options.getNumber('activity-type') ?? ActivityType.Playing,
+			activityType: interaction.options.getInteger('activity-type') ?? ActivityType.Playing,
 			activityMessage: interaction.options.getString('activity-message') ?? '',
 			status: interaction.options.getString('status-type') ?? 'online',
 		};
