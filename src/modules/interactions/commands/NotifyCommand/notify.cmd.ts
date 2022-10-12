@@ -10,6 +10,7 @@ import {
 import { BotClient } from 'src/BotClient';
 import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 import { NotifyCommandOptions, NotifySubCommand } from './notify.sub';
+import { sortByName } from '@utils/sortByName';
 
 /**
  * @SlashCommand `notify`
@@ -76,14 +77,15 @@ export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocomp
 			(channel) => channel.type === ChannelType.GuildText
 		);
 		if (textchannel) {
-
-			const res = textchannel.map((choice) => ({
+			let res = textchannel.map((choice) => ({
 				name: choice.name,
 				value: choice.id,
 			}));
+			res = res.sort((a, b) => sortByName(a.name, b.name));
 			res.unshift(
 				{ name: '---', value: '-1' }
 			);
+			if (res.length >= 25) res = res.slice(0, 25);
 			await interaction.respond(res);
 		}
 	};

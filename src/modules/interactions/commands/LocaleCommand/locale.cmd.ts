@@ -1,12 +1,13 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionsBitField, Locale } from 'discord.js';
-import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionsBitField, Locale, AutocompleteInteraction, CacheType } from 'discord.js';
+import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
+import { sortByName } from '@utils/sortByName';
 
 type Choice = {
     name: string;
     value: string;
 }
 
-export class LocaleCommand implements UtsukushiSlashCommand {
+export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 
 	private getAllLocale(): Choice[] {
 		const choices: Choice[] = [];
@@ -32,9 +33,7 @@ export class LocaleCommand implements UtsukushiSlashCommand {
 			option
 				.setName('locale')
 				.setDescription('Change the locale of the guild (only 25 first locale in alphabetical order)')
-				.addChoices(
-					...this.getAllLocale()
-				)
+				.setAutocomplete(true)
 				.setRequired(true)
 		);
 
@@ -50,6 +49,13 @@ export class LocaleCommand implements UtsukushiSlashCommand {
 
 		guild.setPreferredLocale(locale);
 		await interaction.reply({ content: '🌐 Guild set locale Succefully !', ephemeral: true });
+	};
+
+	readonly autocomplete = async (interaction: AutocompleteInteraction<CacheType>): Promise<void> => {
+		let res = this.getAllLocale();
+		res = res.sort((a, b) => sortByName(a.name, b.name));
+		if (res.length >= 25) res = res.slice(0, 25);
+		await interaction.respond(res);
 	};
 
 }

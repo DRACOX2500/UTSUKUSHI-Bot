@@ -12,6 +12,7 @@ import {
 	SoundEffectCommandOptions,
 	SoundEffectSubCommand,
 } from './soundEffect.sub';
+import { sortByName } from '@utils/sortByName';
 
 /**
  * @SlashCommand `soundeffect`
@@ -82,10 +83,13 @@ export class SoundEffectCommand
 		client: BotClient
 	): Promise<void> => {
 		if (interaction.options.getSubcommand() === 'play') {
-			const data = await client.getDatabase().getCacheGlobal();
-			if (data?.soundEffects) {
+			let data = await client.getDatabase().getCacheGlobalSounEffect();
+
+			if (data) {
+				data.sort((a, b) => sortByName(a.key, b.key));
+				if (data.length >= 25) data = data.slice(0, 25);
 				await interaction.respond(
-					data.soundEffects.map((choice) => ({
+					data.map((choice) => ({
 						name: choice.key,
 						value: choice.url,
 					}))
