@@ -1,6 +1,6 @@
 import { Activity } from '@models/Activity';
-import { Emoji } from '@models/Emoji';
 import { SoundEffect } from '@models/SoundEffect';
+import { APIMessageComponentEmoji } from 'discord.js';
 
 export interface BotCacheGlobal {
     activity?: Activity
@@ -9,10 +9,7 @@ export interface BotCacheGlobal {
 
 export type BotCacheGlobalSoundEffect = SoundEffect
 
-export interface BotCacheGlobalGuildEmoji {
-    guildId: number;
-    emojiList: Emoji[];
-}
+export type BotCacheGlobalGuildEmoji = APIMessageComponentEmoji;
 
 export interface BotCacheGuild {
     lastPlayURL?: string | null,

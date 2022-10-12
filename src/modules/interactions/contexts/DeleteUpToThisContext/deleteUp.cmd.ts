@@ -3,10 +3,7 @@ import { BotClient } from 'src/BotClient';
 import { UtsukushiMessageContextCommand } from 'src/models/UtsukushiCommand';
 
 /**
- * @SlashCommand `soundeffect`
- * @AutocompleteInteraction
- *  - `soundeffect play [effect]` : Play sound effect
- *  - `soundeffect add [key] [url]` : Add sound effect to the database
+ * @ContextCommand
  */
 export class DeleteContext implements UtsukushiMessageContextCommand {
 	readonly command: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()

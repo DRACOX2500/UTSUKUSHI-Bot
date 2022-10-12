@@ -24,6 +24,7 @@ import {
 	initBotUserData,
 } from '@models/database/BotUserData';
 import { green, red } from 'ansicolor';
+import { UtsukushiFirebaseGlobalEmoji } from '@models/database/Firebase.model';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -137,11 +138,11 @@ export class BotFirebase {
 		}
 	}
 
-	async setCacheGlobalEmoji(cache: BotCacheGlobalGuildEmoji): Promise<void> {
+	async setCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<void> {
 		const document = doc(this.db, 'global/emoji');
 
-		if (cache.guildId) {
-			updateDoc(document, 'soundEffects', arrayUnion(cache))
+		if (cache) {
+			updateDoc(document, 'emojis', arrayUnion(cache))
 				.then(() => {
 					console.log(
 						green('[Cache Global Emoji] : Updated Success !')
@@ -153,7 +154,7 @@ export class BotFirebase {
 					);
 					if (error.code === NOT_FOUND_ERROR) {
 						console.log('[Cache Global Emoji] : Try to create doc...');
-						setDoc(document, cache)
+						setDoc(document, { emojis: cache })
 							.then(() => console.log(green('[Cache Global Emoji] : Success !')))
 							.catch(() =>
 								console.log(red('[Cache Global Emoji] : Failed !'))
@@ -229,7 +230,7 @@ export class BotFirebase {
 	async getCacheGlobalEmoji(): Promise<BotCacheGlobalGuildEmoji[] | null> {
 		const document = doc(this.db, 'global/emoji');
 		const caches = await getDoc(document);
-		if (caches.exists()) return <BotCacheGlobalGuildEmoji[]>caches.data();
+		if (caches.exists()) return (<UtsukushiFirebaseGlobalEmoji>caches.data()).emojis;
 		else console.error(red('[Cache Global] : Cache Not Found !'));
 		return null;
 	}
