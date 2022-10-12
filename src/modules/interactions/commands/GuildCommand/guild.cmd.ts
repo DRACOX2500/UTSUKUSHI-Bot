@@ -3,6 +3,10 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { EmbedGuild } from '@modules/system/embeds/embedGuild';
 import { BotClient } from 'src/BotClient';
 
+/**
+ * @SlashCommand `guild`
+ *  - `guild` : get guild informations
+ */
 export class GuildCommand implements UtsukushiSlashCommand {
 	readonly command = new SlashCommandBuilder()
 		.setName('guild')

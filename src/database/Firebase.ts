@@ -8,6 +8,8 @@ import {
 	setDoc,
 	updateDoc,
 	arrayUnion,
+	deleteField,
+	arrayRemove,
 } from 'firebase/firestore';
 import {
 	Auth,
@@ -140,9 +142,9 @@ export class BotFirebase {
 
 	async setCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<void> {
 		const document = doc(this.db, 'global/emoji');
-
+		console.log(cache);
 		if (cache) {
-			updateDoc(document, 'emojis', arrayUnion(cache))
+			updateDoc(document, 'emojis', arrayUnion(...cache))
 				.then(() => {
 					console.log(
 						green('[Cache Global Emoji] : Updated Success !')
@@ -161,6 +163,24 @@ export class BotFirebase {
 							);
 					}
 				});
+		}
+	}
+
+	async deleteCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<void> {
+
+		if (cache) {
+			cache.forEach((emoji) => {
+
+				const document = doc(this.db, 'global/emoji/emojis/' + emoji.id);
+
+				updateDoc(document, 'emojis', arrayRemove(...cache))
+					.then(() => {
+						console.log(green('[DELETE Emoji] Code Field has been deleted successfully'));
+					})
+					.catch(() => {
+						console.log(red('[DELETE Emoji] : Failed !'));
+					});
+			});
 		}
 	}
 
