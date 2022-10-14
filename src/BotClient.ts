@@ -80,8 +80,8 @@ export class BotClient extends Client {
 			this.commandManager.commands,
 			this.commandManager.contexts
 		);
-		this.commandDeployer.deployGlobal();
-		this.commandDeployer.deployPrivate();
+		this.commandDeployer.deployGlobal({ test: !test });
+		this.commandDeployer.deployPrivate({ test: !test });
 		this.commandManager.initCommand(this);
 		this.commandManager.initBotEvents(this);
 	}

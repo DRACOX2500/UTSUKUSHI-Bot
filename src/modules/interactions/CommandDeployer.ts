@@ -18,7 +18,9 @@ import { lightGreen, green, lightMagenta, magenta } from 'ansicolor';
 
 type CommandDeployerOptions = {
     /** default true */
-	enableLogs: boolean;
+	enableLogs?: boolean;
+	/** default false */
+	test?: boolean;
 };
 
 export class CommandDeployer {
@@ -45,7 +47,7 @@ export class CommandDeployer {
 			UtsukushiContextCommand<
 				MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction
 			>
-		>
+		>,
 	) {
 		this.globals = commands.clone();
 		this.contexts = contexts;
@@ -91,6 +93,7 @@ export class CommandDeployer {
 
 		return (async (): Promise<number> => {
 			try {
+				if (options?.test ?? false) return 0;
 				if (options?.enableLogs ?? true)
 					console.log(
 						lightGreen('Started refreshing application global (/) commands...')
@@ -130,6 +133,7 @@ export class CommandDeployer {
 
 			return (async (): Promise<void> => {
 				try {
+					if (options?.test ?? false) return;
 					if (options?.enableLogs ?? true)
 						console.log(
 							lightMagenta(

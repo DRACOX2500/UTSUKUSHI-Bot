@@ -100,7 +100,7 @@ export default {
 		'^@models/(.*)$': '<rootDir>/src/models/$1',
 		'^@modules/(.*)$': '<rootDir>/src/modules/$1',
 		'^@utils/(.*)$': '<rootDir>/src/utils/$1',
-		'^test/(.*)$': '<rootDir>/tes/$1',
+		'^test/(.*)$': '<rootDir>/test/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -134,11 +134,11 @@ export default {
 	// restoreMocks: false,
 
 	// The root directory that Jest should scan for tests and modules within
-	// rootDir: undefined,
+	// rootDir: 'test',
 
 	// A list of paths to directories that Jest should use to search for files in
 	// roots: [
-	//   "<rootDir>"
+	// 	'<rootDir>',
 	// ],
 
 	// Allows you to use a custom runner instead of Jest's default test runner
@@ -173,7 +173,7 @@ export default {
 
 	// An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
 	testPathIgnorePatterns: [
-		'\\{1,2}(node_modules)|(dist)\\{1,2}',
+		'\\{1,2}(node_modules|dist)\\{1,2}',
 	],
 
 	// The regexp pattern or array of patterns that Jest uses to detect test files
