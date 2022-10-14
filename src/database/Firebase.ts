@@ -140,14 +140,15 @@ export class BotFirebase {
 		}
 	}
 
-	async setCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<void> {
+	async setCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<boolean> {
 		const document = doc(this.db, 'global/emoji');
-		console.log(cache);
+		let resFunct = true;
+
 		if (cache) {
-			updateDoc(document, 'emojis', arrayUnion(...cache))
+			await updateDoc(document, 'emojis', arrayUnion(...cache))
 				.then(() => {
 					console.log(
-						green('[Cache Global Emoji] : Updated Success !')
+						green(`[Cache Global Emoji] : Updated Success (+${cache.length}) !`)
 					);
 				})
 				.catch((error) => {
@@ -158,30 +159,36 @@ export class BotFirebase {
 						console.log('[Cache Global Emoji] : Try to create doc...');
 						setDoc(document, { emojis: cache })
 							.then(() => console.log(green('[Cache Global Emoji] : Success !')))
-							.catch(() =>
-								console.log(red('[Cache Global Emoji] : Failed !'))
-							);
+							.catch(() => {
+								console.log(red('[Cache Global Emoji] : Failed !'));
+								resFunct = false;
+							});
 					}
 				});
 		}
+		return resFunct;
 	}
 
-	async deleteCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<void> {
+	async deleteCacheGlobalEmoji(...cache: BotCacheGlobalGuildEmoji[]): Promise<number> {
+
+		let resFunct = 0;
 
 		if (cache) {
-			cache.forEach((emoji) => {
+			await Promise.all(cache.map(async () => {
 
-				const document = doc(this.db, 'global/emoji/emojis/' + emoji.id);
+				const document = doc(this.db, 'global/emoji/');
 
-				updateDoc(document, 'emojis', arrayRemove(...cache))
+				await updateDoc(document, 'emojis', arrayRemove(...cache))
 					.then(() => {
 						console.log(green('[DELETE Emoji] Code Field has been deleted successfully'));
+						resFunct++;
 					})
 					.catch(() => {
 						console.log(red('[DELETE Emoji] : Failed !'));
 					});
-			});
+			}));
 		}
+		return resFunct;
 	}
 
 	async setCacheByGuild(guild: Guild, cache: BotCacheGuild): Promise<void> {

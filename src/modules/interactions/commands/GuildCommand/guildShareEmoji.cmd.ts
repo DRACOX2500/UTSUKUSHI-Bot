@@ -38,12 +38,21 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 		}));
 		if (option) {
 
-			await client.getDatabase().setCacheGlobalEmoji(...arrayEmojis);
-			await interaction.editReply({ content: '✅ Emojis added to database successfully !' });
+			const res = await client.getDatabase().setCacheGlobalEmoji(...arrayEmojis);
+			if (res)
+				await interaction.editReply({ content: '✅ Emojis added to database successfully !' });
+			else
+				await interaction.editReply({ content: '❌ Emojis added to database failed !' });
 		}
 		else {
-			await client.getDatabase().deleteCacheGlobalEmoji(...arrayEmojis);
-			await interaction.editReply({ content: '✅ Emojis deleted to database successfully !' });
+			const res = await client.getDatabase().deleteCacheGlobalEmoji(...arrayEmojis);
+
+			if (res === arrayEmojis.length)
+				await interaction.editReply({ content: '✅ Emojis deleted to database successfully !' });
+			else if (res <= 0)
+				await interaction.editReply({ content: '❌ Emojis deleted to database failed !' });
+			else
+				await interaction.editReply({ content: `⏸️ Partially deleted emojis from database (${res}/${arrayEmojis.length}) !` });
 		}
 	};
 
