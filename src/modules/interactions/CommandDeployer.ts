@@ -75,6 +75,34 @@ export class CommandDeployer {
 		);
 	}
 
+	private async deployPrivateCommand(key: string, botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[], rest: REST, options: CommandDeployerOptions): Promise<number> {
+		try {
+			if (options?.test ?? false) return 0;
+			if (options?.enableLogs ?? true)
+				console.log(
+					lightMagenta(
+						`Started refreshing application private [${key}] (/) commands...`
+					)
+				);
+
+			await rest.put(Routes.applicationGuildCommands(this.CLIENT_ID, key), {
+				body: botCommands,
+			});
+
+			if (options?.enableLogs ?? true)
+				console.log(
+					magenta(
+						`Successfully reloaded application ${botCommands.length} private [${key}] (/) commands !`
+					)
+				);
+		}
+		catch (error) {
+			console.error(error);
+			return 1;
+		}
+		return 0;
+	}
+
 	async deployGlobal(
 		options?: CommandDeployerOptions
 	): Promise<number> {
@@ -116,12 +144,14 @@ export class CommandDeployer {
 		})();
 	}
 
-	async deployPrivate(options?: CommandDeployerOptions): Promise<void> {
+	async deployPrivate(options?: CommandDeployerOptions): Promise<number> {
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
+		const resTab: number[] = [];
 
-		this.commandGuilds.forEach((value, key) => {
+		for (const key of this.commandGuilds.keys()) {
 			const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] = [];
-			const cmds = value;
+			const cmds = this.commandGuilds.get(key);
+			if (!cmds) continue;
 
 			for (const iterator of cmds) {
 				const val = cmds.get(iterator[0]);
@@ -131,31 +161,10 @@ export class CommandDeployer {
 					);
 			}
 
-			return (async (): Promise<void> => {
-				try {
-					if (options?.test ?? false) return;
-					if (options?.enableLogs ?? true)
-						console.log(
-							lightMagenta(
-								`Started refreshing application private [${key}] (/) commands...`
-							)
-						);
+			const res = await this.deployPrivateCommand(key, botCommands, rest, options ?? {});
+			resTab.push(res);
+		}
 
-					await rest.put(Routes.applicationGuildCommands(this.CLIENT_ID, key), {
-						body: botCommands,
-					});
-
-					if (options?.enableLogs ?? true)
-						console.log(
-							magenta(
-								`Successfully reloaded application ${botCommands.length} private [${key}] (/) commands !`
-							)
-						);
-				}
-				catch (error) {
-					console.error(error);
-				}
-			})();
-		});
+		return resTab.reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante, 0);
 	}
 }
