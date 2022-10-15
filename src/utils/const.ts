@@ -7,6 +7,10 @@ export const LOGO_MUSIC_BLUE = 'https://emojipedia-us.s3.dualstack.us-west-1.ama
 export const LOGO_MUSIC_PURPLE = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/facebook/65/multiple-musical-notes_1f3b6.png';
 export const RED_FUEL_PUMP = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/google/313/fuel-pump_26fd.png';
 
+export const LOGO_SOURCES = {
+	YOUTUBE: 'https://img.icons8.com/color/344/youtube-play.png',
+};
+
 export const BUTTON = {
 	PLAY_RESPONSE: {
 		content:'❌ This song is not available !',

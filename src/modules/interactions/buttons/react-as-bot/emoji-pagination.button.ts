@@ -3,10 +3,11 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { ReactAsBotContextReply } from '@modules/interactions/contexts/react-as-bot/react-as-bot.reply';
+import { UtsukushiButton } from '@models/UtsukushiInteraction';
 
-export namespace ReactAsBotButton {
+export namespace ReactAsBotButtons {
 
-	export class NextButton {
+	export class NextButton implements UtsukushiButton {
 
 		readonly button = (disabled = false): ButtonBuilder => {
 			return new ButtonBuilder()
@@ -32,7 +33,7 @@ export namespace ReactAsBotButton {
 
 	}
 
-	export class PreviousButton {
+	export class PreviousButton implements UtsukushiButton {
 
 		readonly button = (disabled = false): ButtonBuilder => {
 			return new ButtonBuilder()
@@ -58,3 +59,8 @@ export namespace ReactAsBotButton {
 
 	}
 }
+
+export const buttons = [
+	new ReactAsBotButtons.NextButton(),
+	new ReactAsBotButtons.PreviousButton(),
+];

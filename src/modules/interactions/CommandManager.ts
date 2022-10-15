@@ -18,10 +18,9 @@ import {
 	SelectMenuInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { CommandButton } from './enum';
 import { NotifyEvent } from './events/NotifyEvent';
-import { ButtonPause } from './button/play/ButtonPause';
-import { ButtonVolume } from './button/play/ButtonVolumeDown';
+import { PauseButton } from '@modules/interactions/buttons/play/pause.button';
+import { VolumeButtons } from '@modules/interactions/buttons/play/volume.button';
 import {
 	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
@@ -29,18 +28,26 @@ import {
 	UtsukushiSlashCommand,
 } from '@models/UtsukushiCommand';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
-import { ReactAsBotButton } from './button/react-as-bot/emoji-pagination.button';
+import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
+import { UtsukushiButton } from '../../models/UtsukushiInteraction';
+import { StopButton } from './buttons/play/stop.button';
+import { SkipButton } from './buttons/play/skip.button';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
 	contexts!: Collection<string, UtsukushiContextCommand<MessageContextMenuCommandInteraction|UserContextMenuCommandInteraction>>;
 
+	private buttons!: Collection<string, UtsukushiButton>;
+
 	constructor(private readonly client: BotClient) {
 		this.commands = new Collection();
 		this.contexts = new Collection();
-		this.loadCommand('commands', this.commands);
-		this.loadCommand('contexts', this.contexts);
+		this.buttons = new Collection();
+		this.loadCommands('commands', this.commands);
+		this.loadCommands('contexts', this.contexts);
+
+		this.loadButtons('buttons', this.buttons);
 	}
 
 	get allCollection(): Collection<string, UtsukushiCommand<any>> {
@@ -50,14 +57,14 @@ export class CommandManager {
 		);
 	}
 
-	private loadCommand(
+	private loadCommands(
 		folderTitle: string,
 		collection: Collection<string, any>
 	) {
 		const filesList: string[][] = [];
 		const commandsPath = path.join(__dirname, folderTitle);
 
-		this.load(filesList, commandsPath);
+		this.load(filesList, commandsPath, '.cmd.js');
 
 		for (const file of filesList.flat()) {
 			const command: UtsukushiCommand<any> = require(file).command;
@@ -67,13 +74,41 @@ export class CommandManager {
 		}
 	}
 
-	private load(filesList: string[][], absolutePath: string): void {
+	private loadButtons(
+		folderTitle: string,
+		collection: Collection<string, UtsukushiButton>
+	) {
+		const filesList: string[][] = [];
+		const buttonsPath = path.join(__dirname, folderTitle);
+
+		this.load(filesList, buttonsPath, '.button.js');
+
+		for (const file of filesList.flat()) {
+			const content = require(file);
+
+			const paramButton: UtsukushiButton = content.button;
+			const paramButtons: UtsukushiButton[] = content.buttons;
+
+			if (paramButton) {
+				const customId: string = (<any>paramButton.button().data).custom_id;
+				if (customId) collection.set(customId, paramButton);
+			}
+			else if (paramButtons) {
+				paramButtons.forEach(button => {
+					const customId: string = (<any>button.button().data).custom_id;
+					if (customId) collection.set(customId, button);
+				});
+			}
+		}
+	}
+
+	private load(filesList: string[][], absolutePath: string, suffix: string): void {
 		try {
 			fs.readdirSync(absolutePath).forEach((filefolder) => {
 				const pathFile = path.join(absolutePath, filefolder);
-				if (filefolder.endsWith('.cmd.js')) filesList.push([pathFile]);
+				if (filefolder.endsWith(suffix)) filesList.push([pathFile]);
 				else if (fs.statSync(pathFile).isDirectory()) {
-					this.load(filesList, pathFile);
+					this.load(filesList, pathFile, suffix);
 				}
 			});
 		}
@@ -140,38 +175,27 @@ export class CommandManager {
 		))?.autocomplete(interaction, client);
 	}
 
-	// TODO : auto button management
 	private async interactionButton(
 		interaction: ButtonInteraction,
 		client: BotClient
 	): Promise<void> {
-		switch (interaction.customId) {
-		case CommandButton.VolumeDown:
-			await new ButtonVolume(interaction, client).getDownEffect();
-			break;
-		case CommandButton.Stop:
-			client.connection.killConnection();
-			await interaction.deferUpdate();
-			break;
-		case CommandButton.Pause:
-			await new ButtonPause(interaction, client).getEffect();
-			break;
-		case CommandButton.Skip:
-			// TODO : skip command
-			break;
-		case CommandButton.VolumeUp:
-			await new ButtonVolume(interaction, client).getUpEffect();
-			break;
-		case 'rab-next':
-			await new ReactAsBotButton.NextButton().getEffect(interaction, client);
-			break;
-		case 'rab-previous':
-			await new ReactAsBotButton.PreviousButton().getEffect(interaction, client);
-			break;
+		const button = this.buttons.get(interaction.customId);
+
+		if (!button) return;
+
+		try {
+			await Promise.resolve(button.getEffect(interaction, client));
+		}
+		catch (error) {
+			console.error(error);
+			await interaction.reply({
+				content: 'There was an error while executing this command!',
+				ephemeral: true,
+			});
 		}
 	}
 
-	private interactionSelect(interaction: SelectMenuInteraction<CacheType>, client: BotClient) {
+	private async interactionSelect(interaction: SelectMenuInteraction<CacheType>, client: BotClient) {
 		if (interaction.customId === 'rab-select') {
 			ReactAsBotSelect.getEffect(interaction, client);
 		}

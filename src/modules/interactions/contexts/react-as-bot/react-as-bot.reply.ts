@@ -6,8 +6,8 @@ import {
 	SelectMenuBuilder,
 	ButtonBuilder,
 } from 'discord.js';
-import { ReactAsBotSelect } from '../../selects/react-as-bot/react-as-bot.select';
-import { ReactAsBotButton } from '../../button/react-as-bot/emoji-pagination.button';
+import { ReactAsBotSelect } from '@modules/interactions/selects/react-as-bot/react-as-bot.select';
+import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
 
 export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 	content!: string;
@@ -34,8 +34,8 @@ export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 				new ReactAsBotSelect(this.emojis, limit, this.start)
 			),
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				new ReactAsBotButton.PreviousButton().button(this.start <= 0 ? true : false),
-				new ReactAsBotButton.NextButton().button(limit >= this.emojis.length - 1 ? true : false)
+				new ReactAsBotButtons.PreviousButton().button(this.start <= 0 ? true : false),
+				new ReactAsBotButtons.NextButton().button(limit >= this.emojis.length - 1 ? true : false)
 			),
 		];
 	}

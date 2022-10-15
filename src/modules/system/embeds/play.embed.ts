@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EmbedBuilder, time, ActionRowBuilder, ButtonStyle, ButtonBuilder } from 'discord.js';
+import { EmbedBuilder, time, ActionRowBuilder } from 'discord.js';
 import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
 import { EmbedVideoData } from 'src/models/embeds/EmbedVideoData';
-import { LOGO_MUSIC_BLUE, LOGO_MUSIC_PURPLE } from '@utils/const';
+import { LOGO_MUSIC_BLUE, LOGO_SOURCES } from '@utils/const';
+import { VolumeButtons } from '@modules/interactions/buttons/play/volume.button';
+import { StopButton } from '@modules/interactions/buttons/play/stop.button';
+import { PauseButton } from '@modules/interactions/buttons/play/pause.button';
+import { SkipButton } from '@modules/interactions/buttons/play/skip.button';
 
 export class EmbedPlayer {
 
@@ -61,39 +65,21 @@ export class EmbedPlayer {
 			)
 			.setImage(this.data.thumbnailUrl)
 			.setTimestamp()
-			.setFooter({ text: 'Youtube', iconURL: LOGO_MUSIC_PURPLE });
+			.setFooter({ text: 'Youtube', iconURL: LOGO_SOURCES.YOUTUBE });
 	}
 
 	getButtonMenu() {
 		return new ActionRowBuilder()
 			.addComponents(
-				new ButtonBuilder()
-					.setCustomId('vdown')
-					.setEmoji('<:vold:937333517258469416>')
-					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(this.volumeOpti),
+				new VolumeButtons.VolumeDownButton().button(this.volumeOpti),
 
-				new ButtonBuilder()
-					.setCustomId('stop')
-					.setEmoji('<:stop:937333534186680321>')
-					.setStyle(ButtonStyle.Danger),
+				new StopButton().button(),
 
-				new ButtonBuilder()
-					.setCustomId('pause')
-					.setEmoji('<:p_:937332417738473503>')
-					.setStyle(ButtonStyle.Success),
+				new PauseButton().button(),
 
-				new ButtonBuilder()
-					.setCustomId('skip')
-					.setEmoji('<:skip:937332450953146432>')
-					.setStyle(ButtonStyle.Primary)
-					.setDisabled(true),
+				new SkipButton().button(true),
 
-				new ButtonBuilder()
-					.setCustomId('vup')
-					.setEmoji('<:volp:937332469798162462>')
-					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(this.volumeOpti),
+				new VolumeButtons.VolumeUpButton().button(this.volumeOpti),
 			);
 	}
 }
