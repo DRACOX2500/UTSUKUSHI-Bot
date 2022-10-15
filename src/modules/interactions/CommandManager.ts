@@ -28,6 +28,7 @@ import {
 	UtsukushiSlashCommand,
 } from '@models/UtsukushiCommand';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
+import { ReactAsBotButton } from './button/react-as-bot/emoji-pagination.button';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
@@ -158,6 +159,12 @@ export class CommandManager {
 			break;
 		case CommandButton.VolumeUp:
 			await new ButtonVolume(interaction, client).getUpEffect();
+			break;
+		case 'rab-next':
+			await new ReactAsBotButton.NextButton().getEffect(interaction, client);
+			break;
+		case 'rab-previous':
+			await new ReactAsBotButton.PreviousButton().getEffect(interaction, client);
 			break;
 		}
 	}

@@ -8,7 +8,6 @@ import {
 	setDoc,
 	updateDoc,
 	arrayUnion,
-	deleteField,
 	arrayRemove,
 } from 'firebase/firestore';
 import {
@@ -27,29 +26,11 @@ import {
 } from '@models/database/BotUserData';
 import { green, red } from 'ansicolor';
 import { UtsukushiFirebaseGlobalEmoji } from '@models/database/Firebase.model';
+import { FirebaseCache } from './FirebaseCache';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const NOT_FOUND_ERROR = 'not-found';
-
-class FirebaseCache {
-	readonly userdata!: Map<string, BotUserData>;
-
-	constructor() {
-		this.userdata = new Map();
-
-		// 1 min interval -> clear cache
-		setInterval(() => this.userdata.clear(), 60000);
-	}
-
-	add(user: DiscordUser, data: BotUserData) {
-		this.userdata.set(user.id, data);
-	}
-
-	clean(user: DiscordUser) {
-		this.userdata.delete(user.id);
-	}
-}
 
 export interface FirebaseAuth {
 	email: string;
@@ -72,7 +53,7 @@ export class BotFirebase {
 	private user!: User;
 	private db!: Firestore;
 
-	userDataCache = new FirebaseCache();
+	dataCache!:FirebaseCache;
 
 	constructor(key: string, firebaseAuth: FirebaseAuth, test: boolean) {
 		this.firebaseConfig.apiKey = key;
@@ -87,6 +68,7 @@ export class BotFirebase {
 		)
 			.then((userCredential: UserCredential) => {
 				this.user = userCredential.user;
+				this.dataCache = new FirebaseCache(this);
 				if (!test) console.log(green('Connect to Firebase !'));
 			})
 			.catch((error) => {
@@ -225,7 +207,7 @@ export class BotFirebase {
 							);
 					}
 				});
-			this.userDataCache.userdata.delete(user.id);
+			this.dataCache.userdata.delete(user.id);
 		}
 		else {
 			setDoc(document, cache, { merge: true })

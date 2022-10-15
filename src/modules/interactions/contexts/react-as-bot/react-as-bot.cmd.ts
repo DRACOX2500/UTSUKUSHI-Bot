@@ -1,7 +1,7 @@
-import { ContextMenuCommandBuilder, ApplicationCommandType, MessageContextMenuCommandInteraction, Message, ActionRowBuilder, SelectMenuBuilder, SelectMenuComponentOptionData } from 'discord.js';
+import { ContextMenuCommandBuilder, ApplicationCommandType, MessageContextMenuCommandInteraction, Message, ReplyMessageOptions } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { UtsukushiMessageContextCommand } from '@models/UtsukushiCommand';
-import { ReactAsBotSelect } from '@modules/system/selects/ReactAsBotSelect';
+import { ReactAsBotContextReply } from './react-as-bot.reply';
 
 /**
  * @ContextCommand
@@ -24,19 +24,16 @@ export class ReactAsBotContext implements UtsukushiMessageContextCommand {
 		if (!this.targetMessage) return;
 		await interaction.deferReply({ ephemeral: true });
 
-		const emojis = await client.getDatabase().getCacheGlobalEmoji();
+		const emojis = await client.getDatabase().dataCache.fetchEmojis();
 		if (!emojis || !emojis.length) {
 			await interaction.editReply({ content: '❌ React Failed !' });
 			return;
 		}
-		console.log(emojis);
+		const targetId = interaction.targetId;
 
-		const row = new ActionRowBuilder<SelectMenuBuilder>()
-			.addComponents(
-				new ReactAsBotSelect(emojis)
-			);
+		const reply = new ReactAsBotContextReply(targetId, emojis, 0);
 
-		await interaction.editReply({ content: 'Choose an emoji !', components: [row] });
+		await interaction.editReply(reply);
 	};
 }
 export const command = new ReactAsBotContext();

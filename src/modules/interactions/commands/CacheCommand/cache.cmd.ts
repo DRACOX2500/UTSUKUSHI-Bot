@@ -52,7 +52,7 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		switch (code) {
 		case CacheType.Clear: {
 			await interaction.deferReply({ ephemeral: true });
-			client.getDatabase().userDataCache.clean(interaction.user);
+			client.getDatabase().dataCache.clean(interaction.user);
 			const clearBoolean = await client
 				.getDatabase()
 				.resetUserData(interaction.user);

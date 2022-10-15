@@ -92,7 +92,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 				});
 			const keywordsCache = client
 				.getDatabase()
-				.userDataCache.userdata.get(interaction.user.id)?.keywords;
+				.dataCache.userdata.get(interaction.user.id)?.keywords;
 			if (!url.match(/^https?:\/\//) && !keywordsCache?.includes(url))
 				client.getDatabase().setUserData(interaction.user, { keyword: url });
 		});
@@ -112,16 +112,16 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 		let keywordsCache = client
 			.getDatabase()
-			.userDataCache.userdata.get(interaction.user.id);
+			.dataCache.userdata.get(interaction.user.id);
 		if (!keywordsCache) {
 			const data = await client.getDatabase().getUserData(interaction.user);
 			if (data) {
 				client
 					.getDatabase()
-					.userDataCache.userdata.set(interaction.user.id, data);
+					.dataCache.userdata.set(interaction.user.id, data);
 				keywordsCache = client
 					.getDatabase()
-					.userDataCache.userdata.get(interaction.user.id);
+					.dataCache.userdata.get(interaction.user.id);
 			}
 		}
 
