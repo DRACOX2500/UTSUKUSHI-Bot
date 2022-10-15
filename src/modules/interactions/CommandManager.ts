@@ -15,6 +15,7 @@ import {
 	Collection,
 	MessageContextMenuCommandInteraction,
 	UserContextMenuCommandInteraction,
+	SelectMenuInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { CommandButton } from './enum';
@@ -29,6 +30,7 @@ import {
 } from '@models/UtsukushiCommand';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotButton } from './button/react-as-bot/emoji-pagination.button';
+import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
@@ -169,6 +171,12 @@ export class CommandManager {
 		}
 	}
 
+	private interactionSelect(interaction: SelectMenuInteraction<CacheType>, client: BotClient) {
+		if (interaction.customId === 'rab-select') {
+			ReactAsBotSelect.getEffect(interaction, client);
+		}
+	}
+
 	initCommand(client: BotClient) {
 		client.on(
 			'interactionCreate',
@@ -193,6 +201,12 @@ export class CommandManager {
 						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use context : ${magenta(interaction.commandName)}`
 					);
 					await this.interactionContext(interaction, client);
+				}
+				else if (interaction.isSelectMenu()) {
+					console.log(
+						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use select : ${magenta(interaction.customId)}`
+					);
+					await this.interactionSelect(interaction, client);
 				}
 			}
 		);
