@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { BurgerAPI } from '@api/burger/BurgerAPI';
+import { BurgerAPI } from 'root/src/api/burger/burger.api';
 import { UtsukushiCommandOptions, UtsukushiSlashCommand } from '@models/UtsukushiCommand';
 import { BotClient } from 'src/BotClient';
 

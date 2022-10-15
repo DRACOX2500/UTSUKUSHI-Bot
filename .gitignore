@@ -10,7 +10,7 @@ dist/
 
 #local
 .env
-assets/*.webp
+src/assets/*.webp
 utsukushi.config.json
 
 #IDE

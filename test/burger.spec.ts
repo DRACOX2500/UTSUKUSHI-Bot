@@ -1,4 +1,4 @@
-import { BurgerAPI } from '@api/burger/BurgerAPI';
+import { BurgerAPI } from 'root/src/api/burger/burger.api';
 import { ApiBurgerReponse } from '@models/api/ApiBurgerResponse';
 import { API } from '@utils/const';
 

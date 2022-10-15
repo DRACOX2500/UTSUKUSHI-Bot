@@ -25,9 +25,9 @@ export class EmbedFuel {
 		const center = [data.geometry.coordinates[0], data.geometry.coordinates[1]];
 
 		await map.render(center, zoom);
-		await map.image.save(`assets/fuel${index}.webp`);
+		await map.image.save(`src/assets/fuel${index}.webp`);
 
-		return new AttachmentBuilder(`assets/fuel${index}.webp`);
+		return new AttachmentBuilder(`src/assets/fuel${index}.webp`);
 	}
 
 	async getImages(index: number): Promise<AttachmentBuilder> {

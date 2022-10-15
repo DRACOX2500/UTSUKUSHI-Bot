@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { EmbedPong } from '@modules/system/embeds/embedPong';
+import { EmbedPong } from 'root/src/modules/system/embeds/pong.embed';
 import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
 
 /**

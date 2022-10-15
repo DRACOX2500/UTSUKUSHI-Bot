@@ -1,6 +1,6 @@
 import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { EmbedGuild } from '@modules/system/embeds/embedGuild';
+import { EmbedGuild } from 'root/src/modules/system/embeds/guild.embed';
 import { BotClient } from 'src/BotClient';
 
 /**

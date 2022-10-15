@@ -7,7 +7,7 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { EmbedPlayer } from '@modules/system/embeds/embedPlayer';
+import { EmbedPlayer } from 'root/src/modules/system/embeds/play.embed';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
 import { BotCacheGuild } from 'src/models/database/BotCache';
