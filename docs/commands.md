@@ -5,7 +5,7 @@
 ### **/ping**: get pong information
 **1.1.0 NEW**: Now, response with Embed and more data !
 
-![](.//ping.png)
+![](./img/ping.png)
 
 \* *this image is a screenshot in dev version and my connection is really bad*
 
@@ -22,7 +22,7 @@
 ### **/big-burger**: generate a random burger picture.
 ### **/snoring**: bot come in your voice channel and snores very loudly
 ### **/play *song:url_or_keywords***: search music by URL or Keywords and play it in your voice channel
-![](.//play.png)
+![](./img/play.png)
 
 *Embed inspired from [Scathach Bot](https://github.com/sinkaroid/scathachhh) !*
 
@@ -49,7 +49,7 @@ Buttons menu :
 >         cache_action: CLEAR
 
 ### **/notify *channel: channel_name***: choose a channel, and UTSUKUSHI will notify you when someone enters a voice channel
-![](./notify.png)
+![](./img/notify.png)
 
 ### **/fuel *fuel: fuel_type search: search_method value: search_value***: (Only French Data) search fuel cost by search method and fuel type
 >         fuel_type: GAZOLE / SP98 / SP95 / E85 / E10 / GPLc

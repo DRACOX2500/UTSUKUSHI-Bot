@@ -43,7 +43,7 @@ Discord Bot for my private Discord Server & friends server.
 - Start : `npm start`
 - Build + Start : `npm restart`
 
-![](./.github/readme/start.png)
+![](./docs/img/start.png)
 
 ## Interaction
 ![](https://img.shields.io/badge/Slash_Commands-13-success)
@@ -51,7 +51,7 @@ Discord Bot for my private Discord Server & friends server.
 
 ### Commands
 
-Commands détails available in **[Commands.md](./.github/readme/commands.md)**
+Commands détails available in **[Commands.md](./docs/commands.md/commands.md)**
 
 ### Context Menus
 
@@ -63,7 +63,7 @@ source: [discordjs.guide](https://discordjs.guide/interactions/context-menus.htm
 
 #### Delete Up To This
 
-![](./.github/readme/ContextMenu.png)
+![](./docs/img/ContextMenu.png)
 
 Select a message, right click and select this options to delete all messages until selected message (selected message include)
 
