@@ -18,7 +18,6 @@ import {
 	UserCredential,
 } from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
-import { green, red } from 'ansicolor';
 import { UtsukushiFirebaseGlobalEmoji } from '@models/firebase/firebase.model';
 import { FirebaseCache } from './utsukushi-cache';
 import {
@@ -31,6 +30,8 @@ import {
 	initBotUserData,
 	initBotCacheGuild,
 } from '@models/firebase/document-data.model';
+import { green } from 'ansicolor';
+import { logger } from '@modules/system/logger/logger';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -90,10 +91,10 @@ export class BotFirebase {
 
 		setDoc(document, cache, { merge: true })
 			.then(() => {
-				console.log(green('[Cache Global] : Cache Saved Success !'));
+				logger.info({ tag: 'Cache Global' }, 'Cache Saved Success !');
 			})
 			.catch(() => {
-				console.error(red('[Cache Global] : Cache Saved Failure !'));
+				logger.error({ tag: 'Cache Global' }, 'Cache Saved Failure !');
 			});
 	}
 
@@ -105,24 +106,31 @@ export class BotFirebase {
 		if (cache) {
 			updateDoc(document, 'soundEffects', arrayUnion(cache))
 				.then(() => {
-					console.log(green('[Cache Global SoundEffect] : Updated Success !'));
+					logger.info({ tag: 'Cache Global SoundEffect' }, 'Updated Success !');
 				})
 				.catch((error) => {
-					console.error(red('[Cache Global SoundEffect] : Updated Failure !'));
 					if (error.code === NOT_FOUND_ERROR) {
-						console.log('[Cache Global SoundEffect] : Try to create doc...');
 						setDoc(document, cache)
 							.then(() =>
-								console.log(green('[Cache Global SoundEffect] : Success !'))
+								logger.info(
+									{ tag: 'Cache Global SoundEffect' },
+									'Updated New Try Success !'
+								)
 							)
 							.catch(() =>
-								console.log(red('[Cache Global SoundEffect] : Failed !'))
+								logger.error(
+									{ tag: 'Cache Global SoundEffect' },
+									'Updated New Try Failure !'
+								)
 							);
 					}
 				});
 		}
 		else {
-			console.error(red('[Cache Global SoundEffect] : Updated Failure !'));
+			logger.error(
+				{ tag: 'Cache Global SoundEffect' },
+				'Updated Failure (no cache) !'
+			);
 		}
 	}
 
@@ -135,20 +143,17 @@ export class BotFirebase {
 		if (cache) {
 			await updateDoc(document, 'emojis', arrayUnion(...cache))
 				.then(() => {
-					console.log(
-						green(`[ADD EMOJI] : Updated Success (+${cache.length}) !`)
+					logger.info(
+						{ tag: 'ADD EMOJI' },
+						`Updated Success (+${cache.length}) !`
 					);
 				})
 				.catch((error) => {
-					console.error(red('[ADD EMOJI] : Updated Failure !'));
 					if (error.code === NOT_FOUND_ERROR) {
-						console.log('[ADD EMOJI] : Try to create doc...');
 						setDoc(document, { emojis: cache })
-							.then(() =>
-								console.log(green('[ADD EMOJI] : Success !'))
-							)
+							.then(() => logger.info({ tag: 'ADD EMOJI' }, 'Success !'))
 							.catch(() => {
-								console.log(red('[ADD EMOJI] : Failed !'));
+								logger.error({ tag: 'ADD EMOJI' }, 'Failed !');
 								resFunct = false;
 							});
 					}
@@ -167,12 +172,13 @@ export class BotFirebase {
 
 			await updateDoc(document, 'emojis', arrayRemove(...cache))
 				.then(() => {
-					console.log(
-						green(`[DELETE EMOJI] : Deleted Success (-${cache.length}) !`)
+					logger.info(
+						{ tag: 'DELETE EMOJI' },
+						`Deleted Success (-${cache.length}) !`
 					);
 				})
 				.catch(() => {
-					console.log(red('[DELETE Emoji] : Failed !'));
+					logger.error({ tag: 'DELETE EMOJI' }, 'Failed !');
 					resFunct = false;
 				});
 		}
@@ -183,10 +189,16 @@ export class BotFirebase {
 		const document = doc(this.db, 'guild-data/' + guild.id);
 		setDoc(document, cache, { merge: true })
 			.then(() => {
-				console.log(green(`[Cache ${guild.id}] : Cache Saved Success !`));
+				logger.info(
+					{ tag: 'Guild Data', guildId: guild.id },
+					'Guild Data Saved Success'
+				);
 			})
 			.catch(() => {
-				console.error(red(`[Cache ${guild.id}] : Cache Saved Failure !`));
+				logger.error(
+					{ tag: 'Guild Data', guildId: guild.id },
+					'Guild Data Saved Failure'
+				);
 			});
 	}
 
@@ -196,22 +208,19 @@ export class BotFirebase {
 		if (cache.keyword) {
 			updateDoc(document, 'keywords', arrayUnion(cache.keyword))
 				.then(() => {
-					console.log(
-						green('[UserData ' + user.id + '] : UserData Updated Success !')
+					logger.info(
+						{ tag: 'User Data', userId: user.id },
+						'User Data Saved Success'
 					);
 				})
 				.catch((error) => {
-					console.error(
-						red('[UserData ' + user.id + '] : UserData Updated Failure !')
-					);
 					if (error.code === NOT_FOUND_ERROR) {
-						console.log('[UserData ' + user.id + '] : Try to create doc...');
 						setDoc(document, { keywords: [cache.keyword] })
 							.then(() =>
-								console.log(green('[UserData ' + user.id + '] : Success !'))
+								logger.info({ tag: 'User Data', userId: user.id }, 'Success !')
 							)
 							.catch(() =>
-								console.log(red('[UserData ' + user.id + '] : Failed !'))
+								logger.error({ tag: 'User Data', userId: user.id }, 'Failed !')
 							);
 					}
 				});
@@ -220,10 +229,16 @@ export class BotFirebase {
 		else {
 			setDoc(document, cache, { merge: true })
 				.then(() => {
-					console.log(green('[Cache ' + user.id + '] : Cache Saved Success !'));
+					logger.info(
+						{ tag: 'User Data', userId: user.id },
+						'User Data Saved Success !'
+					);
 				})
 				.catch(() => {
-					console.error(red('[Cache ' + user.id + '] : Cache Saved Failure !'));
+					logger.error(
+						{ tag: 'User Data', userId: user.id },
+						'User Data Saved Success !'
+					);
 				});
 		}
 	}
@@ -232,7 +247,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'global/utsukushi');
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGlobal>caches.data();
-		else console.error(red('[Cache Global] : Cache Not Found !'));
+		else logger.error({ tag: 'Glogal Data' }, 'Not Found !');
 		return null;
 	}
 
@@ -241,7 +256,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'global/sound-effect');
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGlobalSoundEffect[]>caches.data();
-		else console.error(red('[Cache Global] : Cache Not Found !'));
+		else logger.error({ tag: 'Glogal Data SoundEffect' }, 'Not Found !');
 		return null;
 	}
 
@@ -250,7 +265,7 @@ export class BotFirebase {
 		const caches = await getDoc(document);
 		if (caches.exists())
 			return (<UtsukushiFirebaseGlobalEmoji>caches.data()).emojis;
-		else console.error(red('[Cache Global] : Cache Not Found !'));
+		else logger.error({ tag: 'Glogal Data Emoji' }, 'Not Found !');
 		return null;
 	}
 
@@ -258,7 +273,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'guild-data/' + guild.id);
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGuild>caches.data();
-		else console.error(red('[Cache ' + guild.id + '] : Cache Not Found !'));
+		else logger.error({ tag: 'Guild Data', guildId: guild.id }, 'Not Found !');
 		return null;
 	}
 
@@ -266,8 +281,7 @@ export class BotFirebase {
 		const document = doc(this.db, 'user-data/' + user.id);
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotUserData>caches.data();
-		else
-			console.error(red('[UserData ' + user.id + '] : UserData Not Found !'));
+		else logger.error({ tag: 'User Data', userId: user.id }, 'Not Found !');
 		return null;
 	}
 
@@ -275,15 +289,11 @@ export class BotFirebase {
 		const document = doc(this.db, 'user-data/' + user.id);
 		return setDoc(document, initBotUserData)
 			.then(() => {
-				console.log(
-					green('[UserData ' + user.id + '] : Cache Clear Success !')
-				);
+				logger.info({ tag: 'User Data', userId: user.id }, 'Reset Sucess !');
 				return true;
 			})
 			.catch(() => {
-				console.error(
-					red('[UserData ' + user.id + '] : Cache Clear Failure !')
-				);
+				logger.error({ tag: 'User Data', userId: user.id }, 'Reset Failed !');
 				return false;
 			});
 	}
@@ -292,14 +302,13 @@ export class BotFirebase {
 		const document = doc(this.db, 'guild-data/' + guild.id);
 		return setDoc(document, initBotCacheGuild)
 			.then(() => {
-				console.log(
-					green('[UserData ' + guild.id + '] : Cache Clear Success !')
-				);
+				logger.info({ tag: 'Guild Data', guildId: guild.id }, 'Reset Sucess !');
 				return true;
 			})
 			.catch(() => {
-				console.error(
-					red('[UserData ' + guild.id + '] : Cache Clear Failure !')
+				logger.error(
+					{ tag: 'Guild Data', guildId: guild.id },
+					'Reset Failed !'
 				);
 				return false;
 			});

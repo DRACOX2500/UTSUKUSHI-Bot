@@ -9,6 +9,7 @@ coverage/
 dist/
 
 #local
+logs/*.log
 .env
 src/assets/*.webp
 utsukushi.config.json

@@ -18,8 +18,6 @@ class EmojiListUpdateEvent implements UtsukushiEvent {
 				name: emoji.name,
 			};
 		});
-
-		console.log(blue(`Update ${emojiArray.length} Emojis from ${guild.name}#${guild.id}`));
 		await client.getDatabase().deleteCacheGlobalEmoji(...emojiArray);
 		await client.getDatabase().setCacheGlobalEmoji(...emojiArray);
 	}

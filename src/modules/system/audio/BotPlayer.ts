@@ -10,6 +10,7 @@ import {
 } from '@discordjs/voice';
 import { red, yellow } from 'ansicolor';
 import { Message } from 'discord.js';
+import { logger } from '../logger/logger';
 
 export class BotPlayer {
 	player: AudioPlayer;
@@ -36,11 +37,7 @@ export class BotPlayer {
 
 	private initEvents() {
 		this.player?.on('stateChange', (oldState, newState) => {
-			console.log(
-				yellow(
-					`Audio player transitioned from ${oldState.status} to ${newState.status}`
-				)
-			);
+			logger.info({ tag: 'Audio player', oldState: oldState.status, newState: newState.status });
 		});
 
 		this.player?.on(AudioPlayerStatus.Idle, () => {
@@ -49,7 +46,7 @@ export class BotPlayer {
 		});
 
 		this.player?.on('error', (error) => {
-			console.error(red(`[Player] Error : ${error.message}`));
+			logger.error({ tag: 'Audio player' }, error.message);
 		});
 	}
 

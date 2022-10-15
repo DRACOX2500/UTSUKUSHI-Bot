@@ -28,8 +28,12 @@ import {
 } from 'root/src/models/utsukushi-command.model';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
-import { UtsukushiButton, UtsukushiEvent } from '../../models/utsukushi-interaction.model';
+import {
+	UtsukushiButton,
+	UtsukushiEvent,
+} from '../../models/utsukushi-interaction.model';
 import { ReplyAsBotModal } from './modals/reply-as-bot/reply-as-bot.modal';
+import { logger } from '@modules/system/logger/logger';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
@@ -224,46 +228,46 @@ export class CommandManager {
 			'interactionCreate',
 			async (interaction: Interaction<CacheType>) => {
 				if (interaction.isChatInputCommand()) {
-					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(
-							interaction.user.id
-						)}] use command : ${magenta(interaction.commandName)}`
-					);
+					logger.info({
+						tag: 'interaction',
+						user: { id: interaction.user.id, name: interaction.user.username },
+						command: { type: 'SlashCommand', name: interaction.commandName },
+					});
 					await this.interactionChatInput(interaction, client);
 				}
 				else if (interaction.isButton()) {
-					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(
-							interaction.user.id
-						)}] use button : ${magenta(interaction.customId)}`
-					);
+					logger.info({
+						tag: 'interaction',
+						user: { id: interaction.user.id, name: interaction.user.username },
+						command: { type: 'Button', name: interaction.customId },
+					});
 					await this.interactionButton(interaction, client);
 				}
 				else if (interaction.isAutocomplete()) {
 					await this.interactionAutocomplete(interaction, client);
 				}
 				else if (interaction.isContextMenuCommand()) {
-					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(
-							interaction.user.id
-						)}] use context : ${magenta(interaction.commandName)}`
-					);
+					logger.info({
+						tag: 'interaction',
+						user: { id: interaction.user.id, name: interaction.user.username },
+						command: { type: 'ContextMenu', name: interaction.commandName },
+					});
 					await this.interactionContext(interaction, client);
 				}
 				else if (interaction.isSelectMenu()) {
-					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(
-							interaction.user.id
-						)}] use select : ${magenta(interaction.customId)}`
-					);
+					logger.info({
+						tag: 'interaction',
+						user: { id: interaction.user.id, name: interaction.user.username },
+						command: { type: 'SelectMenu', name: interaction.customId },
+					});
 					await this.interactionSelect(interaction, client);
 				}
 				else if (interaction.isModalSubmit()) {
-					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(
-							interaction.user.id
-						)}] use modal : ${magenta(interaction.customId)}`
-					);
+					logger.info({
+						tag: 'interaction',
+						user: { id: interaction.user.id, name: interaction.user.username },
+						command: { type: 'ModalSubmit', name: interaction.customId },
+					});
 					await this.interactionModal(interaction, client);
 				}
 			}

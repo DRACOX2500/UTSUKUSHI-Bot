@@ -2,6 +2,7 @@
 import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice';
 import { blue, red } from 'ansicolor';
 import { Message } from 'discord.js';
+import { logger } from '../logger/logger';
 import { BotPlayer } from './BotPlayer';
 
 export class VocalConnection {
@@ -19,15 +20,11 @@ export class VocalConnection {
 
 	private initEvents(): void {
 		this.connection?.on('stateChange', (oldState, newState) => {
-			console.log(
-				blue(
-					`Connection transitioned from ${oldState.status} to ${newState.status}`
-				)
-			);
+			logger.info({ tag: 'Voice Connection', oldState: oldState.status, newState: newState.status });
 		});
 
 		this.connection?.on('error', (error) => {
-			console.error(red(`[Connection] Error : ${error.message}`));
+			logger.error({ tag: 'Voice Connection' }, error.message);
 		});
 	}
 
