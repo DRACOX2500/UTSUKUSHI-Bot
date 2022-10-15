@@ -19,8 +19,6 @@ import {
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { NotifyEvent } from './events/NotifyEvent';
-import { PauseButton } from '@modules/interactions/buttons/play/pause.button';
-import { VolumeButtons } from '@modules/interactions/buttons/play/volume.button';
 import {
 	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
@@ -28,11 +26,10 @@ import {
 	UtsukushiSlashCommand,
 } from '@models/UtsukushiCommand';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
-import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
 import { UtsukushiButton } from '../../models/UtsukushiInteraction';
-import { StopButton } from './buttons/play/stop.button';
-import { SkipButton } from './buttons/play/skip.button';
+import { ModalSubmitInteraction } from 'discord.js';
+import { ReplyAsBotModal } from './modals/reply-as-bot.modal';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
@@ -201,6 +198,12 @@ export class CommandManager {
 		}
 	}
 
+	private async interactionModal(interaction: ModalSubmitInteraction, client: BotClient) {
+		if (interaction.customId === 'rpab-modal') {
+			ReplyAsBotModal.getEffect(interaction, client);
+		}
+	}
+
 	initCommand(client: BotClient) {
 		client.on(
 			'interactionCreate',
@@ -231,6 +234,12 @@ export class CommandManager {
 						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use select : ${magenta(interaction.customId)}`
 					);
 					await this.interactionSelect(interaction, client);
+				}
+				else if (interaction.isModalSubmit()) {
+					console.log(
+						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use modal : ${magenta(interaction.customId)}`
+					);
+					await this.interactionModal(interaction, client);
 				}
 			}
 		);

@@ -5,7 +5,7 @@ import { UtsukushiMessageContextCommand } from 'src/models/UtsukushiCommand';
 /**
  * @ContextCommand
  */
-export class DeleteContext implements UtsukushiMessageContextCommand {
+export class DeleteUpToThisContext implements UtsukushiMessageContextCommand {
 	readonly command: ContextMenuCommandBuilder = new ContextMenuCommandBuilder()
 		.setName('Delete Up To This')
 		.setType(ApplicationCommandType.Message)
@@ -46,4 +46,4 @@ export class DeleteContext implements UtsukushiMessageContextCommand {
 			});
 	};
 }
-export const command = new DeleteContext();
+export const command = new DeleteUpToThisContext();
