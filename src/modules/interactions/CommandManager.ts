@@ -200,7 +200,7 @@ export class CommandManager {
 
 	private async interactionModal(interaction: ModalSubmitInteraction, client: BotClient) {
 		if (interaction.customId === 'rpab-modal') {
-			ReplyAsBotModal.getEffect(interaction, client);
+			ReplyAsBotModal.getEffect(interaction);
 		}
 	}
 

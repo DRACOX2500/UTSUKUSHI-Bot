@@ -17,7 +17,7 @@ export class ReactAsBotSelect extends SelectMenuBuilder {
 			this.emojis = this.emojis.slice(start, limit);
 
 		this.emojis.forEach((item) => {
-			const emojiValue = `<${item.animated ? 'a' : ''}:${item.name}:${item.id}> `
+			const emojiValue = `<${item.animated ? 'a' : ''}:${item.name}:${item.id}> `;
 			selectOptions.push({ label: <string>item.name, value: emojiValue, emoji: item });
 		});
 		this.setCustomId('rab-select')
