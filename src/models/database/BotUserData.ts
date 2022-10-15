@@ -1,11 +1,11 @@
 export interface BotUserData {
-    keywords: string[];
+	keywords: string[];
 }
 
 export const initBotUserData: BotUserData = {
-	keywords: [ ],
+	keywords: [],
 };
 
-export type BotUserDataKeyword = { keyword: string }
+export type BotUserDataKeyword = { keyword: string };
 
 export type BotUserDataTypes = BotUserDataKeyword;

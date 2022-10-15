@@ -1,4 +1,8 @@
-import { ChatInputCommandInteraction, CacheType, PresenceStatusData } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	CacheType,
+	PresenceStatusData,
+} from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { TWITCH_LINK } from '@utils/const';
 import { Activity } from '@models/Activity';
@@ -31,7 +35,10 @@ export class BotSubCommand {
 		client.setActivity(newActivity);
 
 		client.getDatabase().setCacheGlobal({ activity: newActivity });
-		interaction.reply({ content: '🤖 Bot activity has been change !', ephemeral: true });
+		interaction.reply({
+			content: '🤖 Bot activity has been change !',
+			ephemeral: true,
+		});
 	}
 
 	protected async setStatus(
@@ -42,6 +49,9 @@ export class BotSubCommand {
 		client.setStatus(<PresenceStatusData>options.status);
 
 		client.getDatabase().setCacheGlobal({ status: options.status });
-		interaction.reply({ content: '🤖 Bot status has been change !', ephemeral: true });
+		interaction.reply({
+			content: '🤖 Bot status has been change !',
+			ephemeral: true,
+		});
 	}
 }

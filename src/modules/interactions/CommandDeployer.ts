@@ -17,7 +17,7 @@ import {
 import { lightGreen, green, lightMagenta, magenta } from 'ansicolor';
 
 type CommandDeployerOptions = {
-    /** default true */
+	/** default true */
 	enableLogs?: boolean;
 	/** default false */
 	test?: boolean;
@@ -47,7 +47,7 @@ export class CommandDeployer {
 			UtsukushiContextCommand<
 				MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction
 			>
-		>,
+		>
 	) {
 		this.globals = commands.clone();
 		this.contexts = contexts;
@@ -60,7 +60,9 @@ export class CommandDeployer {
 					const guildscommand = this.commandGuilds.get(guild);
 					this.commandGuilds.set(
 						guild,
-						guildscommand ? guildscommand.set(key, value) : new Map().set(key, value)
+						guildscommand
+							? guildscommand.set(key, value)
+							: new Map().set(key, value)
 					);
 				});
 				this.globals.delete(key);
@@ -75,7 +77,12 @@ export class CommandDeployer {
 		);
 	}
 
-	private async deployPrivateCommand(key: string, botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[], rest: REST, options: CommandDeployerOptions): Promise<number> {
+	private async deployPrivateCommand(
+		key: string,
+		botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[],
+		rest: REST,
+		options: CommandDeployerOptions
+	): Promise<number> {
 		try {
 			if (options?.test ?? false) return 0;
 			if (options?.enableLogs ?? true)
@@ -103,9 +110,7 @@ export class CommandDeployer {
 		return 0;
 	}
 
-	async deployGlobal(
-		options?: CommandDeployerOptions
-	): Promise<number> {
+	async deployGlobal(options?: CommandDeployerOptions): Promise<number> {
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
 
 		const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] = [];
@@ -133,7 +138,9 @@ export class CommandDeployer {
 
 				if (options?.enableLogs ?? true)
 					console.log(
-						green(`Successfully reloaded application ${botCommands.length} global (/) commands !`)
+						green(
+							`Successfully reloaded application ${botCommands.length} global (/) commands !`
+						)
 					);
 			}
 			catch (error) {
@@ -149,7 +156,8 @@ export class CommandDeployer {
 		const resTab: number[] = [];
 
 		for (const key of this.commandGuilds.keys()) {
-			const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] = [];
+			const botCommands: (SlashCommandBuilder | ContextMenuCommandBuilder)[] =
+				[];
 			const cmds = this.commandGuilds.get(key);
 			if (!cmds) continue;
 
@@ -161,10 +169,18 @@ export class CommandDeployer {
 					);
 			}
 
-			const res = await this.deployPrivateCommand(key, botCommands, rest, options ?? {});
+			const res = await this.deployPrivateCommand(
+				key,
+				botCommands,
+				rest,
+				options ?? {}
+			);
 			resTab.push(res);
 		}
 
-		return resTab.reduce((accumulateur, valeurCourante) => accumulateur + valeurCourante, 0);
+		return resTab.reduce(
+			(accumulateur, valeurCourante) => accumulateur + valeurCourante,
+			0
+		);
 	}
 }

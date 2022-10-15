@@ -4,13 +4,12 @@ import {
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
 import { UtsukushiMessageContextCommand } from '@models/UtsukushiCommand';
-import { ReplyAsBotModal } from '../../modals/reply-as-bot.modal';
+import { ReplyAsBotModal } from '../../modals/reply-as-bot/reply-as-bot.modal';
 
 /**
  * @ContextCommand
  */
 export class ReplyAsBotContext implements UtsukushiMessageContextCommand {
-
 	readonly command = new ContextMenuCommandBuilder()
 		.setName('Reply As Bot')
 		.setType(ApplicationCommandType.Message)

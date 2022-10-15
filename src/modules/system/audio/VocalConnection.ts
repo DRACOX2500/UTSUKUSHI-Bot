@@ -5,7 +5,6 @@ import { Message } from 'discord.js';
 import { BotPlayer } from './BotPlayer';
 
 export class VocalConnection {
-
 	connection: VoiceConnection | null = null;
 	botPlayer: BotPlayer | null = null;
 
@@ -20,10 +19,14 @@ export class VocalConnection {
 
 	private initEvents(): void {
 		this.connection?.on('stateChange', (oldState, newState) => {
-			console.log(blue(`Connection transitioned from ${oldState.status} to ${newState.status}`));
+			console.log(
+				blue(
+					`Connection transitioned from ${oldState.status} to ${newState.status}`
+				)
+			);
 		});
 
-		this.connection?.on('error', error => {
+		this.connection?.on('error', (error) => {
 			console.error(red(`[Connection] Error : ${error.message}`));
 		});
 	}

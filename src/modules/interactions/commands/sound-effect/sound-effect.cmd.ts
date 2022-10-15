@@ -11,7 +11,7 @@ import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
 import {
 	SoundEffectCommandOptions,
 	SoundEffectSubCommand,
-} from './soundEffect.sub';
+} from './sound-effect.sub';
 import { sortByName } from '@utils/sortByName';
 
 /**

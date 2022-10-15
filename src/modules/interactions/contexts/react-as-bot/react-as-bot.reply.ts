@@ -27,15 +27,22 @@ export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 			this.start = 0;
 			limit = start + 24;
 		}
-		this.content = `React to message #${this.targetId} with an emoji!\n` +
-			`Choose an emoji ! (${this.start + 1} to ${limit + 1} - ${this.emojis.length})`;
+		this.content =
+			`React to message #${this.targetId} with an emoji!\n` +
+			`Choose an emoji ! (${this.start + 1} to ${limit + 1} - ${
+				this.emojis.length
+			})`;
 		this.components = [
 			new ActionRowBuilder<SelectMenuBuilder>().addComponents(
 				new ReactAsBotSelect(this.emojis, limit, this.start)
 			),
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				new ReactAsBotButtons.PreviousButton().button(this.start <= 0 ? true : false),
-				new ReactAsBotButtons.NextButton().button(limit >= this.emojis.length - 1 ? true : false)
+				new ReactAsBotButtons.PreviousButton().button(
+					this.start <= 0 ? true : false
+				),
+				new ReactAsBotButtons.NextButton().button(
+					limit >= this.emojis.length - 1 ? true : false
+				)
 			),
 		];
 	}

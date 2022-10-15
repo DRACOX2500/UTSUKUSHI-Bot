@@ -85,11 +85,9 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 			const comp = embedPlayer.getButtonMenu();
 			(<any>interaction).editReply({ embeds: [embed], components: [comp] });
 
-			client
-				.getDatabase()
-				.setCacheByGuild((<any>interaction).guild, {
-					lastPlayURL: stream.video.url,
-				});
+			client.getDatabase().setCacheByGuild((<any>interaction).guild, {
+				lastPlayURL: stream.video.url,
+			});
 			const keywordsCache = client
 				.getDatabase()
 				.dataCache.userdata.get(interaction.user.id)?.keywords;
@@ -116,9 +114,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		if (!keywordsCache) {
 			const data = await client.getDatabase().getUserData(interaction.user);
 			if (data) {
-				client
-					.getDatabase()
-					.dataCache.userdata.set(interaction.user.id, data);
+				client.getDatabase().dataCache.userdata.set(interaction.user.id, data);
 				keywordsCache = client
 					.getDatabase()
 					.dataCache.userdata.get(interaction.user.id);

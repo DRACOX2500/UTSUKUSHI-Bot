@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, NoSubscriberBehavior, VoiceConnection } from '@discordjs/voice';
+import {
+	AudioPlayer,
+	AudioPlayerStatus,
+	AudioResource,
+	createAudioPlayer,
+	createAudioResource,
+	NoSubscriberBehavior,
+	VoiceConnection,
+} from '@discordjs/voice';
 import { red, yellow } from 'ansicolor';
 import { Message } from 'discord.js';
 
 export class BotPlayer {
-
 	player: AudioPlayer;
 
 	resource: AudioResource<any> | null;
@@ -29,7 +36,11 @@ export class BotPlayer {
 
 	private initEvents() {
 		this.player?.on('stateChange', (oldState, newState) => {
-			console.log(yellow(`Audio player transitioned from ${oldState.status} to ${newState.status}`));
+			console.log(
+				yellow(
+					`Audio player transitioned from ${oldState.status} to ${newState.status}`
+				)
+			);
 		});
 
 		this.player?.on(AudioPlayerStatus.Idle, () => {
@@ -37,7 +48,7 @@ export class BotPlayer {
 			this.connection.destroy();
 		});
 
-		this.player?.on('error', error => {
+		this.player?.on('error', (error) => {
 			console.error(red(`[Player] Error : ${error.message}`));
 		});
 	}
@@ -48,7 +59,6 @@ export class BotPlayer {
 	 * @param opti boolean
 	 */
 	playMusic(source: string, opti = false): void {
-
 		if (!source) return;
 
 		this.resource = createAudioResource<any>(source, { inlineVolume: !opti });
@@ -61,7 +71,7 @@ export class BotPlayer {
 		if (!this.resource || !this.resource.volume) return;
 
 		let volume = this.resource.volume.volume;
-		volume = Math.round(((volume - 0.1) + Number.EPSILON) * 10) / 10;
+		volume = Math.round((volume - 0.1 + Number.EPSILON) * 10) / 10;
 
 		if (volume < 0) volume = 0;
 		this.resource.volume.setVolume(volume);
@@ -71,7 +81,7 @@ export class BotPlayer {
 		if (!this.resource || !this.resource.volume) return;
 
 		let volume = this.resource.volume.volume;
-		volume = Math.round(((volume + 0.1) + Number.EPSILON) * 10) / 10;
+		volume = Math.round((volume + 0.1 + Number.EPSILON) * 10) / 10;
 
 		if (volume > 1) volume = 1;
 		this.resource.volume.setVolume(volume);
@@ -81,5 +91,4 @@ export class BotPlayer {
 		if (!this.resource || !this.resource.volume) return 1;
 		return this.resource.volume.volume;
 	}
-
 }

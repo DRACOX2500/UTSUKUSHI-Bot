@@ -13,7 +13,10 @@ export class GuildCommand implements UtsukushiSlashCommand {
 		.setDescription('Guild informations')
 		.setDMPermission(false);
 
-	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient): Promise<void> => {
+	readonly result = async (
+		interaction: ChatInputCommandInteraction,
+		client: BotClient
+	): Promise<void> => {
 		const guild = interaction.guild;
 		if (!guild) return;
 
@@ -24,6 +27,5 @@ export class GuildCommand implements UtsukushiSlashCommand {
 		const emExtra = await embed.getEmbedExtra();
 		await interaction.editReply({ embeds: [em, emExtra] });
 	};
-
 }
 export const command = new GuildCommand();

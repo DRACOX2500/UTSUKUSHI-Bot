@@ -13,7 +13,7 @@ export interface EmbedGuildData {
 	name: string;
 	ownerId: string;
 	iconUrl: string;
-    bannerUrl: string;
+	bannerUrl: string;
 	memberCount: number;
 	preferredLocale: string;
 	premiumSubscriptionCount: number;

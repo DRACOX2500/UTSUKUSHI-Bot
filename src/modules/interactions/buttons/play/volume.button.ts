@@ -1,21 +1,27 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { APIEmbedField, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from 'discord.js';
+import {
+	APIEmbedField,
+	ButtonBuilder,
+	ButtonInteraction,
+	ButtonStyle,
+	EmbedBuilder,
+} from 'discord.js';
 import { BotPlayer } from '@modules/system/audio/BotPlayer';
 import { BotClient } from 'src/BotClient';
 import { BUTTON } from '@utils/const';
 import { UtsukushiButton } from '@models/UtsukushiInteraction';
 
 function isNotOK(interaction: ButtonInteraction, client: BotClient): boolean {
-	return !client.connection.botPlayer?.resource ||
-	interaction.message.embeds[0].data.fields === undefined ||
-	(client.connection.botPlayer?.origin &&
-	interaction.message.id !== client.connection.botPlayer?.origin?.id);
+	return (
+		!client.connection.botPlayer?.resource ||
+		interaction.message.embeds[0].data.fields === undefined ||
+		(client.connection.botPlayer?.origin &&
+			interaction.message.id !== client.connection.botPlayer?.origin?.id)
+	);
 }
 
 export namespace VolumeButtons {
-
 	export class VolumeDownButton implements UtsukushiButton {
-
 		readonly button = (disabled = false): ButtonBuilder => {
 			return new ButtonBuilder()
 				.setCustomId('play-vdown')
@@ -24,7 +30,10 @@ export namespace VolumeButtons {
 				.setDisabled(disabled);
 		};
 
-		readonly getEffect = async (interaction: ButtonInteraction, client: BotClient): Promise<void> => {
+		readonly getEffect = async (
+			interaction: ButtonInteraction,
+			client: BotClient
+		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
 				interaction.reply(BUTTON.PLAY_RESPONSE);
 				return;
@@ -32,7 +41,8 @@ export namespace VolumeButtons {
 
 			client.connection.botPlayer?.volumeDown();
 
-			(<APIEmbedField[]> interaction.message.embeds[0].data.fields)[5].value = ((<BotPlayer> client.connection.botPlayer).getVolume() * 100) + '%';
+			(<APIEmbedField[]>interaction.message.embeds[0].data.fields)[5].value =
+				(<BotPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vDownEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
 			interaction.message.edit({ embeds: [vDownEmbed] });
@@ -42,7 +52,6 @@ export namespace VolumeButtons {
 	}
 
 	export class VolumeUpButton implements UtsukushiButton {
-
 		readonly button = (disabled = false): ButtonBuilder => {
 			return new ButtonBuilder()
 				.setCustomId('play-vup')
@@ -51,14 +60,18 @@ export namespace VolumeButtons {
 				.setDisabled(disabled);
 		};
 
-		readonly getEffect = async (interaction: ButtonInteraction, client: BotClient): Promise<void> => {
+		readonly getEffect = async (
+			interaction: ButtonInteraction,
+			client: BotClient
+		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
 				interaction.reply(BUTTON.PLAY_RESPONSE);
 				return;
 			}
 			client.connection.botPlayer?.volumeUp();
 
-			(<APIEmbedField[]> interaction.message.embeds[0].data.fields)[5].value = ((<BotPlayer> client.connection.botPlayer).getVolume() * 100) + '%';
+			(<APIEmbedField[]>interaction.message.embeds[0].data.fields)[5].value =
+				(<BotPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vUpEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
 			interaction.message.edit({ embeds: [vUpEmbed] });

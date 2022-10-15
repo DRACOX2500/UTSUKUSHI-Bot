@@ -64,10 +64,7 @@ export class SoundEffectSubCommand {
 		}
 
 		const data = await client.getDatabase().getCacheGlobalSounEffect();
-		if (
-			data &&
-			data.some((effect) => effect.key === options.name)
-		) {
+		if (data && data.some((effect) => effect.key === options.name)) {
 			await interaction.reply({
 				content: `❌ Sound Effect key ${bold(options.name)} already exist !`,
 				ephemeral: true,

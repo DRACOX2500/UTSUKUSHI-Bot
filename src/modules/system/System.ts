@@ -12,13 +12,15 @@ class BotRemover {
 		channelMessages: MessageManager,
 		message: Message
 	) {
-		await channelMessages.fetch({ after: message.id }).then(async (messages) => {
-			const interactionId = await interaction.fetchReply();
-			messages.delete(interactionId.id);
-			messages.forEach((mes) => mes.delete());
-			await message.delete();
-			this.deleteMessage = messages.size + 1;
-		});
+		await channelMessages
+			.fetch({ after: message.id })
+			.then(async (messages) => {
+				const interactionId = await interaction.fetchReply();
+				messages.delete(interactionId.id);
+				messages.forEach((mes) => mes.delete());
+				await message.delete();
+				this.deleteMessage = messages.size + 1;
+			});
 
 		return this.deleteMessage;
 	}
@@ -42,12 +44,12 @@ export class BotRemoverManager {
 	}
 
 	/**
-     * @param channelId
-     * @return `BotRemover | null`
-     *
-     * Return `null` if BotRemoverManager.maxInstances is Full
-     * or if channelId is already in BotRemoverManager.removerMap
-     */
+	 * @param channelId
+	 * @return `BotRemover | null`
+	 *
+	 * Return `null` if BotRemoverManager.maxInstances is Full
+	 * or if channelId is already in BotRemoverManager.removerMap
+	 */
 	addRemover(channelId: string): BotRemover | null {
 		if (this.isFull) return null;
 		if (this.removerMap.get(channelId)) return null;

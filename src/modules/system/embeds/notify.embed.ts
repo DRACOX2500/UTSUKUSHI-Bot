@@ -1,8 +1,6 @@
 import { bold, EmbedBuilder, User, VoiceChannel } from 'discord.js';
-import { BotClient } from 'src/BotClient';
 
 export class EmbedNotify {
-
 	userId!: string;
 	userName!: string;
 	userDiscriminator!: string;
@@ -23,12 +21,15 @@ export class EmbedNotify {
 
 	getEmbed(): EmbedBuilder {
 		return new EmbedBuilder()
-			.setColor(0xF9FF00)
-			.setAuthor({ name: `${this.userName}#${this.userDiscriminator}`, iconURL: this.userImageUrl })
-			.setDescription(`🔔 <@${this.userId}> joined voice channel ${bold(this.channelName)}`)
+			.setColor(0xf9ff00)
+			.setAuthor({
+				name: `${this.userName}#${this.userDiscriminator}`,
+				iconURL: this.userImageUrl,
+			})
+			.setDescription(
+				`🔔 <@${this.userId}> joined voice channel ${bold(this.channelName)}`
+			)
 			.setTimestamp()
 			.setFooter({ text: this.guildName, iconURL: this.guildImageUrl });
 	}
-
-
 }

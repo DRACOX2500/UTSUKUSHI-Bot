@@ -1,6 +1,15 @@
-import { SlashCommandBuilder, SlashCommandIntegerOption, ActivityType, ChatInputCommandInteraction, SlashCommandStringOption } from 'discord.js';
+import {
+	SlashCommandBuilder,
+	SlashCommandIntegerOption,
+	ActivityType,
+	ChatInputCommandInteraction,
+	SlashCommandStringOption,
+} from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiPrivateCommand, UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import {
+	UtsukushiPrivateCommand,
+	UtsukushiSlashCommand,
+} from '@models/UtsukushiCommand';
 import { BotCommandOptions, BotSubCommand } from './bot.sub';
 import config from 'root/utsukushi.config.json';
 
@@ -10,9 +19,12 @@ import config from 'root/utsukushi.config.json';
  *  - `bot activity [activity-type] [activity-message]` : Change Utsukushi profile activity !
  *  - `bot status [status-type]` : Change Utsukushi profile status !
  */
-export class BotCommand extends BotSubCommand implements UtsukushiSlashCommand, UtsukushiPrivateCommand {
-
-	readonly guildId = config.privateCommands[0].bot.length ? config.privateCommands[0].bot : null;
+export class BotCommand
+	extends BotSubCommand
+	implements UtsukushiSlashCommand, UtsukushiPrivateCommand {
+	readonly guildId = config.privateCommands[0].bot.length
+		? config.privateCommands[0].bot
+		: null;
 
 	readonly command = new SlashCommandBuilder()
 		.setName('bot')
@@ -22,43 +34,52 @@ export class BotCommand extends BotSubCommand implements UtsukushiSlashCommand, 
 			subcommand
 				.setName('activity')
 				.setDescription('Change Bot activity 🤖!')
-				.addIntegerOption((option : SlashCommandIntegerOption) =>
-					option.setName('activity-type')
+				.addIntegerOption((option: SlashCommandIntegerOption) =>
+					option
+						.setName('activity-type')
 						.setDescription('Type of bot activity')
 						.addChoices(
 							{ name: 'Play', value: ActivityType.Playing },
 							{ name: 'Listen', value: ActivityType.Listening },
 							{ name: 'Stream', value: ActivityType.Streaming },
 							{ name: 'Competing', value: ActivityType.Competing },
-							{ name: 'Watch', value: ActivityType.Watching },
+							{ name: 'Watch', value: ActivityType.Watching }
 						)
-						.setRequired(true))
-				.addStringOption(option =>
-					option.setName('activity-message')
+						.setRequired(true)
+				)
+				.addStringOption((option) =>
+					option
+						.setName('activity-message')
 						.setDescription('Message of bot activity')
-						.setRequired(true))
+						.setRequired(true)
+				)
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('status')
 				.setDescription('Change Bot status 🤖!')
-				.addStringOption((option : SlashCommandStringOption) =>
-					option.setName('status-type')
+				.addStringOption((option: SlashCommandStringOption) =>
+					option
+						.setName('status-type')
 						.setDescription('Type of bot activity')
 						.addChoices(
 							{ name: 'Online', value: 'online' },
 							{ name: 'Idle', value: 'idle' },
 							{ name: 'Do Not Disturb', value: 'dnd' },
-							{ name: 'Invisible', value: 'invisible' },
+							{ name: 'Invisible', value: 'invisible' }
 						)
 						.setRequired(true)
-				));
+				)
+		);
 
-	readonly result = async (interaction: ChatInputCommandInteraction, client: BotClient): Promise<void> => {
-
+	readonly result = async (
+		interaction: ChatInputCommandInteraction,
+		client: BotClient
+	): Promise<void> => {
 		const subCommand = interaction.options.getSubcommand();
 		const options: BotCommandOptions = {
-			activityType: interaction.options.getInteger('activity-type') ?? ActivityType.Playing,
+			activityType:
+				interaction.options.getInteger('activity-type') ?? ActivityType.Playing,
 			activityMessage: interaction.options.getString('activity-message') ?? '',
 			status: interaction.options.getString('status-type') ?? 'online',
 		};

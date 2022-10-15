@@ -18,15 +18,14 @@ import { sortByName } from '@utils/sortByName';
  * @DefaultMemberPermissions `ManageGuild`
  * - `notify [channel]` : set **TextChannel** to notify when guild members join voice channel
  */
-export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocompleteSlashCommand {
-
+export class NotifyCommand
+	extends NotifySubCommand
+	implements UtsukushiAutocompleteSlashCommand {
 	readonly command = new SlashCommandBuilder()
 		.setName('notify')
 		.setDescription('Notify when someone join a voice channel 🔔!')
 		.setDMPermission(false)
-		.setDefaultMemberPermissions(
-			PermissionsBitField.Flags.ManageGuild
-		)
+		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('on')
@@ -49,7 +48,6 @@ export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocomp
 		interaction: ChatInputCommandInteraction,
 		client: BotClient
 	): Promise<void> => {
-
 		const subCommand = interaction.options.getSubcommand();
 
 		// SubCommand  => On
@@ -82,9 +80,7 @@ export class NotifyCommand extends NotifySubCommand implements UtsukushiAutocomp
 				value: choice.id,
 			}));
 			res = res.sort((a, b) => sortByName(a.name, b.name));
-			res.unshift(
-				{ name: '---', value: '-1' }
-			);
+			res.unshift({ name: '---', value: '-1' });
 			if (res.length >= 25) res = res.slice(0, 25);
 			await interaction.respond(res);
 		}

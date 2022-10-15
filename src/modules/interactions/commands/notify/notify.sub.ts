@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, CacheType } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 
 export interface NotifyCommandOptions {
-    channel: string;
+	channel: string;
 }
 
 export class NotifySubCommand {

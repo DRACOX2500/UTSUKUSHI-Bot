@@ -9,7 +9,6 @@ import { PauseButton } from '@modules/interactions/buttons/play/pause.button';
 import { SkipButton } from '@modules/interactions/buttons/play/skip.button';
 
 export class EmbedPlayer {
-
 	data: EmbedVideoData = {
 		title: '',
 		duration: 0,
@@ -33,8 +32,11 @@ export class EmbedPlayer {
 		this.data.title = data.videoDetails.title;
 		this.data.duration = data.videoDetails.lengthSeconds;
 		this.data.view = data.videoDetails.viewCount;
-		this.data.category = data.player_response.microformat.playerMicroformatRenderer.category;
-		this.data.publishDate = new Date(data.player_response.microformat.playerMicroformatRenderer.publishDate);
+		this.data.category =
+			data.player_response.microformat.playerMicroformatRenderer.category;
+		this.data.publishDate = new Date(
+			data.player_response.microformat.playerMicroformatRenderer.publishDate
+		);
 		this.data.videoUrl = data.videoDetails.video_url;
 		this.data.videoLikeCount = data.videoDetails.likes?.toString() || '-1';
 		this.data.thumbnailUrl = data.videoDetails.thumbnails[3].url;
@@ -49,19 +51,31 @@ export class EmbedPlayer {
 
 	getEmbed(): EmbedBuilder {
 		return new EmbedBuilder()
-			.setColor(0xFF0000)
+			.setColor(0xff0000)
 			.setTitle(this.data.title)
 			.setURL(this.data.videoUrl)
 			.setDescription('🎶 🎵 🎶 🎵 🎶')
 			.setThumbnail(this.data.authorThumbnail)
-			.setAuthor({ name: this.data.author, iconURL: LOGO_MUSIC_BLUE, url: this.data.authorLink })
+			.setAuthor({
+				name: this.data.author,
+				iconURL: LOGO_MUSIC_BLUE,
+				url: this.data.authorLink,
+			})
 			.addFields(
-				{ name: 'Duration :', value: minuteSecondsFormater(this.data.duration), inline: true },
+				{
+					name: 'Duration :',
+					value: minuteSecondsFormater(this.data.duration),
+					inline: true,
+				},
 				{ name: 'Views :', value: this.data.view, inline: true },
 				{ name: 'Category :', value: this.data.category, inline: true },
 				{ name: 'Publish :', value: time(this.data.publishDate), inline: true },
 				{ name: 'Likes :', value: this.data.videoLikeCount, inline: true },
-				{ name: 'Volume :', value: this.data.volume.toString() + '%', inline: true },
+				{
+					name: 'Volume :',
+					value: this.data.volume.toString() + '%',
+					inline: true,
+				}
 			)
 			.setImage(this.data.thumbnailUrl)
 			.setTimestamp()
@@ -69,17 +83,16 @@ export class EmbedPlayer {
 	}
 
 	getButtonMenu() {
-		return new ActionRowBuilder()
-			.addComponents(
-				new VolumeButtons.VolumeDownButton().button(this.volumeOpti),
+		return new ActionRowBuilder().addComponents(
+			new VolumeButtons.VolumeDownButton().button(this.volumeOpti),
 
-				new StopButton().button(),
+			new StopButton().button(),
 
-				new PauseButton().button(),
+			new PauseButton().button(),
 
-				new SkipButton().button(true),
+			new SkipButton().button(true),
 
-				new VolumeButtons.VolumeUpButton().button(this.volumeOpti),
-			);
+			new VolumeButtons.VolumeUpButton().button(this.volumeOpti)
+		);
 	}
 }

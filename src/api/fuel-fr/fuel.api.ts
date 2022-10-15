@@ -1,23 +1,23 @@
 import axios from 'axios';
-import { DataEconomieGouvResponse, DataEconomieGouvResponseRecord } from '@models/api/DataEconomieGouv';
+import {
+	DataEconomieGouvResponse,
+	DataEconomieGouvResponseRecord,
+} from '@models/api/DataEconomieGouv';
 import { API } from '@utils/const';
 import { red } from 'ansicolor';
 
 export class FuelAPI {
-
 	refinePrixNom!: string;
 
 	queryValue!: string;
 
 	constructor() {
-
 		this.refinePrixNom = '&refine.prix_nom=';
 		this.queryValue = '';
 	}
 
 	private fuelError(err?: Error) {
-		if (err)
-			console.error(red(`[Fuel API] Error: ${err.message}`));
+		if (err) console.error(red(`[Fuel API] Error: ${err.message}`));
 		return API.FUEL.ERROR;
 	}
 
@@ -50,7 +50,6 @@ export class FuelAPI {
 	}
 
 	async getReponse(): Promise<DataEconomieGouvResponseRecord[] | string> {
-
 		const options = {
 			method: 'GET',
 			url: this.generateURL(),
@@ -58,19 +57,18 @@ export class FuelAPI {
 
 		return axios.request(options).then(
 			(response) => {
-				if (!response)
-					return this.fuelError();
-				else
-					return (<DataEconomieGouvResponse>response.data).records;
+				if (!response) return this.fuelError();
+				else return (<DataEconomieGouvResponse>response.data).records;
 			},
 			(error: Error) => {
 				return this.fuelError(error);
-			},
+			}
 		);
 	}
 
 	private generateURL(): string {
-		let result = API.FUEL.URL + API.FUEL.QUERY + this.queryValue + API.FUEL.ROWS;
+		let result =
+			API.FUEL.URL + API.FUEL.QUERY + this.queryValue + API.FUEL.ROWS;
 		for (const facet of API.FUEL.FACETS) {
 			result += facet;
 		}

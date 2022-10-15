@@ -1,9 +1,7 @@
 import { ButtonBuilder, ButtonStyle, ButtonInteraction } from 'discord.js';
-import { BotClient } from 'src/BotClient';
 import { UtsukushiButton } from '@models/UtsukushiInteraction';
 
 export class SkipButton implements UtsukushiButton {
-
 	readonly button = (disabled = false): ButtonBuilder => {
 		return new ButtonBuilder()
 			.setCustomId('skip')
@@ -12,7 +10,9 @@ export class SkipButton implements UtsukushiButton {
 			.setDisabled(disabled);
 	};
 
-	readonly getEffect = async (interaction: ButtonInteraction, client: BotClient): Promise<void> => {
+	readonly getEffect = async (
+		interaction: ButtonInteraction
+	): Promise<void> => {
 		// TODO : skip command
 		await interaction.deferUpdate();
 	};

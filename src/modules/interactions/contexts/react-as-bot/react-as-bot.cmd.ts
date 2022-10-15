@@ -1,4 +1,9 @@
-import { ContextMenuCommandBuilder, ApplicationCommandType, MessageContextMenuCommandInteraction, Message, ReplyMessageOptions } from 'discord.js';
+import {
+	ContextMenuCommandBuilder,
+	ApplicationCommandType,
+	MessageContextMenuCommandInteraction,
+	Message,
+} from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { UtsukushiMessageContextCommand } from '@models/UtsukushiCommand';
 import { ReactAsBotContextReply } from './react-as-bot.reply';
@@ -7,7 +12,6 @@ import { ReactAsBotContextReply } from './react-as-bot.reply';
  * @ContextCommand
  */
 export class ReactAsBotContext implements UtsukushiMessageContextCommand {
-
 	private targetMessage!: Message | null;
 
 	readonly command = new ContextMenuCommandBuilder()
@@ -15,8 +19,10 @@ export class ReactAsBotContext implements UtsukushiMessageContextCommand {
 		.setType(ApplicationCommandType.Message)
 		.setDMPermission(true);
 
-	readonly result = async (interaction: MessageContextMenuCommandInteraction, client: BotClient): Promise<void> => {
-
+	readonly result = async (
+		interaction: MessageContextMenuCommandInteraction,
+		client: BotClient
+	): Promise<void> => {
 		const channel = interaction.channel;
 		if (!channel) return;
 

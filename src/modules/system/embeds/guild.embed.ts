@@ -1,10 +1,4 @@
-import {
-	bold,
-	EmbedBuilder,
-	Guild,
-	italic,
-	time,
-} from 'discord.js';
+import { bold, EmbedBuilder, Guild, italic, time } from 'discord.js';
 import { EmbedGuildData } from '@models/embeds/EmbedGuildData';
 import { BotClient } from 'src/BotClient';
 
@@ -82,12 +76,12 @@ export class EmbedGuild {
 			bold(`Stickers (${guildStickers.size}) :\n`) +
 			stickers +
 			'\n\n' +
-            bold(`Roles (${guildRoles.size}) :\n`) +
+			bold(`Roles (${guildRoles.size}) :\n`) +
 			roles +
 			'\n\n' +
-            bold(`Banned Users (${guildBans.size}) :\n`) +
-                bans +
-                '\n\n';
+			bold(`Banned Users (${guildBans.size}) :\n`) +
+			bans +
+			'\n\n';
 
 		if (desc.length > 1950) desc = desc.slice(0, 1950);
 

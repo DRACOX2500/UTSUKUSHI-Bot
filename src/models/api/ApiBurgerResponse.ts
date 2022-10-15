@@ -1,3 +1,3 @@
 export interface ApiBurgerReponse {
-    image: string;
+	image: string;
 }

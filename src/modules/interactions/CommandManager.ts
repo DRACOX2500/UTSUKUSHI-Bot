@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -18,7 +19,7 @@ import {
 	SelectMenuInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { NotifyEvent } from './events/NotifyEvent';
+import { NotifyEvent } from './events/notify/notify.event';
 import {
 	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
@@ -29,11 +30,16 @@ import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
 import { UtsukushiButton } from '../../models/UtsukushiInteraction';
 import { ModalSubmitInteraction } from 'discord.js';
-import { ReplyAsBotModal } from './modals/reply-as-bot.modal';
+import { ReplyAsBotModal } from './modals/reply-as-bot/reply-as-bot.modal';
 
 export class CommandManager {
 	commands!: Collection<string, UtsukushiSlashCommand>;
-	contexts!: Collection<string, UtsukushiContextCommand<MessageContextMenuCommandInteraction|UserContextMenuCommandInteraction>>;
+	contexts!: Collection<
+		string,
+		UtsukushiContextCommand<
+			MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction
+		>
+	>;
 
 	private buttons!: Collection<string, UtsukushiButton>;
 
@@ -91,7 +97,7 @@ export class CommandManager {
 				if (customId) collection.set(customId, paramButton);
 			}
 			else if (paramButtons) {
-				paramButtons.forEach(button => {
+				paramButtons.forEach((button) => {
 					const customId: string = (<any>button.button().data).custom_id;
 					if (customId) collection.set(customId, button);
 				});
@@ -99,7 +105,11 @@ export class CommandManager {
 		}
 	}
 
-	private load(filesList: string[][], absolutePath: string, suffix: string): void {
+	private load(
+		filesList: string[][],
+		absolutePath: string,
+		suffix: string
+	): void {
 		try {
 			fs.readdirSync(absolutePath).forEach((filefolder) => {
 				const pathFile = path.join(absolutePath, filefolder);
@@ -128,18 +138,18 @@ export class CommandManager {
 		}
 		catch (error) {
 			console.error(error);
-			await interaction.reply({
-				content: 'There was an error while executing this command!',
-				ephemeral: true,
-			}).catch(
-				async (error: Error) => {
+			await interaction
+				.reply({
+					content: 'There was an error while executing this command!',
+					ephemeral: true,
+				})
+				.catch(async (error: Error) => {
 					if (error.name === 'InteractionAlreadyReplied') {
 						await interaction.editReply({
 							content: 'There was an error while executing this command!',
 						});
 					}
-				}
-			);
+				});
 		}
 	}
 
@@ -192,13 +202,19 @@ export class CommandManager {
 		}
 	}
 
-	private async interactionSelect(interaction: SelectMenuInteraction<CacheType>, client: BotClient) {
+	private async interactionSelect(
+		interaction: SelectMenuInteraction<CacheType>,
+		client: BotClient
+	) {
 		if (interaction.customId === 'rab-select') {
-			ReactAsBotSelect.getEffect(interaction, client);
+			ReactAsBotSelect.getEffect(interaction);
 		}
 	}
 
-	private async interactionModal(interaction: ModalSubmitInteraction, client: BotClient) {
+	private async interactionModal(
+		interaction: ModalSubmitInteraction,
+		client: BotClient
+	) {
 		if (interaction.customId === 'rpab-modal') {
 			ReplyAsBotModal.getEffect(interaction);
 		}
@@ -210,13 +226,17 @@ export class CommandManager {
 			async (interaction: Interaction<CacheType>) => {
 				if (interaction.isChatInputCommand()) {
 					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use command : ${magenta(interaction.commandName)}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(
+							interaction.user.id
+						)}] use command : ${magenta(interaction.commandName)}`
 					);
 					await this.interactionChatInput(interaction, client);
 				}
 				else if (interaction.isButton()) {
 					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use button : ${magenta(interaction.customId)}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(
+							interaction.user.id
+						)}] use button : ${magenta(interaction.customId)}`
 					);
 					await this.interactionButton(interaction, client);
 				}
@@ -225,19 +245,25 @@ export class CommandManager {
 				}
 				else if (interaction.isContextMenuCommand()) {
 					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use context : ${magenta(interaction.commandName)}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(
+							interaction.user.id
+						)}] use context : ${magenta(interaction.commandName)}`
 					);
 					await this.interactionContext(interaction, client);
 				}
 				else if (interaction.isSelectMenu()) {
 					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use select : ${magenta(interaction.customId)}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(
+							interaction.user.id
+						)}] use select : ${magenta(interaction.customId)}`
 					);
 					await this.interactionSelect(interaction, client);
 				}
 				else if (interaction.isModalSubmit()) {
 					console.log(
-						`[${cyan(interaction.user.username)} - #${lightMagenta(interaction.user.id)}] use modal : ${magenta(interaction.customId)}`
+						`[${cyan(interaction.user.username)} - #${lightMagenta(
+							interaction.user.id
+						)}] use modal : ${magenta(interaction.customId)}`
 					);
 					await this.interactionModal(interaction, client);
 				}

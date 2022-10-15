@@ -68,18 +68,19 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		}
 		case CacheType.Show: {
 			await interaction.deferReply({ ephemeral: true });
-			const data = await client
-				.getDatabase()
-				.getUserData(interaction.user);
+			const data = await client.getDatabase().getUserData(interaction.user);
 			if (data) {
-				await interaction.user.send(codeBlock('json', JSON.stringify(data, null, '\t')));
+				await interaction.user.send(
+					codeBlock('json', JSON.stringify(data, null, '\t'))
+				);
 				await interaction.editReply({
 					content: '✅ Data sent',
 				});
 			}
 			else
 				await interaction.editReply({
-					content: '❌ Cache Show Failed ! Maybe you don\'t have data in my database ?',
+					content:
+							'❌ Cache Show Failed ! Maybe you don\'t have data in my database ?',
 				});
 			break;
 		}

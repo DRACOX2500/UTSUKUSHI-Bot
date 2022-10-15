@@ -65,8 +65,9 @@ export interface UtsukushiSlashCommand
 	) => Promise<void>;
 }
 
-export interface UtsukushiContextCommand<T extends ContextMenuCommandInteraction>
-	extends Omit<UtsukushiCommand<ContextMenuCommandInteraction>, 'result'> {
+export interface UtsukushiContextCommand<
+	T extends ContextMenuCommandInteraction
+> extends Omit<UtsukushiCommand<ContextMenuCommandInteraction>, 'result'> {
 	/**
 	 * @Command ContextMenuCommand
 	 */

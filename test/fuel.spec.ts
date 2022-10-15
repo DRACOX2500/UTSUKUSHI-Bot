@@ -2,7 +2,7 @@
 import { EmbedFuel } from 'root/src/modules/system/embeds/fuel.embed';
 import { DataEconomieGouvResponseRecord } from '@models/api/DataEconomieGouv';
 import { FuelAPI } from 'root/src/api/fuel-fr/fuel.api';
-import { FuelCommand } from 'src/modules/interactions/commands/FuelCommand/fuel.cmd';
+import { FuelCommand } from 'root/src/modules/interactions/commands/fuel/fuel.cmd';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 async function getApiResponse(): Promise<DataEconomieGouvResponseRecord[] | null> {
