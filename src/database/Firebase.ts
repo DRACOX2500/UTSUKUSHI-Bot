@@ -18,21 +18,19 @@ import {
 	UserCredential,
 } from 'firebase/auth';
 import { Guild, User as DiscordUser } from 'discord.js';
+import { green, red } from 'ansicolor';
+import { UtsukushiFirebaseGlobalEmoji } from '@models/firebase/firebase.model';
+import { FirebaseCache } from './utsukushi-cache';
 import {
 	BotCacheGlobal,
-	BotCacheGlobalGuildEmoji,
 	BotCacheGlobalSoundEffect,
+	BotCacheGlobalGuildEmoji,
 	BotCacheGuild,
-	initBotCacheGuild,
-} from '@models/database/BotCache';
-import {
-	BotUserData,
 	BotUserDataTypes,
+	BotUserData,
 	initBotUserData,
-} from '@models/database/BotUserData';
-import { green, red } from 'ansicolor';
-import { UtsukushiFirebaseGlobalEmoji } from '@models/database/Firebase.model';
-import { FirebaseCache } from './FirebaseCache';
+	initBotCacheGuild,
+} from '@models/firebase/document-data.model';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -138,19 +136,19 @@ export class BotFirebase {
 			await updateDoc(document, 'emojis', arrayUnion(...cache))
 				.then(() => {
 					console.log(
-						green(`[Cache Global Emoji] : Updated Success (+${cache.length}) !`)
+						green(`[ADD EMOJI] : Updated Success (+${cache.length}) !`)
 					);
 				})
 				.catch((error) => {
-					console.error(red('[Cache Global Emoji] : Updated Failure !'));
+					console.error(red('[ADD EMOJI] : Updated Failure !'));
 					if (error.code === NOT_FOUND_ERROR) {
-						console.log('[Cache Global Emoji] : Try to create doc...');
+						console.log('[ADD EMOJI] : Try to create doc...');
 						setDoc(document, { emojis: cache })
 							.then(() =>
-								console.log(green('[Cache Global Emoji] : Success !'))
+								console.log(green('[ADD EMOJI] : Success !'))
 							)
 							.catch(() => {
-								console.log(red('[Cache Global Emoji] : Failed !'));
+								console.log(red('[ADD EMOJI] : Failed !'));
 								resFunct = false;
 							});
 					}
@@ -161,26 +159,22 @@ export class BotFirebase {
 
 	async deleteCacheGlobalEmoji(
 		...cache: BotCacheGlobalGuildEmoji[]
-	): Promise<number> {
-		let resFunct = 0;
+	): Promise<boolean> {
+		let resFunct = true;
 
 		if (cache) {
-			await Promise.all(
-				cache.map(async () => {
-					const document = doc(this.db, 'global/emoji/');
+			const document = doc(this.db, 'global/emoji/');
 
-					await updateDoc(document, 'emojis', arrayRemove(...cache))
-						.then(() => {
-							console.log(
-								green('[DELETE Emoji] Code Field has been deleted successfully')
-							);
-							resFunct++;
-						})
-						.catch(() => {
-							console.log(red('[DELETE Emoji] : Failed !'));
-						});
+			await updateDoc(document, 'emojis', arrayRemove(...cache))
+				.then(() => {
+					console.log(
+						green(`[DELETE EMOJI] : Deleted Success (-${cache.length}) !`)
+					);
 				})
-			);
+				.catch(() => {
+					console.log(red('[DELETE Emoji] : Failed !'));
+					resFunct = false;
+				});
 		}
 		return resFunct;
 	}
@@ -243,8 +237,7 @@ export class BotFirebase {
 	}
 
 	async getCacheGlobalSounEffect(): Promise<
-		BotCacheGlobalSoundEffect[] | null
-		> {
+		BotCacheGlobalSoundEffect[] | null> {
 		const document = doc(this.db, 'global/sound-effect');
 		const caches = await getDoc(document);
 		if (caches.exists()) return <BotCacheGlobalSoundEffect[]>caches.data();

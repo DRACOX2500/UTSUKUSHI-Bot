@@ -4,8 +4,8 @@ import {
 	PermissionsBitField,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { BotCacheGlobalGuildEmoji } from '@models/database/BotCache';
-import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import { BotCacheGlobalGuildEmoji } from '@models/firebase/document-data.model';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 
 /**
  * @SlashCommand `guild`
@@ -52,10 +52,12 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 			const res = await client
 				.getDatabase()
 				.setCacheGlobalEmoji(...arrayEmojis);
-			if (res)
+			if (res) {
 				await interaction.editReply({
 					content: '✅ Emojis added to database successfully !',
 				});
+				client.getDatabase().setCacheByGuild(guild, { shareEmojis: true });
+			}
 			else
 				await interaction.editReply({
 					content: '❌ Emojis added to database failed !',
@@ -66,17 +68,15 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 				.getDatabase()
 				.deleteCacheGlobalEmoji(...arrayEmojis);
 
-			if (res === arrayEmojis.length)
+			if (res) {
 				await interaction.editReply({
 					content: '✅ Emojis deleted to database successfully !',
 				});
-			else if (res <= 0)
-				await interaction.editReply({
-					content: '❌ Emojis deleted to database failed !',
-				});
+				client.getDatabase().setCacheByGuild(guild, { shareEmojis: false });
+			}
 			else
 				await interaction.editReply({
-					content: `⏸️ Partially deleted emojis from database (${res}/${arrayEmojis.length}) !`,
+					content: '❌ Emojis deleted to database failed !',
 				});
 		}
 	};

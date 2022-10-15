@@ -4,7 +4,7 @@ import { BurgerAPI } from 'root/src/api/burger/burger.api';
 import {
 	UtsukushiCommandOptions,
 	UtsukushiSlashCommand,
-} from '@models/UtsukushiCommand';
+} from 'root/src/models/utsukushi-command.model';
 import { BotClient } from 'src/BotClient';
 
 /**

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmbedBuilder, time, ActionRowBuilder } from 'discord.js';
 import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
-import { EmbedVideoData } from 'src/models/embeds/EmbedVideoData';
+import { EmbedVideoData } from 'root/src/models/embeds/embed-video-datav';
 import { LOGO_MUSIC_BLUE, LOGO_SOURCES } from '@utils/const';
 import { VolumeButtons } from '@modules/interactions/buttons/play/volume.button';
 import { StopButton } from '@modules/interactions/buttons/play/stop.button';

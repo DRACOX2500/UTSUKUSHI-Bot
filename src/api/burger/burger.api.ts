@@ -1,5 +1,5 @@
 import { API } from '@utils/const';
-import { ApiBurgerReponse } from '@models/api/ApiBurgerResponse';
+import { ApiBurgerReponse } from '@models/api/api-burger-response.model';
 import axios from 'axios';
 import { red } from 'ansicolor';
 

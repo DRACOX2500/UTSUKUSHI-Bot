@@ -9,3 +9,7 @@ export interface UtsukushiButton {
 		client: BotClient
 	) => Promise<void>;
 }
+
+export interface UtsukushiEvent {
+	readonly event: (client: BotClient) => Promise<void>;
+}

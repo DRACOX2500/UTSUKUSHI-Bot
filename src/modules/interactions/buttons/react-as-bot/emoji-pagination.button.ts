@@ -3,7 +3,7 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { ReactAsBotContextReply } from 'root/src/modules/interactions/contexts/react-as-bot/react-as-bot.reply';
-import { UtsukushiButton } from '@models/UtsukushiInteraction';
+import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
 
 export namespace ReactAsBotButtons {
 	export class NextButton implements UtsukushiButton {

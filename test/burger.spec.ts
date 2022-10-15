@@ -1,5 +1,5 @@
 import { BurgerAPI } from 'root/src/api/burger/burger.api';
-import { ApiBurgerReponse } from '@models/api/ApiBurgerResponse';
+import { ApiBurgerReponse } from 'root/src/models/api/api-burger-response.model';
 import { API } from '@utils/const';
 
 const BURGER_API_RESULT = /^https:\/\/foodish-api\.herokuapp\.com\/images\/burger\/burger\d+\..{3,4}$/;

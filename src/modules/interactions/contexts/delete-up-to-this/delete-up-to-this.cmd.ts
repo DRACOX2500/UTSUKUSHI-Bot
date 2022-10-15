@@ -8,7 +8,7 @@ import {
 	TextBasedChannel,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiMessageContextCommand } from 'src/models/UtsukushiCommand';
+import { UtsukushiMessageContextCommand } from 'root/src/models/utsukushi-command.model';
 
 /**
  * @ContextCommand

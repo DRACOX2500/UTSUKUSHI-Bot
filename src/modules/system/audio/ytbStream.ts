@@ -8,7 +8,7 @@ import {
 	YOUTUBE_MOBILE_VIDEO_LINK_REGEX,
 	YOUTUBE_VIDEO_LINK_REGEX,
 } from '@utils/const';
-import { YtVideoItem } from '@models/YtVideoItem';
+import { YtVideoItem } from 'root/src/models/yt-video-item.model';
 import { red } from 'ansicolor';
 import { getUrlQueryParam } from '@utils/getUrlQueryParam';
 

@@ -5,7 +5,7 @@ import {
 	SelectMenuInteraction,
 	SelectMenuOptionBuilder,
 } from 'discord.js';
-import { BotCacheGlobalGuildEmoji } from 'root/src/models/database/BotCache';
+import { BotCacheGlobalGuildEmoji } from '@models/firebase/document-data.model';
 
 export class ReactAsBotSelect extends SelectMenuBuilder {
 	constructor(

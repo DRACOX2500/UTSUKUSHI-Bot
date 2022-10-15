@@ -1,5 +1,5 @@
 import { bold, EmbedBuilder, Guild, italic, time } from 'discord.js';
-import { EmbedGuildData } from '@models/embeds/EmbedGuildData';
+import { EmbedGuildData } from 'root/src/models/embeds/embed-guild-data.model';
 import { BotClient } from 'src/BotClient';
 
 export class EmbedGuild {

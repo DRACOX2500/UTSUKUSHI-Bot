@@ -6,7 +6,7 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
+import { UtsukushiAutocompleteSlashCommand } from 'root/src/models/utsukushi-command.model';
 import { sortByName } from '@utils/sortByName';
 
 type Choice = {

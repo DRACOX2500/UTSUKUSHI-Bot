@@ -5,7 +5,7 @@ import {
 	Message,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiMessageContextCommand } from '@models/UtsukushiCommand';
+import { UtsukushiMessageContextCommand } from 'root/src/models/utsukushi-command.model';
 import { ReactAsBotContextReply } from './react-as-bot.reply';
 
 /**

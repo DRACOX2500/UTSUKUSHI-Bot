@@ -17,19 +17,18 @@ import {
 	MessageContextMenuCommandInteraction,
 	UserContextMenuCommandInteraction,
 	SelectMenuInteraction,
+	ModalSubmitInteraction,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { NotifyEvent } from './events/notify/notify.event';
 import {
 	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
 	UtsukushiContextCommand,
 	UtsukushiSlashCommand,
-} from '@models/UtsukushiCommand';
+} from 'root/src/models/utsukushi-command.model';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
-import { UtsukushiButton } from '../../models/UtsukushiInteraction';
-import { ModalSubmitInteraction } from 'discord.js';
+import { UtsukushiButton, UtsukushiEvent } from '../../models/utsukushi-interaction.model';
 import { ReplyAsBotModal } from './modals/reply-as-bot/reply-as-bot.modal';
 
 export class CommandManager {
@@ -271,30 +270,17 @@ export class CommandManager {
 		);
 	}
 
-	initBotEvents(client: BotClient) {
-		client.on('voiceStateUpdate', async (oldState, newState) => {
-			if (oldState.channelId === newState.channelId) {
-				// 'a user has not moved!'
-			}
-			if (
-				oldState.channelId != null &&
-				newState.channelId != null &&
-				newState.channelId != oldState.channelId
-			) {
-				// 'a user switched channels'
-			}
-			if (oldState.channelId === null) {
-				if (newState.member?.user.bot) return;
-				// 'a user joined!'
-				const user = newState.id;
-				const channelId = <string>newState.channelId;
-				const guild = newState.guild;
+	async initBotEvents(client: BotClient) {
+		const filesList: string[][] = [];
+		const commandsPath = path.join(__dirname, 'events');
 
-				new NotifyEvent().notifyGuild(client, user, channelId, guild);
-			}
-			if (newState.channelId === null) {
-				// 'a user left!'
-			}
-		});
+		this.load(filesList, commandsPath, '.event.js');
+
+		for (const file of filesList.flat()) {
+			const event: UtsukushiEvent = require(file).default;
+			if (!event) continue;
+
+			await event.event(client);
+		}
 	}
 }

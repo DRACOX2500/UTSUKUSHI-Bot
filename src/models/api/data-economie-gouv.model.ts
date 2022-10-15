@@ -1,4 +1,4 @@
-import { ApiFuelResponse } from './ApiFuelResponse';
+import { ApiFuelResponse } from './api-fuel-response.model';
 
 export interface DataEconomieGouvResponse {
 	nhits: number;

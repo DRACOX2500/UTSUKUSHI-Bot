@@ -7,11 +7,11 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { EmbedPlayer } from 'root/src/modules/system/embeds/play.embed';
+import { EmbedPlayer } from '@modules/system/embeds/play.embed';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
-import { BotCacheGuild } from 'src/models/database/BotCache';
-import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
+import { BotCacheGuild } from '@models/firebase/document-data.model';
+import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 
 /**
  * @SlashCommand `play`

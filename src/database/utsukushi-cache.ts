@@ -1,8 +1,10 @@
 import { User } from 'discord.js';
-import { BotCacheGlobalGuildEmoji } from '../models/database/BotCache';
-import { BotUserData } from '../models/database/BotUserData';
-import { sortByName } from '../utils/sortByName';
-import { BotFirebase } from './Firebase';
+import {
+	BotUserData,
+	BotCacheGlobalGuildEmoji,
+} from '@models/firebase/document-data.model';
+import { sortByName } from '@utils/sortByName';
+import { BotFirebase } from './firebase';
 export class FirebaseCache {
 	readonly userdata!: Map<string, BotUserData>;
 	readonly emojiCache!: BotCacheGlobalGuildEmoji[];

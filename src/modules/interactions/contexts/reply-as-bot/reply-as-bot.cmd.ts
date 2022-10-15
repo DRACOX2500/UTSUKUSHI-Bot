@@ -3,7 +3,7 @@ import {
 	ApplicationCommandType,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { UtsukushiMessageContextCommand } from '@models/UtsukushiCommand';
+import { UtsukushiMessageContextCommand } from 'root/src/models/utsukushi-command.model';
 import { ReplyAsBotModal } from '../../modals/reply-as-bot/reply-as-bot.modal';
 
 /**

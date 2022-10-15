@@ -1,5 +1,5 @@
 import { ButtonBuilder, ButtonStyle, ButtonInteraction } from 'discord.js';
-import { UtsukushiButton } from '@models/UtsukushiInteraction';
+import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
 
 export class SkipButton implements UtsukushiButton {
 	readonly button = (disabled = false): ButtonBuilder => {

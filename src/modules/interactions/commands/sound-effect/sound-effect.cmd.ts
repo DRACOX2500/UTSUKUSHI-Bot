@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiAutocompleteSlashCommand } from '@models/UtsukushiCommand';
+import { UtsukushiAutocompleteSlashCommand } from 'root/src/models/utsukushi-command.model';
 import {
 	SoundEffectCommandOptions,
 	SoundEffectSubCommand,

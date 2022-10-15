@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonStyle, ButtonInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiButton } from '@models/UtsukushiInteraction';
+import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
 
 export class StopButton implements UtsukushiButton {
 	readonly button = (disabled = false): ButtonBuilder => {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
 	DataEconomieGouvResponse,
 	DataEconomieGouvResponseRecord,
-} from '@models/api/DataEconomieGouv';
+} from '@models/api/data-economie-gouv.model';
 import { API } from '@utils/const';
 import { red } from 'ansicolor';
 

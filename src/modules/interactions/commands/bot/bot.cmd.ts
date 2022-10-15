@@ -9,7 +9,7 @@ import { BotClient } from 'src/BotClient';
 import {
 	UtsukushiPrivateCommand,
 	UtsukushiSlashCommand,
-} from '@models/UtsukushiCommand';
+} from 'root/src/models/utsukushi-command.model';
 import { BotCommandOptions, BotSubCommand } from './bot.sub';
 import config from 'root/utsukushi.config.json';
 

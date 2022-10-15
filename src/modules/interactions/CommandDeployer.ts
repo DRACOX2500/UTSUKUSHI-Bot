@@ -13,7 +13,7 @@ import {
 	UtsukushiContextCommand,
 	UtsukushiPrivateCommand,
 	UtsukushiCommand,
-} from '@models/UtsukushiCommand';
+} from 'root/src/models/utsukushi-command.model';
 import { lightGreen, green, lightMagenta, magenta } from 'ansicolor';
 
 type CommandDeployerOptions = {

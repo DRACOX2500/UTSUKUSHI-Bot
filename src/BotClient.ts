@@ -6,11 +6,11 @@ import {
 	ActivityType,
 	PresenceStatusData,
 } from 'discord.js';
-import { Activity } from '@models/Activity';
+import { Activity } from 'root/src/models/activity.model';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
 import { CommandManager } from '@modules/interactions/CommandManager';
-import { BotFirebase, FirebaseAuth } from '@database/Firebase';
+import { BotFirebase, FirebaseAuth } from 'root/src/database/firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
 import { BotRemoverManager } from '@modules/system/System';
 import { CommandDeployer } from '@modules/interactions/CommandDeployer';
@@ -45,6 +45,7 @@ export class BotClient extends Client {
 			intents: [
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.GuildEmojisAndStickers,
 				GatewayIntentBits.GuildVoiceStates,
 			],
 		});

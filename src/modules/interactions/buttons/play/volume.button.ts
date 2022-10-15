@@ -9,7 +9,7 @@ import {
 import { BotPlayer } from '@modules/system/audio/BotPlayer';
 import { BotClient } from 'src/BotClient';
 import { BUTTON } from '@utils/const';
-import { UtsukushiButton } from '@models/UtsukushiInteraction';
+import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
 
 function isNotOK(interaction: ButtonInteraction, client: BotClient): boolean {
 	return (

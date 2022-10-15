@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { EmbedPong } from 'root/src/modules/system/embeds/pong.embed';
-import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
 
 /**
  * @SlashCommand `ping`

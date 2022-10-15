@@ -6,7 +6,7 @@ import {
 	SlashCommandIntegerOption,
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
 
 /**
  * - `Clear`| clear all data from your user cache

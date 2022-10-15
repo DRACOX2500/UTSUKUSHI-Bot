@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 import { BotClient } from 'src/BotClient';
 import { TWITCH_LINK } from '@utils/const';
-import { Activity } from '@models/Activity';
+import { Activity } from 'root/src/models/activity.model';
 
 /**
  * @Options

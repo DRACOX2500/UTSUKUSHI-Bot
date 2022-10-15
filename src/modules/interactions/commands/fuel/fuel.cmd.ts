@@ -9,7 +9,7 @@ import {
 import { EmbedFuel } from 'root/src/modules/system/embeds/fuel.embed';
 import { API } from '@utils/const';
 import { FuelAPI } from 'root/src/api/fuel-fr/fuel.api';
-import { UtsukushiSlashCommand } from '@models/UtsukushiCommand';
+import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
 
 enum FuelType {
 	GAZOLE = 'Gazole',
