@@ -108,7 +108,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		let choices: string[] | undefined;
 
 		const data = await client.getDatabase().users.getByKey(interaction.user.id);
-		if (!data || data.value.keywords) return;
+		if (!data || !data.value.keywords) return;
 
 		if (focusedOption.name === 'song') {
 			choices = data.value.keywords;

@@ -74,7 +74,7 @@ namespace FirebaseCollections {
 				GlobalDataSoundEffect[] | null> {
 				const document = doc(this.firestore.db, 'global/sound-effect');
 				const caches = await getDoc(document);
-				if (caches.exists()) return <GlobalDataSoundEffect[]>caches.data().soundEffect;
+				if (caches.exists()) return <GlobalDataSoundEffect[]>caches.data().soundEffects;
 				else logger.error({ tag: 'Global Data SoundEffect' }, 'Not Found !');
 				return null;
 			}
