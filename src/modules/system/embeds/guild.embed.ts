@@ -3,10 +3,12 @@ import { EmbedGuildData } from 'root/src/models/embeds/embed-guild-data.model';
 import { BotClient } from 'src/BotClient';
 
 export class EmbedGuild {
+	guildSource: Guild;
 	guild: EmbedGuildData;
 	client: BotClient;
 
 	constructor(guild: Guild, client: BotClient) {
+		this.guildSource = guild;
 		this.guild = <EmbedGuildData>(<unknown>guild);
 		this.guild.iconUrl = guild.iconURL() ?? '';
 		this.guild.bannerUrl = guild.bannerURL() ?? '';
@@ -42,6 +44,9 @@ export class EmbedGuild {
 
 	async getEmbedExtra(): Promise<EmbedBuilder> {
 		const embed = new EmbedBuilder();
+		const data = await this.client.getDatabase().getCacheByGuild(this.guildSource);
+		let share = '';
+		if (data) share = `[Shared to Utsukushi : ${data.shareEmojis ? '✅' : '❌'}]`;
 
 		let emojis = '';
 		const guildEmojis = await this.guild.emojis.fetch();
@@ -70,7 +75,7 @@ export class EmbedGuild {
 		});
 
 		let desc =
-			bold(`Emojis (${guildEmojis.size}) :\n`) +
+			bold(`Emojis (${guildEmojis.size}) ${share}:\n`) +
 			emojis +
 			'\n\n' +
 			bold(`Stickers (${guildStickers.size}) :\n`) +
