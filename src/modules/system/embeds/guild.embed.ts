@@ -44,9 +44,9 @@ export class EmbedGuild {
 
 	async getEmbedExtra(): Promise<EmbedBuilder> {
 		const embed = new EmbedBuilder();
-		const data = await this.client.getDatabase().getCacheByGuild(this.guildSource);
+		const data = await this.client.getDatabase().guilds.getByKey(this.guildSource.id);
 		let share = '';
-		if (data) share = `[Shared to Utsukushi : ${data.shareEmojis ? '✅' : '❌'}]`;
+		if (data) share = `[Shared to Utsukushi : ${data.value.shareEmojis ? '✅' : '❌'}]`;
 
 		let emojis = '';
 		const guildEmojis = await this.guild.emojis.fetch();

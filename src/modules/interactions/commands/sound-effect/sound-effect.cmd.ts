@@ -83,7 +83,7 @@ export class SoundEffectCommand
 		client: BotClient
 	): Promise<void> => {
 		if (interaction.options.getSubcommand() === 'play') {
-			let data = await client.getDatabase().getCacheGlobalSounEffect();
+			let data = client.getDatabase().global.getSoundEffects();
 
 			if (data) {
 				data.sort((a, b) => sortByName(a.key, b.key));

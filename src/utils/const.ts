@@ -19,6 +19,11 @@ export const BUTTON = {
 	},
 };
 
+/**
+ * A week convert in milliseconds
+ */
+export const CLEANER_TIMEOUT = 60480000;
+
 export const API = {
 	FUEL: {
 		URL: 'https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-carburants-fichier-instantane-test-ods-copie',

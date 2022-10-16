@@ -17,7 +17,7 @@ export class NotifySubCommand {
 		await interaction.deferReply();
 		client
 			.getDatabase()
-			.setCacheByGuild(interaction.guild, { vocalNotifyChannel: null });
+			.guilds.set(interaction.guild.id, { vocalNotifyChannel: null });
 		interaction.editReply('🔕 Notify Channel Removed successfully !');
 	}
 	protected async on(
@@ -30,7 +30,7 @@ export class NotifySubCommand {
 			return;
 		}
 		await interaction.deferReply();
-		client.getDatabase().setCacheByGuild(interaction.guild, {
+		client.getDatabase().guilds.set(interaction.guild.id, {
 			vocalNotifyChannel: options.channel,
 		});
 		interaction.editReply('🔔 Channel setup successfully !');

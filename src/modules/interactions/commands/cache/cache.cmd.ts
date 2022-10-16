@@ -52,10 +52,9 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		switch (code) {
 		case CacheType.Clear: {
 			await interaction.deferReply({ ephemeral: true });
-			client.getDatabase().dataCache.clean(interaction.user);
 			const clearBoolean = await client
 				.getDatabase()
-				.resetUserData(interaction.user);
+				.users.reset(interaction.user.id);
 			if (clearBoolean)
 				await interaction.editReply({
 					content: '✅ Cache Clear !',
@@ -68,10 +67,12 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		}
 		case CacheType.Show: {
 			await interaction.deferReply({ ephemeral: true });
-			const data = await client.getDatabase().getUserData(interaction.user);
+			const data = await client
+				.getDatabase()
+				.users.getByKey(interaction.user.id);
 			if (data) {
 				await interaction.user.send(
-					codeBlock('json', JSON.stringify(data, null, '\t'))
+					codeBlock('json', JSON.stringify(data.value, null, '\t'))
 				);
 				await interaction.editReply({
 					content: '✅ Data sent',

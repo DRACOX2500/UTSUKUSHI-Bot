@@ -5,11 +5,11 @@ import {
 	SelectMenuInteraction,
 	SelectMenuOptionBuilder,
 } from 'discord.js';
-import { BotCacheGlobalGuildEmoji } from '@models/firebase/document-data.model';
+import { GlobalDataEmoji } from '@models/firebase/document-data.model';
 
 export class ReactAsBotSelect extends SelectMenuBuilder {
 	constructor(
-		private emojis: BotCacheGlobalGuildEmoji[],
+		private emojis: GlobalDataEmoji[],
 		limit: number,
 		start: number
 	) {

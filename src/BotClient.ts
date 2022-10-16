@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { config } from 'dotenv';
 import { cyan, lightYellow } from 'ansicolor';
 import {
@@ -6,14 +7,15 @@ import {
 	ActivityType,
 	PresenceStatusData,
 } from 'discord.js';
-import { Activity } from 'root/src/models/activity.model';
+import { Activity } from '@models/activity.model';
 import { TWITCH_LINK } from '@utils/const';
 import { VocalConnection } from '@modules/system/audio/VocalConnection';
 import { CommandManager } from '@modules/interactions/CommandManager';
-import { BotFirebase, FirebaseAuth } from 'root/src/database/firebase';
 import { BotErrorManager } from '@errors/BotErrorManager';
 import { BotRemoverManager } from '@modules/system/System';
 import { CommandDeployer } from '@modules/interactions/CommandDeployer';
+import { UtsukushiCache } from '@database/utsukushi-cache';
+import { UtsukushiFirebase } from '@database/firebase';
 
 config({ path: '.env' });
 
@@ -22,7 +24,7 @@ export class BotClient extends Client {
 	private CLIENT_ID!: string;
 
 	private FIREBASE_TOKEN!: string;
-	private database!: BotFirebase;
+	private memory!: UtsukushiCache;
 
 	connection: VocalConnection = new VocalConnection();
 
@@ -58,21 +60,24 @@ export class BotClient extends Client {
 			+(process.env.MAX_REMOVER_INSTANCES || 3)
 		);
 
-		const auth: FirebaseAuth = {
+		const auth = {
 			email: process.env.DB_EMAIL || '',
 			password: process.env.DB_PASSWORD || '',
 		};
 
 		const authDB = !!+(process.argv[2] ?? 1);
-		if (authDB)
-			this.database = new BotFirebase(this.FIREBASE_TOKEN, auth, test);
-
+		if (authDB) {
+			const database = new UtsukushiFirebase.UtsukushiFirestore(this.FIREBASE_TOKEN, auth, (firestore) => {
+				this.memory = new UtsukushiCache(firestore);
+				this.initEvents();
+			},
+			{ logEnabled: test });
+		}
 		this.init(test);
 	}
 
 	private init(test: boolean): void {
 		this.errorManager = new BotErrorManager(this);
-		this.initEvents();
 
 		this.commandManager = new CommandManager(this);
 		this.commandDeployer = new CommandDeployer(
@@ -95,7 +100,7 @@ export class BotClient extends Client {
 	private initEvents(): void {
 		this.on('ready', async () => {
 			console.log(lightYellow(`Logged in as ${cyan(this.user?.tag)}!`));
-			const cache = await this.database.getCacheGlobal();
+			const cache = await this.memory.global.fetchData();
 			if (cache?.activity)
 				this.setActivity(cache?.activity || this.defaultActivity);
 
@@ -113,7 +118,7 @@ export class BotClient extends Client {
 		this.user?.setStatus(status);
 	}
 
-	getDatabase(): BotFirebase {
-		return this.database;
+	getDatabase(): UtsukushiCache {
+		return this.memory;
 	}
 }

@@ -1,7 +1,7 @@
 import { Guild, TextBasedChannel, VoiceChannel } from 'discord.js';
 import { BotClient } from 'src/BotClient';
-import { EmbedNotify } from 'root/src/modules/system/embeds/notify.embed';
-import { UtsukushiEvent } from 'root/src/models/utsukushi-interaction.model';
+import { EmbedNotify } from '@modules/system/embeds/notify.embed';
+import { UtsukushiEvent } from '@models/utsukushi-interaction.model';
 
 class VoiceChannelNotifyEvent implements UtsukushiEvent {
 	private async notifyGuild(
@@ -10,10 +10,10 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 		channelId: string,
 		guild: Guild
 	): Promise<void> {
-		const data = await client.getDatabase().getCacheByGuild(guild);
-		if (data?.vocalNotifyChannel) {
+		const data = await client.getDatabase().guilds.getByKey(guild.id);
+		if (data?.value.vocalNotifyChannel) {
 			const channelNotify: TextBasedChannel = await guild.channels
-				.fetch(data.vocalNotifyChannel)
+				.fetch(data.value.vocalNotifyChannel)
 				.then((result) => {
 					return <TextBasedChannel>result;
 				});

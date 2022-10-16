@@ -1,5 +1,5 @@
-import { BotCacheGlobalGuildEmoji } from './document-data.model';
+import { GlobalDataEmoji } from './document-data.model';
 
 export interface UtsukushiFirebaseGlobalEmoji {
-	emojis: BotCacheGlobalGuildEmoji[];
+	emojis: GlobalDataEmoji[];
 }

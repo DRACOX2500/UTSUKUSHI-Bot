@@ -1,5 +1,7 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FirebaseApp, initializeApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import {
 	doc,
 	Firestore,
@@ -10,307 +12,341 @@ import {
 	arrayUnion,
 	arrayRemove,
 } from 'firebase/firestore';
-import {
-	Auth,
-	getAuth,
-	signInWithEmailAndPassword,
-	User,
-	UserCredential,
-} from 'firebase/auth';
-import { Guild, User as DiscordUser } from 'discord.js';
-import { UtsukushiFirebaseGlobalEmoji } from '@models/firebase/firebase.model';
-import { FirebaseCache } from './utsukushi-cache';
-import {
-	BotCacheGlobal,
-	BotCacheGlobalSoundEffect,
-	BotCacheGlobalGuildEmoji,
-	BotCacheGuild,
-	BotUserDataTypes,
-	BotUserData,
-	initBotUserData,
-	initBotCacheGuild,
-} from '@models/firebase/document-data.model';
+import { Auth, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { green } from 'ansicolor';
 import { logger } from '@modules/system/logger/logger';
+import {
+	GlobalData,
+	GlobalDataEmoji,
+	GlobalDataSoundEffect,
+	GuildData,
+	UserData,
+} from '@models/firebase/document-data.model';
+import { UtsukushiFirebaseGlobalEmoji } from '@models/firebase/firebase.model';
 // Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const NOT_FOUND_ERROR = 'not-found';
 
-export interface FirebaseAuth {
-	email: string;
-	password: string;
-}
+namespace FirebaseCollections {
+	namespace FirebaseDocuments {
+		export class SoundEffectDocument {
+			constructor(private firestore: UtsukushiFirebase.UtsukushiFirestore) {}
 
-export class BotFirebase {
-	// Your web app's Firebase configuration
-	private firebaseConfig = {
-		apiKey: '',
-		authDomain: 'utsukushi-database.firebaseapp.com',
-		projectId: 'utsukushi-database',
-		storageBucket: 'utsukushi-database.appspot.com',
-		messagingSenderId: '695089030418',
-		appId: '1:695089030418:web:1c628025fa4d37ae7a3fcb',
+			async set(cache: GlobalDataSoundEffect[]): Promise<void> {
+				const document = doc(this.firestore.db, 'global/sound-effect');
+
+				if (cache) {
+					updateDoc(document, 'soundEffects', arrayUnion(...cache))
+						.then(() => {
+							logger.info(
+								{ tag: 'Cache Global SoundEffect' },
+								'Updated Success !'
+							);
+						})
+						.catch((error) => {
+							if (error.code === NOT_FOUND_ERROR) {
+								setDoc(document, cache)
+									.then(() =>
+										logger.info(
+											{ tag: 'Cache Global SoundEffect' },
+											'Updated New Try Success !'
+										)
+									)
+									.catch(() =>
+										logger.error(
+											{ tag: 'Cache Global SoundEffect' },
+											'Updated New Try Failure !'
+										)
+									);
+							}
+						});
+				}
+				else {
+					logger.error(
+						{ tag: 'Cache Global SoundEffect' },
+						'Updated Failure (no cache) !'
+					);
+				}
+			}
+
+			async get(): Promise<
+				GlobalDataSoundEffect[] | null> {
+				const document = doc(this.firestore.db, 'global/sound-effect');
+				const caches = await getDoc(document);
+				if (caches.exists()) return <GlobalDataSoundEffect[]>caches.data().soundEffect;
+				else logger.error({ tag: 'Global Data SoundEffect' }, 'Not Found !');
+				return null;
+			}
+		}
+
+		export class EmojiDocument {
+			constructor(private firestore: UtsukushiFirebase.UtsukushiFirestore) {}
+
+			async set(...cache: GlobalDataEmoji[]): Promise<boolean> {
+				const document = doc(this.firestore.db, 'global/emoji');
+				let resFunct = true;
+
+				if (cache) {
+					await updateDoc(document, 'emojis', arrayUnion(...cache))
+						.then(() => {
+							logger.info(
+								{ tag: 'ADD EMOJI' },
+								`Updated Success (+${cache.length}) !`
+							);
+						})
+						.catch((error) => {
+							if (error.code === NOT_FOUND_ERROR) {
+								setDoc(document, { emojis: cache })
+									.then(() => logger.info({ tag: 'ADD EMOJI' }, 'Success !'))
+									.catch(() => {
+										logger.error({ tag: 'ADD EMOJI' }, 'Failed !');
+										resFunct = false;
+									});
+							}
+						});
+				}
+				return resFunct;
+			}
+
+			async delete(...cache: GlobalDataEmoji[]): Promise<boolean> {
+				let resFunct = true;
+
+				if (cache) {
+					const document = doc(this.firestore.db, 'global/emoji/');
+
+					await updateDoc(document, 'emojis', arrayRemove(...cache))
+						.then(() => {
+							logger.info(
+								{ tag: 'DELETE EMOJI' },
+								`Deleted Success (-${cache.length}) !`
+							);
+						})
+						.catch(() => {
+							logger.error({ tag: 'DELETE EMOJI' }, 'Failed !');
+							resFunct = false;
+						});
+				}
+				return resFunct;
+			}
+
+			async get(): Promise<GlobalDataEmoji[] | null> {
+				const document = doc(this.firestore.db, 'global/emoji');
+				const caches = await getDoc(document);
+				if (caches.exists())
+					return (<UtsukushiFirebaseGlobalEmoji>caches.data()).emojis;
+				else logger.error({ tag: 'Global Data Emoji' }, 'Not Found !');
+				return null;
+			}
+		}
+	}
+
+	const FirestoreInitialDocuments = {
+		user: {
+			keywords: [],
+		},
+		guild: {
+			lastPlayURL: null,
+			vocalNotifyChannel: null,
+			shareEmojis: false,
+		},
 	};
 
-	private app!: FirebaseApp;
-	private auth!: Auth;
-	private user!: User;
-	private db!: Firestore;
+	export class GlobalCollection {
+		readonly soundEffects: FirebaseDocuments.SoundEffectDocument;
+		readonly emojis: FirebaseDocuments.EmojiDocument;
 
-	dataCache!: FirebaseCache;
-
-	constructor(key: string, firebaseAuth: FirebaseAuth, test: boolean) {
-		this.firebaseConfig.apiKey = key;
-
-		// Initialize Firebase
-		this.app = initializeApp(this.firebaseConfig);
-		this.auth = getAuth();
-		signInWithEmailAndPassword(
-			this.auth,
-			firebaseAuth.email,
-			firebaseAuth.password
-		)
-			.then((userCredential: UserCredential) => {
-				this.user = userCredential.user;
-				this.dataCache = new FirebaseCache(this);
-				if (!test) console.log(green('Connect to Firebase !'));
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-
-		this.db = getFirestore();
-	}
-
-	/**
-	 * Default set Utsukushi Document
-	 */
-	async setCacheGlobal(cache: BotCacheGlobal): Promise<void> {
-		const document = doc(this.db, 'global/utsukushi');
-
-		setDoc(document, cache, { merge: true })
-			.then(() => {
-				logger.info({ tag: 'Cache Global' }, 'Cache Saved Success !');
-			})
-			.catch(() => {
-				logger.error({ tag: 'Cache Global' }, 'Cache Saved Failure !');
-			});
-	}
-
-	async setCacheGlobalSoundEffect(
-		cache: BotCacheGlobalSoundEffect
-	): Promise<void> {
-		const document = doc(this.db, 'global/sound-effect');
-
-		if (cache) {
-			updateDoc(document, 'soundEffects', arrayUnion(cache))
-				.then(() => {
-					logger.info({ tag: 'Cache Global SoundEffect' }, 'Updated Success !');
-				})
-				.catch((error) => {
-					if (error.code === NOT_FOUND_ERROR) {
-						setDoc(document, cache)
-							.then(() =>
-								logger.info(
-									{ tag: 'Cache Global SoundEffect' },
-									'Updated New Try Success !'
-								)
-							)
-							.catch(() =>
-								logger.error(
-									{ tag: 'Cache Global SoundEffect' },
-									'Updated New Try Failure !'
-								)
-							);
-					}
-				});
-		}
-		else {
-			logger.error(
-				{ tag: 'Cache Global SoundEffect' },
-				'Updated Failure (no cache) !'
+		constructor(private firestore: UtsukushiFirebase.UtsukushiFirestore) {
+			this.soundEffects = new FirebaseDocuments.SoundEffectDocument(
+				this.firestore
 			);
+			this.emojis = new FirebaseDocuments.EmojiDocument(this.firestore);
 		}
-	}
 
-	async setCacheGlobalEmoji(
-		...cache: BotCacheGlobalGuildEmoji[]
-	): Promise<boolean> {
-		const document = doc(this.db, 'global/emoji');
-		let resFunct = true;
+		async set(cache: GlobalData): Promise<void> {
+			const document = doc(this.firestore.db, 'global/utsukushi');
 
-		if (cache) {
-			await updateDoc(document, 'emojis', arrayUnion(...cache))
+			setDoc(document, cache, { merge: true })
 				.then(() => {
-					logger.info(
-						{ tag: 'ADD EMOJI' },
-						`Updated Success (+${cache.length}) !`
-					);
-				})
-				.catch((error) => {
-					if (error.code === NOT_FOUND_ERROR) {
-						setDoc(document, { emojis: cache })
-							.then(() => logger.info({ tag: 'ADD EMOJI' }, 'Success !'))
-							.catch(() => {
-								logger.error({ tag: 'ADD EMOJI' }, 'Failed !');
-								resFunct = false;
-							});
-					}
-				});
-		}
-		return resFunct;
-	}
-
-	async deleteCacheGlobalEmoji(
-		...cache: BotCacheGlobalGuildEmoji[]
-	): Promise<boolean> {
-		let resFunct = true;
-
-		if (cache) {
-			const document = doc(this.db, 'global/emoji/');
-
-			await updateDoc(document, 'emojis', arrayRemove(...cache))
-				.then(() => {
-					logger.info(
-						{ tag: 'DELETE EMOJI' },
-						`Deleted Success (-${cache.length}) !`
-					);
+					logger.info({ tag: 'Cache Global' }, 'Cache Saved Success !');
 				})
 				.catch(() => {
-					logger.error({ tag: 'DELETE EMOJI' }, 'Failed !');
-					resFunct = false;
+					logger.error({ tag: 'Cache Global' }, 'Cache Saved Failure !');
 				});
 		}
-		return resFunct;
+
+		async get(): Promise<GlobalData | null> {
+			const document = doc(this.firestore.db, 'global/utsukushi');
+			const caches = await getDoc(document);
+			if (caches.exists()) return <GlobalData>caches.data();
+			else logger.error({ tag: 'Global Data' }, 'Not Found !');
+			return null;
+		}
 	}
 
-	async setCacheByGuild(guild: Guild, cache: BotCacheGuild): Promise<void> {
-		const document = doc(this.db, 'guild-data/' + guild.id);
-		setDoc(document, cache, { merge: true })
-			.then(() => {
-				logger.info(
-					{ tag: 'Guild Data', guildId: guild.id },
-					'Guild Data Saved Success'
-				);
-			})
-			.catch(() => {
-				logger.error(
-					{ tag: 'Guild Data', guildId: guild.id },
-					'Guild Data Saved Failure'
-				);
-			});
-	}
+	export class UsersCollection {
+		constructor(private firestore: UtsukushiFirebase.UtsukushiFirestore) {}
 
-	async setUserData(user: DiscordUser, cache: BotUserDataTypes): Promise<void> {
-		const document = doc(this.db, 'user-data/' + user.id);
+		async get(userID: string): Promise<UserData | null> {
+			const document = doc(this.firestore.db, 'user-data/' + userID);
+			const caches = await getDoc(document);
+			if (caches.exists()) return <UserData>caches.data();
+			else logger.error({ tag: 'User Data', userId: userID }, 'Not Found !');
+			return null;
+		}
 
-		if (cache.keyword) {
-			updateDoc(document, 'keywords', arrayUnion(cache.keyword))
+		async set(userID: string, cache: UserData): Promise<void> {
+			const document = doc(this.firestore.db, 'user-data/' + userID);
+
+			if (cache.keywords.length > 0) {
+				updateDoc(document, 'keywords', arrayUnion(...cache.keywords))
+					.then(() => {
+						logger.info(
+							{ tag: 'User Data', userId: userID },
+							'User Data Saved Success'
+						);
+					})
+					.catch((error) => {
+						if (error.code === NOT_FOUND_ERROR) {
+							setDoc(document, { keywords: cache.keywords })
+								.then(() =>
+									logger.info({ tag: 'User Data', userId: userID }, 'Success !')
+								)
+								.catch(() =>
+									logger.error({ tag: 'User Data', userId: userID }, 'Failed !')
+								);
+						}
+					});
+			}
+		}
+
+		async reset(userID: string): Promise<boolean> {
+			const document = doc(this.firestore.db, 'user-data/' + userID);
+			return setDoc(document, FirestoreInitialDocuments.user)
 				.then(() => {
-					logger.info(
-						{ tag: 'User Data', userId: user.id },
-						'User Data Saved Success'
-					);
+					logger.info({ tag: 'User Data', userId: userID }, 'Reset Sucess !');
+					return true;
 				})
-				.catch((error) => {
-					if (error.code === NOT_FOUND_ERROR) {
-						setDoc(document, { keywords: [cache.keyword] })
-							.then(() =>
-								logger.info({ tag: 'User Data', userId: user.id }, 'Success !')
-							)
-							.catch(() =>
-								logger.error({ tag: 'User Data', userId: user.id }, 'Failed !')
-							);
-					}
+				.catch(() => {
+					logger.error({ tag: 'User Data', userId: userID }, 'Reset Failed !');
+					return false;
 				});
-			this.dataCache.userdata.delete(user.id);
 		}
-		else {
+	}
+
+	export class GuildsCollection {
+		constructor(private firestore: UtsukushiFirebase.UtsukushiFirestore) {}
+
+		async get(guildID: string): Promise<GuildData | null> {
+			const document = doc(this.firestore.db, 'guild-data/' + guildID);
+			const caches = await getDoc(document);
+			if (caches.exists()) return <GuildData>caches.data();
+			else logger.error({ tag: 'Guild Data', guildId: guildID }, 'Not Found !');
+			return null;
+		}
+
+		async set(guildID: string, cache: GuildData): Promise<void> {
+			const document = doc(this.firestore.db, 'guild-data/' + guildID);
 			setDoc(document, cache, { merge: true })
 				.then(() => {
 					logger.info(
-						{ tag: 'User Data', userId: user.id },
-						'User Data Saved Success !'
+						{ tag: 'Guild Data', guildId: guildID },
+						'Guild Data Saved Success'
 					);
 				})
 				.catch(() => {
 					logger.error(
-						{ tag: 'User Data', userId: user.id },
-						'User Data Saved Success !'
+						{ tag: 'Guild Data', guildId: guildID },
+						'Guild Data Saved Failure'
 					);
 				});
 		}
+
+		async reset(guildID: string): Promise<boolean> {
+			const document = doc(this.firestore.db, 'guild-data/' + guildID);
+			return setDoc(document, FirestoreInitialDocuments.guild)
+				.then(() => {
+					logger.info(
+						{ tag: 'Guild Data', guildId: guildID },
+						'Reset Sucess !'
+					);
+					return true;
+				})
+				.catch(() => {
+					logger.error(
+						{ tag: 'Guild Data', guildId: guildID },
+						'Reset Failed !'
+					);
+					return false;
+				});
+		}
+	}
+}
+
+export namespace UtsukushiFirebase {
+	interface FirebaseAuth {
+		email: string;
+		password: string;
 	}
 
-	async getCacheGlobal(): Promise<BotCacheGlobal | null> {
-		const document = doc(this.db, 'global/utsukushi');
-		const caches = await getDoc(document);
-		if (caches.exists()) return <BotCacheGlobal>caches.data();
-		else logger.error({ tag: 'Glogal Data' }, 'Not Found !');
-		return null;
+	interface FirebaseOptions {
+		logEnabled?: boolean;
 	}
 
-	async getCacheGlobalSounEffect(): Promise<
-		BotCacheGlobalSoundEffect[] | null> {
-		const document = doc(this.db, 'global/sound-effect');
-		const caches = await getDoc(document);
-		if (caches.exists()) return <BotCacheGlobalSoundEffect[]>caches.data();
-		else logger.error({ tag: 'Glogal Data SoundEffect' }, 'Not Found !');
-		return null;
-	}
+	export class UtsukushiFirestore {
+		/**
+		 * Firebase configuration
+		 */
+		private firebaseConfig = {
+			apiKey: '',
+			authDomain: 'utsukushi-database.firebaseapp.com',
+			projectId: 'utsukushi-database',
+			storageBucket: 'utsukushi-database.appspot.com',
+			messagingSenderId: '695089030418',
+			appId: '1:695089030418:web:1c628025fa4d37ae7a3fcb',
+		};
 
-	async getCacheGlobalEmoji(): Promise<BotCacheGlobalGuildEmoji[] | null> {
-		const document = doc(this.db, 'global/emoji');
-		const caches = await getDoc(document);
-		if (caches.exists())
-			return (<UtsukushiFirebaseGlobalEmoji>caches.data()).emojis;
-		else logger.error({ tag: 'Glogal Data Emoji' }, 'Not Found !');
-		return null;
-	}
+		private auth!: Auth;
+		readonly db: Firestore;
 
-	async getCacheByGuild(guild: Guild): Promise<BotCacheGuild | null> {
-		const document = doc(this.db, 'guild-data/' + guild.id);
-		const caches = await getDoc(document);
-		if (caches.exists()) return <BotCacheGuild>caches.data();
-		else logger.error({ tag: 'Guild Data', guildId: guild.id }, 'Not Found !');
-		return null;
-	}
+		// Firebase Documents
 
-	async getUserData(user: DiscordUser): Promise<BotUserData | null> {
-		const document = doc(this.db, 'user-data/' + user.id);
-		const caches = await getDoc(document);
-		if (caches.exists()) return <BotUserData>caches.data();
-		else logger.error({ tag: 'User Data', userId: user.id }, 'Not Found !');
-		return null;
-	}
+		readonly collections!: {
+			global: FirebaseCollections.GlobalCollection,
+			user: FirebaseCollections.UsersCollection,
+			guild: FirebaseCollections.GuildsCollection,
+		};
 
-	async resetUserData(user: DiscordUser): Promise<boolean> {
-		const document = doc(this.db, 'user-data/' + user.id);
-		return setDoc(document, initBotUserData)
-			.then(() => {
-				logger.info({ tag: 'User Data', userId: user.id }, 'Reset Sucess !');
-				return true;
-			})
-			.catch(() => {
-				logger.error({ tag: 'User Data', userId: user.id }, 'Reset Failed !');
-				return false;
-			});
-	}
+		constructor(
+			key: string,
+			firebaseAuth: FirebaseAuth,
+			callback: (firestore: UtsukushiFirestore) => void,
+			options?: FirebaseOptions,
+		) {
+			this.firebaseConfig.apiKey = key;
 
-	async resetGuildData(guild: Guild): Promise<boolean> {
-		const document = doc(this.db, 'guild-data/' + guild.id);
-		return setDoc(document, initBotCacheGuild)
-			.then(() => {
-				logger.info({ tag: 'Guild Data', guildId: guild.id }, 'Reset Sucess !');
-				return true;
-			})
-			.catch(() => {
-				logger.error(
-					{ tag: 'Guild Data', guildId: guild.id },
-					'Reset Failed !'
-				);
-				return false;
-			});
+			// Initialize Firebase
+			initializeApp(this.firebaseConfig);
+			this.auth = getAuth();
+			signInWithEmailAndPassword(
+				this.auth,
+				firebaseAuth.email,
+				firebaseAuth.password
+			)
+				.then(() => {
+					if (!options?.logEnabled) console.log(green('Connect to Firebase !'));
+					callback(this);
+				})
+				.catch((error) => {
+					logger.error({ tag: 'UtsukushiFirebase' }, error);
+				});
+
+			this.db = getFirestore();
+			this.collections = {
+				global: new FirebaseCollections.GlobalCollection(this),
+				user: new FirebaseCollections.UsersCollection(this),
+				guild: new FirebaseCollections.GuildsCollection(this),
+			};
+		}
 	}
 }

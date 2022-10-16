@@ -10,7 +10,6 @@ import {
 import { EmbedPlayer } from '@modules/system/embeds/play.embed';
 import { BotClient } from 'src/BotClient';
 import { YtbStream } from '@modules/system/audio/ytbStream';
-import { BotCacheGuild } from '@models/firebase/document-data.model';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 
 /**
@@ -60,9 +59,9 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		if (!url) {
 			url = await client
 				.getDatabase()
-				.getCacheByGuild(interaction.guild)
-				.then((response: BotCacheGuild | null) => {
-					return <string>response?.lastPlayURL;
+				.guilds.getByKey(interaction.guild.id)
+				.then((response) => {
+					return <string>response?.value.lastPlayURL;
 				});
 			if (!url) {
 				interaction.editReply('❌ URL or Keywords are not available');
@@ -85,14 +84,14 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 			const comp = embedPlayer.getButtonMenu();
 			(<any>interaction).editReply({ embeds: [embed], components: [comp] });
 
-			client.getDatabase().setCacheByGuild((<any>interaction).guild, {
+			client.getDatabase().guilds.set(<string>interaction.guildId, {
 				lastPlayURL: stream.video.url,
 			});
-			const keywordsCache = client
+			const keywordsCache = await client
 				.getDatabase()
-				.dataCache.userdata.get(interaction.user.id)?.keywords;
-			if (!url.match(/^https?:\/\//) && !keywordsCache?.includes(url))
-				client.getDatabase().setUserData(interaction.user, { keyword: url });
+				.users.getByKey(interaction.user.id);
+			if (!url.match(/^https?:\/\//) && !keywordsCache?.value.keywords?.includes(url))
+				client.getDatabase().users.set(interaction.user.id, { keywords: [url] });
 		});
 
 		client.connection.join(VoiceChannel);
@@ -108,21 +107,11 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		const focusedOption = interaction.options.getFocused(true);
 		let choices: string[] | undefined;
 
-		let keywordsCache = client
-			.getDatabase()
-			.dataCache.userdata.get(interaction.user.id);
-		if (!keywordsCache) {
-			const data = await client.getDatabase().getUserData(interaction.user);
-			if (data) {
-				client.getDatabase().dataCache.userdata.set(interaction.user.id, data);
-				keywordsCache = client
-					.getDatabase()
-					.dataCache.userdata.get(interaction.user.id);
-			}
-		}
+		const data = await client.getDatabase().users.getByKey(interaction.user.id);
+		if (!data || data.value.keywords) return;
 
 		if (focusedOption.name === 'song') {
-			choices = keywordsCache?.keywords;
+			choices = data.value.keywords;
 		}
 
 		if (!choices) return;

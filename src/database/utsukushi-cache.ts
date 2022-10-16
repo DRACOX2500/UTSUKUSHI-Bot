@@ -1,38 +1,227 @@
-import { User } from 'discord.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-	BotUserData,
-	BotCacheGlobalGuildEmoji,
+	GlobalData,
+	GlobalDataEmoji,
+	GlobalDataSoundEffect,
+	GuildData,
+	UserData,
 } from '@models/firebase/document-data.model';
-import { sortByName } from '@utils/sortByName';
-import { BotFirebase } from './firebase';
-export class FirebaseCache {
-	readonly userdata!: Map<string, BotUserData>;
-	readonly emojiCache!: BotCacheGlobalGuildEmoji[];
+import { CLEANER_TIMEOUT } from '@utils/const';
+import { UtsukushiFirebase } from './firebase';
 
-	constructor(private firebase: BotFirebase) {
-		this.userdata = new Map();
-		this.emojiCache = [];
+type DatedObject<T> = {value: T, date: number};
+
+class Timeout {
+	private timer: NodeJS.Timer | null = null;
+	private callback!: (() => void);
+	private ms!: number;
+
+	set(callback: () => void, ms: number): void {
+		this.callback = callback;
+		this.ms = ms;
+		this.timer = setInterval(callback, ms);
+	}
+
+	cancel(): void {
+		clearInterval(this.timer?.ref());
+		this.timer = null;
+	}
+
+	reset(): void {
+		this.cancel();
+		this.set(this.callback, this.ms);
+	}
+}
+
+// declare class Cache<T> {
+// 	protected cache: CacheDoubleType<T>;
+// 	protected get():CacheDoubleType<T>;
+// 	protected getMap(): Map<string, DatedObject<T>>;
+// 	protected getArray():DatedObject<T>[];
+// 	protected getByKey(key: string):Promise<DatedObject<T> | null>;
+// 	protected getByIndex(index: number):DatedObject<T> | null;
+// 	protected setMap(key:string, value:T):void;
+// 	protected setArray(value:T, index?:number):void;
+// 	protected fetchByKey(key:string):Promise<DatedObject<T>|null>;
+// 	protected clear(key:string):void;
+// 	protected reset(key:string):void;
+// }
+
+class UserCache {
+
+	private cache: Map<string, DatedObject<UserData>> = new Map();
+	private cleaner = new Timeout();
+
+	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore, private timeout = 600000) {
+		this.cleaner.set(() => {
+			if (this.cache.size < 50) return;
+			const now = Date.now();
+			this.cache.forEach((value, key) => {
+				if (now - value.date > CLEANER_TIMEOUT) {
+					this.cache.delete(key);
+				}
+			});
+		}
+		, this.timeout);
+	}
+	get(): Map<string, DatedObject<UserData>> {
+		return this.cache;
+	}
+	async getByKey(key: string):Promise<DatedObject<UserData> | null> {
+		const data = this.cache.get(key);
+		if (data) return data;
+		return this.fetchByKey(key);
+	}
+	set(key:string, value:UserData):void {
+		this.cache.set(key, { value: value, date: Date.now() });
+		this.firebase.collections.user.set(key, value);
+		this.cleaner.reset();
+	}
+	async fetchByKey(key:string): Promise<DatedObject<UserData>|null> {
+		const data = await this.firebase.collections.user.get(key);
+		if (!data) return null;
+		this.set(key, data);
+		return { value: data, date: Date.now() };
+	}
+	clear(key:string):void {
+		this.cache.delete(key);
+	}
+	async reset(key:string):Promise<boolean> {
+		const res = await this.firebase.collections.user.reset(key);
+		if (res) {
+			this.clear(key);
+			return true;
+		}
+		return false;
+	}
+}
+
+class GuildCache {
+
+	private cache: Map<string, DatedObject<GuildData>> = new Map();
+	private cleaner = new Timeout();
+
+	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore, private timeout = 600000) {
+		this.cleaner.set(() => {
+			if (this.cache.size < 50) return;
+			const now = Date.now();
+			this.cache.forEach((value, key) => {
+				if (now - value.date > CLEANER_TIMEOUT) {
+					this.cache.delete(key);
+				}
+			});
+		}
+		, this.timeout);
+	}
+
+	get(): Map<string, DatedObject<GuildData>> {
+		return this.cache;
+	}
+	async getByKey(key: string):Promise<DatedObject<GuildData> | null> {
+		const data = this.cache.get(key);
+		if (data) return data;
+		return this.fetchByKey(key);
+	}
+	set(key:string, value:GuildData):void {
+		this.cache.set(key, { value: value, date: Date.now() });
+		this.firebase.collections.guild.set(key, value);
+		this.cleaner.reset();
+	}
+	async fetchByKey(key:string): Promise<DatedObject<GuildData>|null> {
+		const data = await this.firebase.collections.guild.get(key);
+		if (!data) return null;
+		this.set(key, data);
+		return { value: data, date: Date.now() };
+	}
+	clear(key:string):void {
+		this.cache.delete(key);
+	}
+	async reset(key:string):Promise<boolean> {
+		const res = await this.firebase.collections.guild.reset(key);
+		if (res) {
+			this.clear(key);
+			return true;
+		}
+		return false;
+	}
+}
+
+class GlobalCache {
+	private data!: GlobalData;
+	private soundeffects!: GlobalDataSoundEffect[];
+	private emojis!: GlobalDataEmoji[];
+
+	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore) {
 		this.fetchEmojis();
-
-		// 1 min interval -> clear cache
-		setInterval(() => this.userdata.clear(), 60000);
+		this.fetchSoundEffects();
 	}
 
-	async fetchEmojis(): Promise<BotCacheGlobalGuildEmoji[]> {
-		const data = await this.firebase.getCacheGlobalEmoji();
+	setData(data:GlobalData) : void {
+		this.firebase.collections.global.set(data);
+		this.data = data;
+	}
+
+	getData() {
+		return this.data;
+	}
+
+	async fetchData(): Promise<GlobalData> {
+		const data = await this.firebase.collections.global.get();
+		if (!data) return {};
+		this.data = data;
+		return data;
+	}
+
+	setSoundEffects(effects:GlobalDataSoundEffect[]) {
+		this.firebase.collections.global.soundEffects.set(effects);
+		this.soundeffects = effects;
+	}
+
+	getSoundEffects(): GlobalDataSoundEffect[] {
+		return this.soundeffects;
+	}
+
+	async fetchSoundEffects(): Promise<GlobalDataSoundEffect[]> {
+		const data = await this.firebase.collections.global.soundEffects.get();
 		if (!data) return [];
-		data.sort((a, b) => sortByName(a.name ?? '', b.name ?? ''));
-
-		this.emojiCache.splice(0, this.emojiCache.length);
-		this.emojiCache.push(...data);
-		return this.emojiCache;
+		this.soundeffects = data;
+		return data;
 	}
 
-	add(user: User, data: BotUserData) {
-		this.userdata.set(user.id, data);
+	async setEmojis(emojis: GlobalDataEmoji[]): Promise<boolean> {
+		const res = await this.firebase.collections.global.emojis.set(...emojis);
+		if (!res) return false;
+		this.emojis = emojis;
+		return res;
 	}
 
-	clean(user: User) {
-		this.userdata.delete(user.id);
+	getEmojis() {
+		return this.emojis;
+	}
+
+	async deleteEmojis(emojis: GlobalDataEmoji[]): Promise<boolean> {
+		const res = await this.firebase.collections.global.emojis.delete(...emojis);
+		if (!res) return false;
+		this.emojis = this.emojis.filter(val => !emojis.includes(val));
+		return res;
+	}
+
+	async fetchEmojis(): Promise<GlobalDataEmoji[]> {
+		const data = await this.firebase.collections.global.emojis.get();
+		if (!data) return [];
+		this.emojis = data;
+		return data;
+	}
+}
+
+export class UtsukushiCache {
+	readonly users!: UserCache;
+	readonly guilds!: GuildCache;
+	readonly global!: GlobalCache;
+
+	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore) {
+		this.users = new UserCache(firebase);
+		this.guilds = new GuildCache(firebase);
+		this.global = new GlobalCache(firebase);
 	}
 }
