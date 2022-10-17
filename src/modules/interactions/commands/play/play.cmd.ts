@@ -7,9 +7,9 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { EmbedPlayer } from '@modules/system/embeds/play.embed';
-import { BotClient } from 'src/BotClient';
-import { YtbStream } from '@modules/system/audio/ytbStream';
+import { PlayerEmbed } from '@modules/system/embeds/play.embed';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { YtbStream } from '@modules/system/audio/ytb-stream';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 
 /**
@@ -38,7 +38,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		if (!interaction || !interaction.member || !interaction.guild) return;
 
@@ -78,7 +78,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		}
 
 		stream.setInfoEvent(async (info: any) => {
-			const embedPlayer = new EmbedPlayer(info, opti);
+			const embedPlayer = new PlayerEmbed(info, opti);
 
 			const embed = embedPlayer.getEmbed();
 			const comp = embedPlayer.getButtonMenu();
@@ -102,7 +102,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 	readonly autocomplete = async (
 		interaction: AutocompleteInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const focusedOption = interaction.options.getFocused(true);
 		let choices: string[] | undefined;
@@ -125,7 +125,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 	static readonly reload = async (
 		interaction: ButtonInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<InteractionResponse | void> => {
 		if (!interaction) return;
 

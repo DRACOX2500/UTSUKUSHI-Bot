@@ -7,8 +7,8 @@ import {
 	PermissionsBitField,
 	TextBasedChannel,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiMessageContextCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiMessageContextCommand } from '@models/utsukushi-command.model';
 
 /**
  * @ContextCommand
@@ -22,7 +22,7 @@ export class DeleteUpToThisContext implements UtsukushiMessageContextCommand {
 
 	readonly result = async (
 		interaction: MessageContextMenuCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const message: Message = interaction.targetMessage;
 		const messagesManager: MessageManager | null =

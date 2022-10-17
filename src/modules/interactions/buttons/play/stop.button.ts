@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonStyle, ButtonInteraction } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiButton } from '@models/utsukushi-interaction.model';
 
 export class StopButton implements UtsukushiButton {
 	readonly button = (disabled = false): ButtonBuilder => {
@@ -13,7 +13,7 @@ export class StopButton implements UtsukushiButton {
 
 	readonly getEffect = async (
 		interaction: ButtonInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		client.connection.killConnection();
 		await interaction.deferUpdate();

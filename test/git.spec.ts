@@ -1,4 +1,4 @@
-import { GitCommand } from 'root/src/modules/interactions/commands/git/git.cmd';
+import { GitCommand } from '@modules/interactions/commands/git/git.cmd';
 
 describe('Git Module', () => {
 

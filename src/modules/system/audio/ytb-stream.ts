@@ -7,10 +7,10 @@ import ytsr from 'ytsr';
 import {
 	YOUTUBE_MOBILE_VIDEO_LINK_REGEX,
 	YOUTUBE_VIDEO_LINK_REGEX,
-} from '@utils/const';
-import { YtVideoItem } from 'root/src/models/yt-video-item.model';
+} from 'src/constant';
+import { YtVideoItem } from '@models/yt-video-item.model';
 import { red } from 'ansicolor';
-import { getUrlQueryParam } from '@utils/getUrlQueryParam';
+import { Getter } from '@utils/getter';
 
 config({ path: '.env' });
 
@@ -26,7 +26,7 @@ export class YtbStream {
 		if (!urlKeywords.match(YOUTUBE_VIDEO_LINK_REGEX))
 			await this.searchByKeyword(urlKeywords);
 		else {
-			this.queryT = parseInt(getUrlQueryParam(urlKeywords, 't'));
+			this.queryT = parseInt(Getter.urlQueryParam(urlKeywords, 't'));
 			await this.setSource(urlKeywords);
 		}
 

@@ -1,9 +1,9 @@
 import { AttachmentBuilder, EmbedBuilder, time } from 'discord.js';
-import { RED_FUEL_PUMP } from '@utils/const';
-import { DataEconomieGouvResponseRecord } from 'root/src/models/api/data-economie-gouv.model';
+import { RED_FUEL_PUMP } from 'src/constant';
+import { DataEconomieGouvResponseRecord } from '@models/api/data-economie-gouv.model';
 import StaticMaps from 'staticmaps';
 
-export class EmbedFuel {
+export class FuelEmbed {
 	apiResponse!: DataEconomieGouvResponseRecord;
 	fuelType!: string;
 	imagePath!: AttachmentBuilder;

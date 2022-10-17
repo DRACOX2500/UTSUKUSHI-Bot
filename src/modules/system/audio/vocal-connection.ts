@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice';
-import { blue, red } from 'ansicolor';
 import { Message } from 'discord.js';
 import { logger } from '../logger/logger';
-import { BotPlayer } from './BotPlayer';
+import { BotPlayer } from './bot-player';
 
 export class VocalConnection {
 	connection: VoiceConnection | null = null;

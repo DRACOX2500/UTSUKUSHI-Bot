@@ -1,5 +1,5 @@
 import { red, yellow } from 'ansicolor';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 import json from './package.json';
 
 console.log(
@@ -14,6 +14,6 @@ console.log(
 	)
 );
 
-const client = new BotClient();
+const client = new UtsukushiClient();
 
 client.loginBot();

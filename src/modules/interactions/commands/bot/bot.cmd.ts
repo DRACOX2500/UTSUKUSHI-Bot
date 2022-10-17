@@ -5,11 +5,11 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandStringOption,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 import {
 	UtsukushiPrivateCommand,
 	UtsukushiSlashCommand,
-} from 'root/src/models/utsukushi-command.model';
+} from '@models/utsukushi-command.model';
 import { BotCommandOptions, BotSubCommand } from './bot.sub';
 import config from 'root/utsukushi.config.json';
 
@@ -74,7 +74,7 @@ export class BotCommand
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const subCommand = interaction.options.getSubcommand();
 		const options: BotCommandOptions = {

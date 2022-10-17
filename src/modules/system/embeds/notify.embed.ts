@@ -1,6 +1,6 @@
 import { bold, EmbedBuilder, User, VoiceChannel } from 'discord.js';
 
-export class EmbedNotify {
+export class NotifyEmbed {
 	userId!: string;
 	userName!: string;
 	userDiscriminator!: string;

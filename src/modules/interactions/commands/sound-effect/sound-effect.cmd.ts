@@ -6,13 +6,13 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiAutocompleteSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 import {
 	SoundEffectCommandOptions,
 	SoundEffectSubCommand,
 } from './sound-effect.sub';
-import { sortByName } from '@utils/sortByName';
+import { Sort } from '@utils/sort';
 
 /**
  * @SlashCommand `soundeffect`
@@ -59,7 +59,7 @@ export class SoundEffectCommand
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const subCommand = interaction.options.getSubcommand();
 		const options: SoundEffectCommandOptions = {
@@ -80,13 +80,13 @@ export class SoundEffectCommand
 
 	readonly autocomplete = async (
 		interaction: AutocompleteInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		if (interaction.options.getSubcommand() === 'play') {
 			let data = client.getDatabase().global.getSoundEffects();
 
 			if (data) {
-				data.sort((a, b) => sortByName(a.key, b.key));
+				data.sort((a, b) => Sort.byName(a.key, b.key));
 				if (data.length >= 25) data = data.slice(0, 25);
 				await interaction.respond(
 					data.map((choice) => ({

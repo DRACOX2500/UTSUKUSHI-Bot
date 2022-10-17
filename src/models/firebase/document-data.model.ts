@@ -1,5 +1,5 @@
-import { Activity } from 'root/src/models/activity.model';
-import { SoundEffect } from 'root/src/models/sound-effect.model';
+import { Activity } from '@models/activity.model';
+import { SoundEffect } from '@models/sound-effect.model';
 import { APIMessageComponentEmoji } from 'discord.js';
 
 /**

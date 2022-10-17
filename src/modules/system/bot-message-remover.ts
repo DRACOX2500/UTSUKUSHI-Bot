@@ -4,7 +4,7 @@ import {
 	MessageManager,
 } from 'discord.js';
 
-class BotRemover {
+class BotMessageRemover {
 	private deleteMessage = 0;
 
 	async run(
@@ -26,9 +26,9 @@ class BotRemover {
 	}
 }
 
-export class BotRemoverManager {
+export class BotMessageRemoverManager {
 	readonly maxInstances: number;
-	private removerMap: Map<string, BotRemover>;
+	private removerMap: Map<string, BotMessageRemover>;
 
 	constructor(maxInstances: number) {
 		this.maxInstances = maxInstances;
@@ -45,16 +45,16 @@ export class BotRemoverManager {
 
 	/**
 	 * @param channelId
-	 * @return `BotRemover | null`
+	 * @return `BotMessageRemover | null`
 	 *
-	 * Return `null` if BotRemoverManager.maxInstances is Full
-	 * or if channelId is already in BotRemoverManager.removerMap
+	 * Return `null` if BotMessageRemoverManager.maxInstances is Full
+	 * or if channelId is already in BotMessageRemoverManager.removerMap
 	 */
-	addRemover(channelId: string): BotRemover | null {
+	addRemover(channelId: string): BotMessageRemover | null {
 		if (this.isFull) return null;
 		if (this.removerMap.get(channelId)) return null;
 
-		const remover = new BotRemover();
+		const remover = new BotMessageRemover();
 		this.removerMap.set(channelId, remover);
 		return remover;
 	}

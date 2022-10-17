@@ -3,8 +3,8 @@ import {
 	DataEconomieGouvResponse,
 	DataEconomieGouvResponseRecord,
 } from '@models/api/data-economie-gouv.model';
-import { API } from '@utils/const';
-import { red } from 'ansicolor';
+import { API } from 'src/constant';
+import { logger } from '@modules/system/logger/logger';
 
 export class FuelAPI {
 	refinePrixNom!: string;
@@ -17,7 +17,7 @@ export class FuelAPI {
 	}
 
 	private fuelError(err?: Error) {
-		if (err) console.error(red(`[Fuel API] Error: ${err.message}`));
+		if (err) logger.error({ tag: 'Fuel API-API' }, err.message);
 		return API.FUEL.ERROR;
 	}
 

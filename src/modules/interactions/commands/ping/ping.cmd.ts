@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { EmbedPong } from 'root/src/modules/system/embeds/pong.embed';
-import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { PongEmbed } from '@modules/system/embeds/pong.embed';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 
 /**
  * @SlashCommand `ping`
@@ -15,7 +15,7 @@ export class PingCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client?: BotClient
+		client?: UtsukushiClient
 	): Promise<void> => {
 		if (!client) {
 			interaction.reply('‼️🤖 No Client found !');
@@ -26,7 +26,7 @@ export class PingCommand implements UtsukushiSlashCommand {
 			(await interaction.reply({ content: 'Pinging...', fetchReply: true })) ??
 			null;
 
-		const embedPong = new EmbedPong(sent, interaction, client);
+		const embedPong = new PongEmbed(sent, interaction, client);
 		interaction.editReply({ content: '', embeds: [embedPong.getEmbed()] });
 	};
 }

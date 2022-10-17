@@ -8,18 +8,18 @@ import {
 	PresenceStatusData,
 } from 'discord.js';
 import { Activity } from '@models/activity.model';
-import { TWITCH_LINK } from '@utils/const';
-import { VocalConnection } from '@modules/system/audio/VocalConnection';
-import { CommandManager } from '@modules/interactions/CommandManager';
-import { BotErrorManager } from '@errors/BotErrorManager';
-import { BotRemoverManager } from '@modules/system/System';
-import { CommandDeployer } from '@modules/interactions/CommandDeployer';
+import { TWITCH_LINK } from 'src/constant';
+import { VocalConnection } from '@modules/system/audio/vocal-connection';
+import { CommandManager } from '@modules/interactions/command-manager';
+import { NodeJSErrorManager } from '@errors/nodejs-error-manager';
+import { BotMessageRemoverManager } from '@modules/system/bot-message-remover';
+import { CommandDeployer } from '@modules/interactions/command-deployer';
 import { UtsukushiCache } from '@database/utsukushi-cache';
 import { UtsukushiFirebase } from '@database/firebase';
 
 config({ path: '.env' });
 
-export class BotClient extends Client {
+export class UtsukushiClient extends Client {
 	private DISCORD_TOKEN!: string;
 	private CLIENT_ID!: string;
 
@@ -28,13 +28,13 @@ export class BotClient extends Client {
 
 	connection: VocalConnection = new VocalConnection();
 
-	removerManager!: BotRemoverManager;
+	removerManager!: BotMessageRemoverManager;
 
 	private commandManager!: CommandManager;
 
 	private commandDeployer!: CommandDeployer;
 
-	private errorManager!: BotErrorManager;
+	private errorManager!: NodeJSErrorManager;
 
 	private defaultActivity: Activity = {
 		status: ':]',
@@ -56,7 +56,7 @@ export class BotClient extends Client {
 		this.CLIENT_ID = process.env.CLIENT_ID || '';
 		this.FIREBASE_TOKEN = process.env.FIREBASE_TOKEN || '';
 
-		this.removerManager = new BotRemoverManager(
+		this.removerManager = new BotMessageRemoverManager(
 			+(process.env.MAX_REMOVER_INSTANCES || 3)
 		);
 
@@ -77,7 +77,7 @@ export class BotClient extends Client {
 	}
 
 	private init(test: boolean): void {
-		this.errorManager = new BotErrorManager(this);
+		this.errorManager = new NodeJSErrorManager(this);
 
 		this.commandManager = new CommandManager(this);
 		this.commandDeployer = new CommandDeployer(

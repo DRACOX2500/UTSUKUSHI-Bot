@@ -1,7 +1,7 @@
-import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { EmbedGuild } from 'root/src/modules/system/embeds/guild.embed';
-import { BotClient } from 'src/BotClient';
+import { GuildEmbed } from '@modules/system/embeds/guild.embed';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 /**
  * @SlashCommand `guild`
@@ -15,14 +15,14 @@ export class GuildCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const guild = interaction.guild;
 		if (!guild) return;
 
 		await interaction.deferReply();
 
-		const embed = new EmbedGuild(guild, client);
+		const embed = new GuildEmbed(guild, client);
 		const em = await embed.getEmbed();
 		const emExtra = await embed.getEmbedExtra();
 		await interaction.editReply({ embeds: [em, emExtra] });

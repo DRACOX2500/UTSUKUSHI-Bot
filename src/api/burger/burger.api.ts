@@ -1,11 +1,15 @@
-import { API } from '@utils/const';
+import { API } from 'src/constant';
 import { ApiBurgerReponse } from '@models/api/api-burger-response.model';
 import axios from 'axios';
-import { red } from 'ansicolor';
+import { logger } from '@modules/system/logger/logger';
 
+/**
+ * @deprecated burger API is deprecated
+ * TODO : delete or update this class
+ */
 export class BurgerAPI {
 	private burgerError(err?: Error) {
-		if (err) console.error(red(`[Big-Burger] Error: ${err.message}`));
+		if (err) logger.error({ tag: 'Big-Burger-API' }, err.message);
 		return API.BURGER.ERROR;
 	}
 

@@ -6,8 +6,8 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { UtsukushiAutocompleteSlashCommand } from 'root/src/models/utsukushi-command.model';
-import { sortByName } from '@utils/sortByName';
+import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
+import { Sort } from '@utils/sort';
 
 type Choice = {
 	name: string;
@@ -69,7 +69,7 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 		interaction: AutocompleteInteraction<CacheType>
 	): Promise<void> => {
 		let res = this.getAllLocale();
-		res = res.sort((a, b) => sortByName(a.name, b.name));
+		res = res.sort((a, b) => Sort.byName(a.name, b.name));
 		if (res.length >= 25) res = res.slice(0, 25);
 		await interaction.respond(res);
 	};

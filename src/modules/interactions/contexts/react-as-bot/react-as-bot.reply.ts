@@ -8,7 +8,7 @@ import {
 } from 'discord.js';
 import { ReactAsBotSelect } from '@modules/interactions/selects/react-as-bot/react-as-bot.select';
 import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
-import { sortByName } from '@utils/sortByName';
+import { Sort } from '@utils/sort';
 
 export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 	content!: string;
@@ -29,7 +29,7 @@ export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 			this.start = 0;
 			limit = start + 24;
 		}
-		emojis.sort((a, b) => { return sortByName(<string>a.name, <string>b.name); });
+		emojis.sort((a, b) => { return Sort.byName(<string>a.name, <string>b.name); });
 		this.content =
 			`React to message #${this.targetId} with an emoji!\n` +
 			`Choose an emoji ! (${this.start + 1} to ${limit + 1} - ${

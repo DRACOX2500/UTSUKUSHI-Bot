@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { BurgerAPI } from 'root/src/api/burger/burger.api';
+import { BurgerAPI } from '@api/burger/burger.api';
 import {
 	UtsukushiCommandOptions,
 	UtsukushiSlashCommand,
-} from 'root/src/models/utsukushi-command.model';
-import { BotClient } from 'src/BotClient';
+} from '@models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 /**
  * @SlashCommand `big-burger`
@@ -19,7 +19,7 @@ export class BigBurgerCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	): Promise<void> => {
 		await interaction.reply('🍔 Burger loading...');

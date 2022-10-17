@@ -8,9 +8,8 @@ import {
 	NoSubscriberBehavior,
 	VoiceConnection,
 } from '@discordjs/voice';
-import { red, yellow } from 'ansicolor';
 import { Message } from 'discord.js';
-import { logger } from '../logger/logger';
+import { logger } from '@modules/system/logger/logger';
 
 export class BotPlayer {
 	player: AudioPlayer;

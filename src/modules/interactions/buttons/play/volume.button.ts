@@ -6,12 +6,12 @@ import {
 	ButtonStyle,
 	EmbedBuilder,
 } from 'discord.js';
-import { BotPlayer } from '@modules/system/audio/BotPlayer';
-import { BotClient } from 'src/BotClient';
-import { BUTTON } from '@utils/const';
-import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
+import { BotPlayer } from '@modules/system/audio/bot-player';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { BUTTON } from 'src/constant';
+import { UtsukushiButton } from '@models/utsukushi-interaction.model';
 
-function isNotOK(interaction: ButtonInteraction, client: BotClient): boolean {
+function isNotOK(interaction: ButtonInteraction, client: UtsukushiClient): boolean {
 	return (
 		!client.connection.botPlayer?.resource ||
 		interaction.message.embeds[0].data.fields === undefined ||
@@ -32,7 +32,7 @@ export namespace VolumeButtons {
 
 		readonly getEffect = async (
 			interaction: ButtonInteraction,
-			client: BotClient
+			client: UtsukushiClient
 		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
 				interaction.reply(BUTTON.PLAY_RESPONSE);
@@ -62,7 +62,7 @@ export namespace VolumeButtons {
 
 		readonly getEffect = async (
 			interaction: ButtonInteraction,
-			client: BotClient
+			client: UtsukushiClient
 		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
 				interaction.reply(BUTTON.PLAY_RESPONSE);

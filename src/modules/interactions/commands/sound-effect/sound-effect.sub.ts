@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatInputCommandInteraction, CacheType, bold } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { YtbStream } from '@modules/system/audio/ytbStream';
-import { YOUTUBE_VIDEO_LINK_REGEX } from '@utils/const';
-import { durationStringToNumber } from '@utils/durationStringToNumber';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { YtbStream } from '@modules/system/audio/ytb-stream';
+import { YOUTUBE_VIDEO_LINK_REGEX } from 'src/constant';
+import { Converter } from '@utils/converter';
 
 /**
  * @Options
@@ -21,7 +21,7 @@ export interface SoundEffectCommandOptions {
 export class SoundEffectSubCommand {
 	protected async play(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient,
+		client: UtsukushiClient,
 		options: SoundEffectCommandOptions
 	) {
 		const channel = (<any>interaction.member).voice.channel;
@@ -52,7 +52,7 @@ export class SoundEffectSubCommand {
 
 	protected async add(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient,
+		client: UtsukushiClient,
 		options: SoundEffectCommandOptions
 	) {
 		if (!options.url.match(YOUTUBE_VIDEO_LINK_REGEX)) {
@@ -75,7 +75,7 @@ export class SoundEffectSubCommand {
 		await interaction.deferReply({ ephemeral: true });
 
 		const res = await YtbStream.getYtVideoDataByURL(options.url);
-		const duration = durationStringToNumber(res.duration);
+		const duration = Converter.durationStringToNumber(res.duration);
 		if (duration && duration > 30000) {
 			await interaction.editReply({
 				content: '❌ Sound Effect is too long (max 30 seconds) !',

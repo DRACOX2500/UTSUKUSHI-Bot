@@ -2,26 +2,25 @@
 /* eslint-disable no-undef */
 // TEST
 
-import { getRandomInt } from '@utils/getRandomInt';
-import { BotClient } from 'src/BotClient';
-import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
-import { durationStringToNumber } from '@utils/durationStringToNumber';
+import { Converter } from '@utils/converter';
+import { Getter } from '@utils/getter';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
-export const client = new BotClient(true);
+export const client = new UtsukushiClient(true);
 
 describe('Utils Module', () => {
 
 	test('Random Int [0-9]', () => {
-		const number = getRandomInt(9);
+		const number = Getter.randomNumber(9);
 		expect(number).toBeLessThanOrEqual(9);
 		expect(number).toBeGreaterThanOrEqual(0);
 	});
 
 	test('Seconds To Minute/Secondes Format', () => {
-		expect(minuteSecondsFormater(90)).toBe('01:30');
+		expect(Converter.secondsToMinutesSecondsFormat(90)).toBe('01:30');
 	});
 
 	test('Convert 24h string into milliseconds number', () => {
-		expect(durationStringToNumber('24:00:00')).toBe(86400000);
+		expect(Converter.durationStringToNumber('24:00:00')).toBe(86400000);
 	});
 });

@@ -3,9 +3,9 @@ import {
 	CacheType,
 	PresenceStatusData,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { TWITCH_LINK } from '@utils/const';
-import { Activity } from 'root/src/models/activity.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { TWITCH_LINK } from 'src/constant';
+import { Activity } from '@models/activity.model';
 
 /**
  * @Options
@@ -23,7 +23,7 @@ export interface BotCommandOptions {
 export class BotSubCommand {
 	protected async setActivity(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient,
+		client: UtsukushiClient,
 		options: BotCommandOptions
 	): Promise<void> {
 		const newActivity: Activity = {
@@ -43,7 +43,7 @@ export class BotSubCommand {
 
 	protected async setStatus(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient,
+		client: UtsukushiClient,
 		options: BotCommandOptions
 	): Promise<void> {
 		client.setStatus(<PresenceStatusData>options.status);

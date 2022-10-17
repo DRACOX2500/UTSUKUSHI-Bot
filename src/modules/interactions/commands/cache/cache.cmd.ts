@@ -5,8 +5,8 @@ import {
 	SlashCommandBuilder,
 	SlashCommandIntegerOption,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 
 /**
  * - `Clear`| clear all data from your user cache
@@ -45,7 +45,7 @@ export class CacheCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const code = interaction?.options.getInteger('action') ?? -1;
 

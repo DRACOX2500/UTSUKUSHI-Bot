@@ -19,13 +19,13 @@ import {
 	SelectMenuInteraction,
 	ModalSubmitInteraction,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 import {
 	UtsukushiAutocompleteSlashCommand,
 	UtsukushiCommand,
 	UtsukushiContextCommand,
 	UtsukushiSlashCommand,
-} from 'root/src/models/utsukushi-command.model';
+} from '@models/utsukushi-command.model';
 import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
 import {
@@ -46,7 +46,7 @@ export class CommandManager {
 
 	private buttons!: Collection<string, UtsukushiButton>;
 
-	constructor(private readonly client: BotClient) {
+	constructor(private readonly client: UtsukushiClient) {
 		this.commands = new Collection();
 		this.contexts = new Collection();
 		this.buttons = new Collection();
@@ -130,7 +130,7 @@ export class CommandManager {
 
 	private async interactionChatInput(
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> {
 		const command = this.commands.get(interaction.commandName);
 
@@ -158,7 +158,7 @@ export class CommandManager {
 
 	private async interactionContext(
 		interaction: ContextMenuCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> {
 		const command = this.contexts.get(interaction.commandName);
 
@@ -178,7 +178,7 @@ export class CommandManager {
 
 	private async interactionAutocomplete(
 		interaction: AutocompleteInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	) {
 		(<UtsukushiAutocompleteSlashCommand>(
 			this.commands.get(interaction.commandName)
@@ -187,7 +187,7 @@ export class CommandManager {
 
 	private async interactionButton(
 		interaction: ButtonInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> {
 		const button = this.buttons.get(interaction.customId);
 
@@ -207,7 +207,7 @@ export class CommandManager {
 
 	private async interactionSelect(
 		interaction: SelectMenuInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	) {
 		if (interaction.customId === 'rab-select') {
 			ReactAsBotSelect.getEffect(interaction);
@@ -216,14 +216,14 @@ export class CommandManager {
 
 	private async interactionModal(
 		interaction: ModalSubmitInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	) {
 		if (interaction.customId === 'rpab-modal') {
 			ReplyAsBotModal.getEffect(interaction);
 		}
 	}
 
-	initCommand(client: BotClient) {
+	initCommand(client: UtsukushiClient) {
 		client.on(
 			'interactionCreate',
 			async (interaction: Interaction<CacheType>) => {
@@ -274,7 +274,7 @@ export class CommandManager {
 		);
 	}
 
-	async initBotEvents(client: BotClient) {
+	async initBotEvents(client: UtsukushiClient) {
 		const filesList: string[][] = [];
 		const commandsPath = path.join(__dirname, 'events');
 

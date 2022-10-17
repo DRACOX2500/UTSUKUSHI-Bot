@@ -3,7 +3,7 @@ import {
 	ChatInputCommandInteraction,
 	PermissionsBitField,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 import { GlobalDataEmoji } from '@models/firebase/document-data.model';
 
@@ -26,7 +26,7 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const guild = interaction.guild;
 		const option = interaction.options.getBoolean('on-off') ?? null;

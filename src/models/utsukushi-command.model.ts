@@ -9,7 +9,7 @@ import {
 	UserContextMenuCommandInteraction,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 type UtsukushiSlashCommandType =
 	| SlashCommandBuilder
@@ -47,7 +47,7 @@ export interface UtsukushiCommand<T extends CommandInteraction> {
 	 */
 	readonly result: (
 		interaction: T,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	) => Promise<void>;
 }
@@ -60,7 +60,7 @@ export interface UtsukushiSlashCommand
 	readonly command: UtsukushiSlashCommandType;
 	readonly result: (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	) => Promise<void>;
 }
@@ -74,7 +74,7 @@ export interface UtsukushiContextCommand<
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
 		interaction: T,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	) => Promise<void>;
 }
@@ -87,7 +87,7 @@ export interface UtsukushiMessageContextCommand
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
 		interaction: MessageContextMenuCommandInteraction,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	) => Promise<void>;
 }
@@ -100,7 +100,7 @@ export interface UtsukushiUserContextCommand
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
 		interaction: UserContextMenuCommandInteraction,
-		client: BotClient,
+		client: UtsukushiClient,
 		options?: UtsukushiCommandOptions
 	) => Promise<void>;
 }
@@ -112,6 +112,6 @@ export interface UtsukushiAutocompleteSlashCommand
 	 */
 	readonly autocomplete: (
 		interaction: AutocompleteInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	) => Promise<void>;
 }

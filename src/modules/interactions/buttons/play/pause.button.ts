@@ -1,7 +1,7 @@
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from 'discord.js';
-import { PlayCommand } from 'root/src/modules/interactions/commands/play/play.cmd';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
+import { PlayCommand } from '@modules/interactions/commands/play/play.cmd';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiButton } from '@models/utsukushi-interaction.model';
 
 export class PauseButton implements UtsukushiButton {
 	readonly button = (disabled = false): ButtonBuilder => {
@@ -14,7 +14,7 @@ export class PauseButton implements UtsukushiButton {
 
 	readonly getEffect = async (
 		interaction: ButtonInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		if (!client.connection.botPlayer) {
 			PlayCommand.reload(interaction, client);

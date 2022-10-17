@@ -7,10 +7,10 @@ import {
 	CacheType,
 	ChannelType,
 } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { UtsukushiAutocompleteSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 import { NotifyCommandOptions, NotifySubCommand } from './notify.sub';
-import { sortByName } from '@utils/sortByName';
+import { Sort } from '@utils/sort';
 
 /**
  * @SlashCommand `notify`
@@ -46,7 +46,7 @@ export class NotifyCommand
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const subCommand = interaction.options.getSubcommand();
 
@@ -69,7 +69,7 @@ export class NotifyCommand
 
 	readonly autocomplete = async (
 		interaction: AutocompleteInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	): Promise<void> => {
 		const textchannel = interaction.guild?.channels.cache.filter(
 			(channel) => channel.type === ChannelType.GuildText
@@ -79,7 +79,7 @@ export class NotifyCommand
 				name: choice.name,
 				value: choice.id,
 			}));
-			res = res.sort((a, b) => sortByName(a.name, b.name));
+			res = res.sort((a, b) => Sort.byName(a.name, b.name));
 			res.unshift({ name: '---', value: '-1' });
 			if (res.length >= 25) res = res.slice(0, 25);
 			await interaction.respond(res);

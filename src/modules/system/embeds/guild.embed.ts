@@ -1,13 +1,13 @@
 import { bold, EmbedBuilder, Guild, italic, time } from 'discord.js';
-import { EmbedGuildData } from 'root/src/models/embeds/embed-guild-data.model';
-import { BotClient } from 'src/BotClient';
+import { EmbedGuildData } from '@models/embeds/embed-guild-data.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
-export class EmbedGuild {
+export class GuildEmbed {
 	guildSource: Guild;
 	guild: EmbedGuildData;
-	client: BotClient;
+	client: UtsukushiClient;
 
-	constructor(guild: Guild, client: BotClient) {
+	constructor(guild: Guild, client: UtsukushiClient) {
 		this.guildSource = guild;
 		this.guild = <EmbedGuildData>(<unknown>guild);
 		this.guild.iconUrl = guild.iconURL() ?? '';

@@ -46,7 +46,9 @@ export const API = {
 		TIMEZONE: '&timezone=Europe%2FParis',
 		ERROR: '🥲 Sorry but no fuel has been found ⛽!',
 	},
+	/** @deprecated */
 	BURGER: {
+		/** @deprecated */
 		URL: 'https://foodish-api.herokuapp.com/api/images/burger/',
 		ERROR: '🥲 Sorry but no burger has been found 🍔!',
 	},

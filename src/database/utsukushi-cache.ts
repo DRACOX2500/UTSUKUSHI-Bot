@@ -6,7 +6,7 @@ import {
 	GuildData,
 	UserData,
 } from '@models/firebase/document-data.model';
-import { CLEANER_TIMEOUT } from '@utils/const';
+import { CLEANER_TIMEOUT } from 'src/constant';
 import { UtsukushiFirebase } from './firebase';
 
 type DatedObject<T> = {value: T, date: number};

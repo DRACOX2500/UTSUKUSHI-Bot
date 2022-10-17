@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "CommonJS",
-        "declaration": false,
+        "declaration": true,
         "removeComments": false,
         "allowSyntheticDefaultImports": true,
         "target": "es2022",
@@ -27,7 +27,8 @@
         "skipLibCheck": true,
         "strict": true,
         "sourceMap": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "noEmit": false
     },
     "include": ["index.ts", "src/**/*.ts", "test/**/*.ts"],
     "exclude": ["node_modules", "dist"]

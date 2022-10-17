@@ -1,11 +1,11 @@
 import { Guild, TextBasedChannel, VoiceChannel } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { EmbedNotify } from '@modules/system/embeds/notify.embed';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { NotifyEmbed } from '@modules/system/embeds/notify.embed';
 import { UtsukushiEvent } from '@models/utsukushi-interaction.model';
 
 class VoiceChannelNotifyEvent implements UtsukushiEvent {
 	private async notifyGuild(
-		client: BotClient,
+		client: UtsukushiClient,
 		user: string,
 		channelId: string,
 		guild: Guild
@@ -21,13 +21,13 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 			const channel = await guild.channels.fetch(channelId).then((result) => {
 				return <VoiceChannel>result;
 			});
-			const embedNotify = new EmbedNotify(userJoin, channel);
+			const embedNotify = new NotifyEmbed(userJoin, channel);
 			const embed = embedNotify.getEmbed();
 			channelNotify?.send({ embeds: [embed] });
 		}
 	}
 
-	readonly event = async (client: BotClient): Promise<void> => {
+	readonly event = async (client: UtsukushiClient): Promise<void> => {
 		client.on('voiceStateUpdate', async (oldState, newState) => {
 			if (oldState.channelId === newState.channelId) {
 				// 'a user has not moved!'

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 
 /**
  * @SlashCommand `git`

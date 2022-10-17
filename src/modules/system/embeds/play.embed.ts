@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmbedBuilder, time, ActionRowBuilder } from 'discord.js';
-import { minuteSecondsFormater } from '@utils/secondsToMinuteSecondsFormat';
-import { EmbedVideoData } from 'root/src/models/embeds/embed-video-datav';
-import { LOGO_MUSIC_BLUE, LOGO_SOURCES } from '@utils/const';
+import { Converter } from '@utils/converter';
+import { EmbedVideoData } from '@models/embeds/embed-video-datav';
+import { LOGO_MUSIC_BLUE, LOGO_SOURCES } from 'src/constant';
 import { VolumeButtons } from '@modules/interactions/buttons/play/volume.button';
 import { StopButton } from '@modules/interactions/buttons/play/stop.button';
 import { PauseButton } from '@modules/interactions/buttons/play/pause.button';
 import { SkipButton } from '@modules/interactions/buttons/play/skip.button';
 
-export class EmbedPlayer {
+export class PlayerEmbed {
 	data: EmbedVideoData = {
 		title: '',
 		duration: 0,
@@ -64,7 +64,7 @@ export class EmbedPlayer {
 			.addFields(
 				{
 					name: 'Duration :',
-					value: minuteSecondsFormater(this.data.duration),
+					value: Converter.secondsToMinutesSecondsFormat(this.data.duration),
 					inline: true,
 				},
 				{ name: 'Views :', value: this.data.view, inline: true },

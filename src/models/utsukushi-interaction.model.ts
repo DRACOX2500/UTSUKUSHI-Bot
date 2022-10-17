@@ -1,15 +1,15 @@
 import { ButtonBuilder, ButtonInteraction } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 export interface UtsukushiButton {
 	readonly button: (disabled?: boolean) => ButtonBuilder;
 
 	readonly getEffect: (
 		interaction: ButtonInteraction,
-		client: BotClient
+		client: UtsukushiClient
 	) => Promise<void>;
 }
 
 export interface UtsukushiEvent {
-	readonly event: (client: BotClient) => Promise<void>;
+	readonly event: (client: UtsukushiClient) => Promise<void>;
 }

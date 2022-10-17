@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, CacheType } from 'discord.js';
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 export interface NotifyCommandOptions {
 	channel: string;
@@ -8,7 +8,7 @@ export interface NotifyCommandOptions {
 export class NotifySubCommand {
 	protected async off(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient
+		client: UtsukushiClient
 	) {
 		if (!interaction.guild) {
 			interaction.reply('❌ Channel setup Failed !');
@@ -22,7 +22,7 @@ export class NotifySubCommand {
 	}
 	protected async on(
 		interaction: ChatInputCommandInteraction<CacheType>,
-		client: BotClient,
+		client: UtsukushiClient,
 		options: NotifyCommandOptions
 	) {
 		if (!interaction.guild) {

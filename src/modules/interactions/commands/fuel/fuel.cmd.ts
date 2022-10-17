@@ -6,10 +6,10 @@ import {
 	SlashCommandStringOption,
 	TextChannel,
 } from 'discord.js';
-import { EmbedFuel } from 'root/src/modules/system/embeds/fuel.embed';
-import { API } from '@utils/const';
-import { FuelAPI } from 'root/src/api/fuel-fr/fuel.api';
-import { UtsukushiSlashCommand } from 'root/src/models/utsukushi-command.model';
+import { FuelEmbed } from '@modules/system/embeds/fuel.embed';
+import { API } from 'src/constant';
+import { FuelAPI } from '@api/fuel-fr/fuel.api';
+import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 
 enum FuelType {
 	GAZOLE = 'Gazole',
@@ -121,7 +121,7 @@ export class FuelCommand implements UtsukushiSlashCommand {
 
 		let i = 0;
 		for (const data of response) {
-			const fuelEmbed = new EmbedFuel(data, fuel);
+			const fuelEmbed = new FuelEmbed(data, fuel);
 			const embed = fuelEmbed.getEmbed(i);
 			const image = await fuelEmbed.getImages(i);
 

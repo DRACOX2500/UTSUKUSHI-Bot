@@ -1,11 +1,11 @@
-import { BotClient } from 'src/BotClient';
+import { UtsukushiClient } from 'src/utsukushi-client';
 import { UtsukushiEvent } from '@models/utsukushi-interaction.model';
 import { Guild } from 'discord.js';
 import { GlobalDataEmoji } from '@models/firebase/document-data.model';
 
 class EmojiListUpdateEvent implements UtsukushiEvent {
 
-	private async updateGuildEmojiListInDatabase(guild: Guild, client: BotClient) {
+	private async updateGuildEmojiListInDatabase(guild: Guild, client: UtsukushiClient) {
 		const guildCache = await client.getDatabase().guilds.getByKey(guild.id);
 		if (!guildCache || !guildCache.value.shareEmojis) return;
 
@@ -21,7 +21,7 @@ class EmojiListUpdateEvent implements UtsukushiEvent {
 		await client.getDatabase().global.setEmojis(emojiArray);
 	}
 
-	readonly event = async (client: BotClient): Promise<void> => {
+	readonly event = async (client: UtsukushiClient): Promise<void> => {
 		client.on('emojiCreate', (emoji) => {
 			const guild = emoji.guild;
 			this.updateGuildEmojiListInDatabase(guild, client);

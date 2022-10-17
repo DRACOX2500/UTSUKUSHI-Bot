@@ -23,7 +23,7 @@ src/
 |   |   |- CommandManager.ts    # Command Manager (Load & Receive)
 |   |- system/                
 |- utils/                       # Utilities Functions
-+- BotClient.ts                 # Utsukushi Discord Client
++- UtsukushiClient.ts                 # Utsukushi Discord Client
 test/
 |- mocks/                       # Mocks Discord API
 +- ...                          # Unit tests

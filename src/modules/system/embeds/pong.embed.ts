@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import { ChatInputCommandInteraction, EmbedBuilder, Message } from 'discord.js';
-import { getRandomInt } from '@utils/getRandomInt';
-import { BotClient } from 'src/BotClient';
+import { Getter } from '@utils/getter';
+import { UtsukushiClient } from 'src/utsukushi-client';
 
 enum Color {
 	Green = 0x41df19,
@@ -9,14 +9,14 @@ enum Color {
 	Red = 0xdf1919,
 }
 
-export class EmbedPong {
+export class PongEmbed {
 	private timestamp: number;
 	private wsPing: number;
 
 	constructor(
 		message: Message | null,
 		interaction: ChatInputCommandInteraction | null,
-		client: BotClient
+		client: UtsukushiClient
 	) {
 		this.timestamp = this.getPongLatency(
 			message?.createdTimestamp ?? 0,
@@ -25,7 +25,7 @@ export class EmbedPong {
 		this.wsPing = this.getWsPing(client);
 	}
 
-	private getWsPing(cli: BotClient): number {
+	private getWsPing(cli: UtsukushiClient): number {
 		return Math.round(cli.ws.ping);
 	}
 
@@ -37,7 +37,7 @@ export class EmbedPong {
 	}
 
 	private get title(): string {
-		if (getRandomInt(5) === 1) return '🏓🔥 ***SMAAAAAAAAAAAAAAAAASH !!!!!***';
+		if (Getter.randomNumber(5) === 1) return '🏓🔥 ***SMAAAAAAAAAAAAAAAAASH !!!!!***';
 		else return '🏓 ***Pong !***';
 	}
 

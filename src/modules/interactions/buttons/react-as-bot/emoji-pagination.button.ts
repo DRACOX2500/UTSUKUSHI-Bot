@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable no-empty-function */
 import { ButtonBuilder, ButtonInteraction, ButtonStyle } from 'discord.js';
-import { BotClient } from 'src/BotClient';
-import { ReactAsBotContextReply } from 'root/src/modules/interactions/contexts/react-as-bot/react-as-bot.reply';
-import { UtsukushiButton } from 'root/src/models/utsukushi-interaction.model';
+import { UtsukushiClient } from 'src/utsukushi-client';
+import { ReactAsBotContextReply } from '@modules/interactions/contexts/react-as-bot/react-as-bot.reply';
+import { UtsukushiButton } from '@models/utsukushi-interaction.model';
 
 export namespace ReactAsBotButtons {
 	export class NextButton implements UtsukushiButton {
@@ -17,7 +17,7 @@ export namespace ReactAsBotButtons {
 
 		readonly getEffect = async (
 			interaction: ButtonInteraction,
-			client: BotClient
+			client: UtsukushiClient
 		): Promise<void> => {
 			const emojis = client.getDatabase().global.getEmojis();
 
@@ -43,7 +43,7 @@ export namespace ReactAsBotButtons {
 
 		readonly getEffect = async (
 			interaction: ButtonInteraction,
-			client: BotClient
+			client: UtsukushiClient
 		): Promise<void> => {
 			const emojis = client.getDatabase().global.getEmojis();
 
