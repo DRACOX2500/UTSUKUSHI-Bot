@@ -15,6 +15,7 @@ import {
 	UtsukushiCommand,
 } from '@models/utsukushi-command.model';
 import { lightGreen, green, lightMagenta, magenta } from 'ansicolor';
+import config from 'root/utsukushi.config.json';
 
 type CommandDeployerOptions = {
 	/** default true */
@@ -68,6 +69,24 @@ export class CommandDeployer {
 				this.globals.delete(key);
 			}
 		});
+	}
+
+	private async resetGuild() {
+		return (async () => {
+			const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
+			const guilds = config.resetGuilds;
+			try {
+				await Promise.all(guilds.map(async (guildID) => {
+					await rest.put(Routes.applicationGuildCommands(this.CLIENT_ID, guildID), {
+						body: [],
+					});
+				}));
+
+			}
+			catch (error) {
+				console.error(error);
+			}
+		})();
 	}
 
 	get globalAndContext(): Collection<string, UtsukushiCommand<any>> {
@@ -152,6 +171,7 @@ export class CommandDeployer {
 	}
 
 	async deployPrivate(options?: CommandDeployerOptions): Promise<number> {
+		await this.resetGuild();
 		const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
 		const resTab: number[] = [];
 

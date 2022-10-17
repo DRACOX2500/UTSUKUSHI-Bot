@@ -33,20 +33,6 @@ class Timeout {
 	}
 }
 
-// declare class Cache<T> {
-// 	protected cache: CacheDoubleType<T>;
-// 	protected get():CacheDoubleType<T>;
-// 	protected getMap(): Map<string, DatedObject<T>>;
-// 	protected getArray():DatedObject<T>[];
-// 	protected getByKey(key: string):Promise<DatedObject<T> | null>;
-// 	protected getByIndex(index: number):DatedObject<T> | null;
-// 	protected setMap(key:string, value:T):void;
-// 	protected setArray(value:T, index?:number):void;
-// 	protected fetchByKey(key:string):Promise<DatedObject<T>|null>;
-// 	protected clear(key:string):void;
-// 	protected reset(key:string):void;
-// }
-
 class UserCache {
 
 	private cache: Map<string, DatedObject<UserData>> = new Map();
@@ -219,9 +205,13 @@ export class UtsukushiCache {
 	readonly guilds!: GuildCache;
 	readonly global!: GlobalCache;
 
+	tempory: Map<string, any>;
+
 	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore) {
 		this.users = new UserCache(firebase);
 		this.guilds = new GuildCache(firebase);
 		this.global = new GlobalCache(firebase);
+
+		this.tempory = new Map();
 	}
 }

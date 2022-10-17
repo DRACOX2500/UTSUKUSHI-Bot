@@ -10,7 +10,7 @@ import { UtsukushiClient } from 'src/utsukushi-client';
 export class GuildCommand implements UtsukushiSlashCommand {
 	readonly command = new SlashCommandBuilder()
 		.setName('guild')
-		.setDescription('Guild informations')
+		.setDescription('Guild informations 🏛️ !')
 		.setDMPermission(false);
 
 	readonly result = async (

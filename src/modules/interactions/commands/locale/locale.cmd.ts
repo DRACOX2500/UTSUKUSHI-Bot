@@ -30,7 +30,7 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 
 	readonly command = new SlashCommandBuilder()
 		.setName('locale')
-		.setDescription('Update guild locale language (default: English-US)')
+		.setDescription('Update guild locale language (default: English-US) 🌐 !')
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
 		.addStringOption((option) =>
