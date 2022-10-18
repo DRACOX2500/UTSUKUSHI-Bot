@@ -48,17 +48,13 @@ export class NotifyCommand
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiClient
 	): Promise<void> => {
-		const subCommand = interaction.options.getSubcommand();
+		const subCommand = interaction.options.getSubcommand(true);
 
 		// SubCommand  => On
 		if (subCommand === 'on') {
 			const options: NotifyCommandOptions = {
-				channel: interaction.options.getString('channel') ?? '',
+				channel: interaction.options.getString('channel', true),
 			};
-			if (options.channel === '') {
-				interaction.reply('❌ Channel setup Failed !');
-				return;
-			}
 			await this.on(interaction, client, options);
 		}
 		// SubCommand  => off
@@ -75,10 +71,14 @@ export class NotifyCommand
 			(channel) => channel.type === ChannelType.GuildText
 		);
 		if (textchannel) {
+			const focusedOption = interaction.options.getFocused(true);
 			let res = textchannel.map((choice) => ({
 				name: choice.name,
 				value: choice.id,
 			}));
+			res = res.filter((choice) =>
+				choice.name.toLowerCase().includes(focusedOption.value.toLowerCase())
+			);
 			res = res.sort((a, b) => Sort.byName(a.name, b.name));
 			res.unshift({ name: '---', value: '-1' });
 			if (res.length >= 25) res = res.slice(0, 25);

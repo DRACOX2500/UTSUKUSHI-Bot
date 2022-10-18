@@ -29,8 +29,8 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 		client: UtsukushiClient
 	): Promise<void> => {
 		const guild = interaction.guild;
-		const option = interaction.options.getBoolean('on-off') ?? null;
-		if (!guild || option === null) {
+		const option = interaction.options.getBoolean('on-off', true);
+		if (!guild) {
 			await interaction.reply({
 				content: '❌ Options Failed !',
 				ephemeral: true,

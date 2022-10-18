@@ -61,7 +61,7 @@ export class SoundEffectCommand
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiClient
 	): Promise<void> => {
-		const subCommand = interaction.options.getSubcommand();
+		const subCommand = interaction.options.getSubcommand(true);
 		const options: SoundEffectCommandOptions = {
 			effect: interaction.options.getString('effect') ?? '',
 			name: interaction.options.getString('name') ?? '',
@@ -83,9 +83,13 @@ export class SoundEffectCommand
 		client: UtsukushiClient
 	): Promise<void> => {
 		if (interaction.options.getSubcommand() === 'play') {
+			const focusedOption = interaction.options.getFocused(true);
 			let data = client.getDatabase().global.getSoundEffects();
 
 			if (data) {
+				data = data.filter((choice) =>
+					choice.key.toLowerCase().includes(focusedOption.value.toLowerCase())
+				);
 				data.sort((a, b) => Sort.byName(a.key, b.key));
 				if (data.length >= 25) data = data.slice(0, 25);
 				await interaction.respond(

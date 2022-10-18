@@ -76,7 +76,7 @@ export class BotCommand
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiClient
 	): Promise<void> => {
-		const subCommand = interaction.options.getSubcommand();
+		const subCommand = interaction.options.getSubcommand(true);
 		const options: BotCommandOptions = {
 			activityType:
 				interaction.options.getInteger('activity-type') ?? ActivityType.Playing,

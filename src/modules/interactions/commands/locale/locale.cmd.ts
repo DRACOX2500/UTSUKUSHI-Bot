@@ -47,7 +47,7 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 		interaction: ChatInputCommandInteraction
 	): Promise<void> => {
 		const guild = await interaction.guild?.fetch();
-		const langage = interaction.options.getString('locale') ?? 'EnglishUS';
+		const langage = interaction.options.getString('locale', true);
 		const locale = Locale[langage as keyof typeof Locale];
 
 		if (!guild || !locale) {
@@ -68,7 +68,11 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 	readonly autocomplete = async (
 		interaction: AutocompleteInteraction<CacheType>
 	): Promise<void> => {
+		const focusedOption = interaction.options.getFocused(true);
 		let res = this.getAllLocale();
+		res = res.filter((choice) =>
+			choice.name.toLowerCase().includes(focusedOption.value.toLowerCase())
+		);
 		res = res.sort((a, b) => Sort.byName(a.name, b.name));
 		if (res.length >= 25) res = res.slice(0, 25);
 		await interaction.respond(res);
