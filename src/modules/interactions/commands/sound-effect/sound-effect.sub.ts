@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatInputCommandInteraction, CacheType, bold } from 'discord.js';
 import { UtsukushiClient } from 'src/utsukushi-client';
-import { YtbStream } from '@modules/system/audio/ytb-stream';
 import { YOUTUBE_VIDEO_LINK_REGEX } from 'src/constant';
 import { Converter } from '@utils/converter';
+import { YoutubeStream } from '@modules/system/audio/audio-stream';
 
 /**
  * @Options
@@ -35,10 +35,14 @@ export class SoundEffectSubCommand {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const stream = new YtbStream();
-		await stream.init(options.effect);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(options.effect);
+		if (!stream.readable) {
+			interaction.editReply('❌ Music not found !');
+			return;
+		}
+		YoutubeStream.attachEvent(stream.readable, interaction);
 
-		stream.setInfoEvent(() => {
+		stream.readable.on('info', async () => {
 			return interaction.editReply({
 				content: 'Play Sound Effect Succefully 🎶!',
 			});
@@ -47,7 +51,7 @@ export class SoundEffectSubCommand {
 		client.connection.join(channel);
 		client.connection
 			.newBotPlayer((<any>interaction).message)
-			?.playMusic(stream.get(), true);
+			?.playMusic(stream.readable, true);
 	}
 
 	protected async add(
@@ -74,7 +78,7 @@ export class SoundEffectSubCommand {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const res = await YtbStream.getYtVideoDataByURL(options.url);
+		const res = await YoutubeStream.YoutubeAudioStream.getDataByURL(options.url);
 		const duration = Converter.durationStringToNumber(res.duration);
 		if (duration && duration > 30000) {
 			await interaction.editReply({
@@ -93,3 +97,4 @@ export class SoundEffectSubCommand {
 		});
 	}
 }
+

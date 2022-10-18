@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { joinVoiceChannel, VoiceConnection } from '@discordjs/voice';
-import { Message } from 'discord.js';
-import { logger } from '../logger/logger';
-import { BotPlayer } from './bot-player';
+import { Message, VoiceChannel } from 'discord.js';
+import { logger } from '@modules/system/logger/logger';
+import { UtsukushiAudioPlayer } from './utsukushi-audio-player';
 
 export class VocalConnection {
-	connection: VoiceConnection | null = null;
-	botPlayer: BotPlayer | null = null;
+	connection: VoiceConnection | undefined = undefined;
+	botPlayer: UtsukushiAudioPlayer | undefined = undefined;
 
-	join(channel: any): void {
+	join(channel: VoiceChannel): void {
 		this.connection = joinVoiceChannel({
 			channelId: channel.id,
 			guildId: channel.guild.id,
@@ -24,18 +24,19 @@ export class VocalConnection {
 
 		this.connection?.on('error', (error) => {
 			logger.error({ tag: 'Voice Connection' }, error.message);
+			this.killConnection();
 		});
 	}
 
-	newBotPlayer(message: Message): BotPlayer | null {
-		if (!this.connection) return null;
-		this.botPlayer = new BotPlayer(message, this.connection);
+	newBotPlayer(message: Message): UtsukushiAudioPlayer | undefined {
+		if (!this.connection) return undefined;
+		this.botPlayer = new UtsukushiAudioPlayer(message, this.connection);
 		return this.botPlayer;
 	}
 
 	killConnection(): void {
 		this.botPlayer?.player.stop();
-		this.botPlayer = null;
+		this.botPlayer = undefined;
 		this.connection?.destroy();
 	}
 }

@@ -10,8 +10,9 @@ import {
 } from '@discordjs/voice';
 import { Message } from 'discord.js';
 import { logger } from '@modules/system/logger/logger';
+import { Readable } from 'stream';
 
-export class BotPlayer {
+export class UtsukushiAudioPlayer {
 	player: AudioPlayer;
 
 	resource: AudioResource<any> | null;
@@ -54,7 +55,7 @@ export class BotPlayer {
 	 * @param source string
 	 * @param opti boolean
 	 */
-	playMusic(source: string, opti = false): void {
+	playMusic(source: string | Readable, opti = false): void {
 		if (!source) return;
 
 		this.resource = createAudioResource<any>(source, { inlineVolume: !opti });

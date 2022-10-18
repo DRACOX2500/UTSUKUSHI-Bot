@@ -140,7 +140,7 @@ export class CommandManager {
 			await Promise.resolve(command.result(interaction, client));
 		}
 		catch (error) {
-			console.error(error);
+			logger.error({ tag: 'interactionChatInput' }, (<Error>error).message);
 			await interaction
 				.reply({
 					content: 'There was an error while executing this command!',

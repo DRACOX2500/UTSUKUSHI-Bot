@@ -1,5 +1,6 @@
 export const TWITCH_LINK = 'https://www.twitch.tv/*';
 
+export const SPOTIFY_TRACK_LINK_REGEX = /^https?:\/\/open\.spotify\.com\/track\/.+$/;
 export const YOUTUBE_MOBILE_VIDEO_LINK_REGEX = /^https:\/\/youtu\.be\/.+$/;
 export const YOUTUBE_VIDEO_LINK_REGEX =
 	/(^https:\/\/www\.youtube\.com\/watch\?v=.+$)|(^https:\/\/youtu\.be\/.+$)/;
@@ -10,6 +11,7 @@ export const RED_FUEL_PUMP = 'https://emojipedia-us.s3.dualstack.us-west-1.amazo
 
 export const LOGO_SOURCES = {
 	YOUTUBE: 'https://img.icons8.com/color/344/youtube-play.png',
+	SPOTIFY: 'https://img.icons8.com/color/344/spotify.png',
 };
 
 export const BUTTON = {

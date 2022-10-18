@@ -59,6 +59,8 @@ class UserCache {
 		return this.fetchByKey(key);
 	}
 	set(key:string, value:UserData):void {
+		const map = this.cache.get(key);
+		if (map) value.keywords = map.value.keywords.concat(value.keywords);
 		this.cache.set(key, { value: value, date: Date.now() });
 		this.firebase.collections.user.set(key, value);
 		this.cleaner.reset();

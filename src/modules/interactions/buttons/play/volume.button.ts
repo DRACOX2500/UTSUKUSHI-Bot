@@ -6,7 +6,7 @@ import {
 	ButtonStyle,
 	EmbedBuilder,
 } from 'discord.js';
-import { BotPlayer } from '@modules/system/audio/bot-player';
+import { UtsukushiAudioPlayer } from 'root/src/modules/system/audio/utsukushi-audio-player';
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { BUTTON } from 'src/constant';
 import { UtsukushiButton } from '@models/utsukushi-interaction.model';
@@ -42,7 +42,7 @@ export namespace VolumeButtons {
 			client.connection.botPlayer?.volumeDown();
 
 			(<APIEmbedField[]>interaction.message.embeds[0].data.fields)[5].value =
-				(<BotPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
+				(<UtsukushiAudioPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vDownEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
 			interaction.message.edit({ embeds: [vDownEmbed] });
@@ -71,7 +71,7 @@ export namespace VolumeButtons {
 			client.connection.botPlayer?.volumeUp();
 
 			(<APIEmbedField[]>interaction.message.embeds[0].data.fields)[5].value =
-				(<BotPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
+				(<UtsukushiAudioPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vUpEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
 			interaction.message.edit({ embeds: [vUpEmbed] });
