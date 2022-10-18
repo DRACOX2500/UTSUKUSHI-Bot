@@ -7,7 +7,6 @@ import {
 	CacheType,
 } from 'discord.js';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
-import { Sort } from '@utils/sort';
 
 type Choice = {
 	name: string;
@@ -18,7 +17,6 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 	private getAllLocale(): Choice[] {
 		const choices: Choice[] = [];
 		for (const key in Locale) {
-			if (choices.length >= 25) continue;
 			choices.push({
 				name: key,
 				value: key,
@@ -73,7 +71,6 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 		res = res.filter((choice) =>
 			choice.name.toLowerCase().includes(focusedOption.value.toLowerCase())
 		);
-		res = res.sort((a, b) => Sort.byName(a.name, b.name));
 		if (res.length >= 25) res = res.slice(0, 25);
 		await interaction.respond(res);
 	};
