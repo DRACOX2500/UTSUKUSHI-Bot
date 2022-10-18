@@ -53,3 +53,28 @@ export const API = {
 		ERROR: '🥲 Sorry but no burger has been found 🍔!',
 	},
 };
+
+export const PLAY_TOGETHER_ACTIVITY = [
+	{ name:'youtube', actif: true },
+	{ name:'youtubedev', actif: false },
+	{ name:'poker', actif: null },
+	{ name:'betrayal', actif: false },
+	{ name:'fishing', actif: false },
+	{ name:'chess', actif: null },
+	{ name:'chessdev', actif: false },
+	{ name:'lettertile', actif: false },
+	{ name:'wordsnack', actif: false },
+	{ name:'doodlecrew', actif: false },
+	{ name:'awkword', actif: false },
+	{ name:'spellcast', actif: false },
+	{ name:'checkers', actif: null },
+	{ name:'puttparty', actif: false },
+	{ name:'sketchheads', actif: null },
+	{ name:'ocho', actif: false },
+	{ name:'puttpartyqa', actif: false },
+	{ name:'sketchyartist', actif: false },
+	{ name:'land', actif: null },
+	{ name:'meme', actif: false },
+	{ name:'askaway', actif: false },
+	{ name:'bobble', actif: false },
+];

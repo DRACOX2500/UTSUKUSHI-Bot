@@ -4,8 +4,8 @@ import { UtsukushiClient } from 'src/utsukushi-client';
 import { buttons } from '@modules/interactions/buttons/speak-as-bot/speak-as-bot.button';
 
 /**
- * @SlashCommand `ping`
- *  - `ping` : Reply with pong message
+ * @SlashCommand `speak-as-bot`
+ *  - `speak-as-bot [message] [attechment]` : Send a message as Utsukushi Bot
  */
 export class SpeakAsBotCommand implements UtsukushiSlashCommand {
 	readonly command = new SlashCommandBuilder()
