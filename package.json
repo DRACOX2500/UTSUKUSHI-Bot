@@ -4,7 +4,7 @@
     "main": "index.ts",
     "scripts": {
         "start": "node -r tsconfig-paths/register -r ts-node ./dist/index.js",
-        "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist",
+        "build-dev": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist",
         "restart": "npm run build & npm start",
         "test": "jest",
         "lint": "eslint . --ext .ts"

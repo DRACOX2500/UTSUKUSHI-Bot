@@ -15,7 +15,7 @@ import { NodeJSErrorManager } from '@errors/nodejs-error-manager';
 import { BotMessageRemoverManager } from '@modules/system/bot-message-remover';
 import { CommandDeployer } from '@modules/interactions/command-deployer';
 import { UtsukushiCache } from '@database/utsukushi-cache';
-import { UtsukushiFirebase } from 'root/src/database/_firebase';
+import { UtsukushiFirebase } from 'root/src/database/firebase';
 
 config({ path: '.env' });
 
