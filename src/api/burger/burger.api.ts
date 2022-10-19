@@ -27,6 +27,7 @@ export class BurgerAPI {
 			(error: Error) => {
 				return this.burgerError(error);
 			}
-		);
+		)
+			.catch(() => this.burgerError());
 	}
 }

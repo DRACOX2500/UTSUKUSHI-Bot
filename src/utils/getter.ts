@@ -8,12 +8,12 @@ export namespace Getter {
 	}
 
 	export function urlQueryParam(url: string, query: string): string {
-		const pair = url.split('?')[1].split('=');
+		const pair = url.split('?')[1].split('&');
 
-		if (pair.length % 2 !== 0) return '';
 		const m = new Map();
-		for (let i = 0; i < pair.length; i += 2) {
-			m.set(pair[i], pair[i + 1]);
+		for (let i = 0; i < pair.length; i++) {
+			const array = pair[i].split('=');
+			m.set(array[0], array[1]);
 		}
 		return m.get(query);
 	}

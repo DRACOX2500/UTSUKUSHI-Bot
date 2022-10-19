@@ -4,9 +4,7 @@
 
 import { Converter } from '@utils/converter';
 import { Getter } from '@utils/getter';
-import { UtsukushiClient } from 'src/utsukushi-client';
-
-export const client = new UtsukushiClient(true);
+import { Sort } from '@utils/sort';
 
 describe('Utils Module', () => {
 
@@ -16,11 +14,22 @@ describe('Utils Module', () => {
 		expect(number).toBeGreaterThanOrEqual(0);
 	});
 
+	test('Get Query Param in URL', () => {
+		const url = 'https://www.example.com/home?t=5200&name=test&query=search';
+		expect(Getter.urlQueryParam(url, 'name')).toBe('test');
+	});
+
 	test('Seconds To Minute/Secondes Format', () => {
 		expect(Converter.secondsToMinutesSecondsFormat(90)).toBe('01:30');
 	});
 
-	test('Convert 24h string into milliseconds number', () => {
+	test('Convert 24h String Into Milliseconds Number', () => {
 		expect(Converter.durationStringToNumber('24:00:00')).toBe(86400000);
+	});
+
+	test('Sort By Name', () => {
+		const array = ['xyz', 'hij', 'mno', 'abd'];
+		array.sort((a: string, b: string) => Sort.byName(a, b));
+		expect(array).toStrictEqual(['abd', 'hij', 'mno', 'xyz']);
 	});
 });

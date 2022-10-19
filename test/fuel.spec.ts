@@ -35,6 +35,7 @@ describe('Fuel Module', () => {
 	});
 
 	test('Test Fuel Embed', async () => {
+		jest.setTimeout(20000);
 		let embed = null;
 		const response = await getApiResponse();
 		if (response) {
@@ -45,6 +46,7 @@ describe('Fuel Module', () => {
 	});
 
 	test('Test Fuel Embed', async () => {
+		jest.setTimeout(20000);
 		let image = null;
 		const response = await getApiResponse();
 		if (response) {
