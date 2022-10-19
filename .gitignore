@@ -3,10 +3,17 @@ node_modules/
 
 #Coverage
 coverage/
+*/coverage/
 
 #TypeScript
 dist/
 
 #local
+logs/*.log
 .env
-assets/*.webp
+src/assets/*.webp
+utsukushi.config.json
+
+#IDE
+.vscode/
+.idea/

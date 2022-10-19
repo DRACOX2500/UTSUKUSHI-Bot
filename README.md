@@ -1,6 +1,6 @@
 # UTSUKUSHI BOT (Discord-Bot)
 ![](https://img.shields.io/badge/Discord%20JS-14-blueviolet)
-![](https://img.shields.io/badge/Version-1.1.1-success)
+![](https://img.shields.io/badge/Version-1.2-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
@@ -20,13 +20,38 @@ Discord Bot for my private Discord Server & friends server.
 - **[Staticmaps](https://www.npmjs.com/package/staticmaps)** : 1.10.0                   # Get Static Map Images
 - **[Ytsr](https://www.npmjs.com/package/ytsr)** : 3.8.0                                # Youtube Search Service
 
+## Installation
+
+1. Clone projet : `git clone https://github.com/DRACOX2500/Discord-Bot.git`
+
+2. Install / Update packages manager  
+- Install **NodeJS** latest LTS version (*current : 17.10.1*)
+- Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 8.19.2*)
+- *Only Linux* : `apt install libtool` 
+
+3. Install dependencies
+- Execute following command : `npm i`
+- Install TypeScript & TypeScriptPath (Global) : `npm i -g typescript tspath`
+- If an **Opus error** is returned, try to remone project directory and reclone project
+
+4. Environment Variables
+- Copy or Rename `.env.example` into `.env`
+- Complete the *.env file* with your values
+
+5. Start Utsukushi Project
+- Build : `npm run build`
+- Start : `npm start`
+- Build + Start : `npm restart`
+
+![](./docs/img/start.png)
+
 ## Interaction
-![](https://img.shields.io/badge/Slash_Commands-9-success)
+![](https://img.shields.io/badge/Slash_Commands-13-success)
 ![](https://img.shields.io/badge/Context_Menus-1-success)
 
 ### Commands
 
-Commands détails available in **[Commands.md](./.github/readme/commands.md)**
+Commands détails available in **[Commands.md](./docs/commands.md/commands.md)**
 
 ### Context Menus
 
@@ -38,7 +63,7 @@ source: [discordjs.guide](https://discordjs.guide/interactions/context-menus.htm
 
 #### Delete Up To This
 
-![](./.github/readme/ContextMenu.png)
+![](./docs/img/ContextMenu.png)
 
 Select a message, right click and select this options to delete all messages until selected message (selected message include)
 

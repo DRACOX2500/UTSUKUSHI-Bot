@@ -1,0 +1,6 @@
+{
+    "privateCommands" : [
+        { "bot" : [] }
+    ],
+    "resetGuilds": []
+}
