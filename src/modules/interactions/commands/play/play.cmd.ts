@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	SlashCommandBuilder,
@@ -7,10 +8,16 @@ import {
 	AutocompleteInteraction,
 	CacheType,
 } from 'discord.js';
-import { PlayerEmbed } from '@modules/system/embeds/play.embed';
 import { UtsukushiClient } from 'src/utsukushi-client';
-import { YtbStream } from '@modules/system/audio/ytb-stream';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
+import { YoutubeStream } from '@modules/system/audio/audio-stream';
+import { PlayReply } from './play.reply';
+
+const enum Platform {
+	Youtube = 'youtube',
+	// Spotify = 'spotify',
+	// Soundcloud = 'soundcloud',
+}
 
 /**
  * @SlashCommand `play`
@@ -50,9 +57,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 		await interaction.deferReply();
 
-		let url: string = <string>(
-			interaction.options.get('song')?.value?.toString()
-		);
+		let url = interaction.options.getString('song');
 		const opti: boolean =
 			!!interaction.options.get('optimization')?.value ?? false;
 
@@ -69,23 +74,21 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 			}
 		}
 
-		const stream = new YtbStream();
-		await stream.init(url, interaction);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(url);
 
-		if (!stream.isFound) {
+		if (!stream.readable) {
 			interaction.editReply('❌ Music not found !');
 			return;
 		}
+		YoutubeStream.attachEvent(stream.readable, interaction);
 
-		stream.setInfoEvent(async (info: any) => {
-			const embedPlayer = new PlayerEmbed(info, opti);
-
-			const embed = embedPlayer.getEmbed();
-			const comp = embedPlayer.getButtonMenu();
-			(<any>interaction).editReply({ embeds: [embed], components: [comp] });
+		stream.readable.on('info', async (info: any) => {
+			if (!url || !stream) return;
+			const reply = new PlayReply(info, Platform.Youtube, opti);
+			interaction.editReply(reply);
 
 			client.getDatabase().guilds.set(<string>interaction.guildId, {
-				lastPlayURL: stream.video.url,
+				lastPlayURL: stream.url,
 			});
 			const keywordsCache = await client
 				.getDatabase()
@@ -97,7 +100,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		client.connection.join(VoiceChannel);
 		client.connection
 			.newBotPlayer((<any>interaction).message)
-			?.playMusic(stream.get(), opti);
+			?.playMusic(stream.readable, opti);
 	};
 
 	readonly autocomplete = async (
@@ -130,8 +133,11 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		if (!interaction) return;
 
 		const url = <string>interaction.message.embeds[0].url;
-		const stream = new YtbStream();
-		await stream.init(url);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(url);
+		if (!stream.readable) {
+			interaction.editReply('❌ Music not found !');
+			return;
+		}
 
 		const VoiceChannel = (<any>interaction).member.voice.channel;
 		if (!VoiceChannel) return interaction.deferUpdate();
@@ -139,7 +145,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		client.connection.join(VoiceChannel);
 		client.connection
 			.newBotPlayer(interaction.message)
-			?.playMusic(stream.get());
+			?.playMusic(stream.readable);
 	};
 }
 
