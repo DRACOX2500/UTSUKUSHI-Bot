@@ -162,7 +162,7 @@ class GlobalCache {
 
 	setSoundEffects(effects:GlobalDataSoundEffect[]) {
 		this.firebase.collections.global.soundEffects.set(effects);
-		this.soundeffects = effects;
+		this.soundeffects = this.soundeffects.concat(effects);
 	}
 
 	getSoundEffects(): GlobalDataSoundEffect[] {
@@ -179,7 +179,7 @@ class GlobalCache {
 	async setEmojis(emojis: GlobalDataEmoji[]): Promise<boolean> {
 		const res = await this.firebase.collections.global.emojis.set(...emojis);
 		if (!res) return false;
-		this.emojis = emojis;
+		this.emojis = this.emojis.concat(emojis);
 		return res;
 	}
 
