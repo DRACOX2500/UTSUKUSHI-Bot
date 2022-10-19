@@ -67,7 +67,7 @@ export class UtsukushiClient extends Client {
 
 		const authDB = !!+(process.argv[2] ?? 1);
 		if (authDB) {
-			const database = new UtsukushiFirebase.UtsukushiFirestore(this.FIREBASE_TOKEN, auth, (firestore) => {
+			const database = new UtsukushiFirebase.UtsukushiFirestore(this.FIREBASE_TOKEN, auth, (firestore: UtsukushiFirebase.UtsukushiFirestore) => {
 				this.memory = new UtsukushiCache(firestore);
 				this.initEvents();
 			},

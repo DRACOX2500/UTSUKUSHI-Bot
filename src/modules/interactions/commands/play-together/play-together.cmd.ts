@@ -55,8 +55,8 @@ export class PlayTogetherCommand implements UtsukushiSlashCommand {
 		}
 
 		const activity = interaction.options.getString('activity', true);
-		client.discordTogether = new DiscordTogether(client);
-		const invite: { code: string; } = await client.discordTogether.createTogetherCode((<any>interaction.member).voice.channel.id, activity);
+		const discordTogether = new DiscordTogether(client);
+		const invite: { code: string; } = await discordTogether.createTogetherCode((<any>interaction.member).voice.channel.id, activity);
 		await interaction.reply(invite.code);
 	};
 }

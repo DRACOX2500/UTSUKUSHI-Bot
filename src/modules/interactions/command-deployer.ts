@@ -76,7 +76,7 @@ export class CommandDeployer {
 			const rest = new REST({ version: '10' }).setToken(this.DISCORD_TOKEN);
 			const guilds = config.resetGuilds;
 			try {
-				await Promise.all(guilds.map(async (guildID) => {
+				await Promise.all(guilds.map(async (guildID: string) => {
 					await rest.put(Routes.applicationGuildCommands(this.CLIENT_ID, guildID), {
 						body: [],
 					});
