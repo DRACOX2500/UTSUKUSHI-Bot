@@ -28,6 +28,7 @@ export namespace ReactAsBotButtons {
 			const start = +s1[0];
 			const reply = new ReactAsBotContextReply(targetId, emojis, start + 24);
 
+			await mes.delete();
 			await interaction.reply({ ...reply, ephemeral: true });
 		};
 	}

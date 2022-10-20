@@ -1,4 +1,5 @@
 import {
+	bold,
 	CacheType,
 	SelectMenuBuilder,
 	SelectMenuComponentOptionData,
@@ -54,7 +55,12 @@ export class ReactAsBotSelect extends SelectMenuBuilder {
 		}
 		const mesTarget = await interaction.channel.messages.fetch(targetId);
 		interaction.values.forEach((value) => {
-			mesTarget.react(value);
+			mesTarget.react(value).catch((error: Error) => {
+				if (error.message === 'Unknown Emoji') {
+					const emojiName = value.split(':')[1];
+					interaction.followUp({ content: `❌ This emoji (${bold(emojiName)}) is not supported !`, ephemeral: true });
+				}
+			});
 		});
 		interaction.deferUpdate();
 	}
