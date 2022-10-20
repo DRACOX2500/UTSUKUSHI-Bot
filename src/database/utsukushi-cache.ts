@@ -181,8 +181,15 @@ class GlobalCache {
 	async setEmojis(emojis: GlobalDataEmoji[]): Promise<boolean> {
 		const res = await this.firebase.collections.global.emojis.set(...emojis);
 		if (!res) return false;
-		this.emojis = this.emojis
-			.concat(emojis);
+		const uniqueIds = new Set();
+		this.emojis = this.emojis.concat(emojis).filter(element => {
+			const isDuplicate = uniqueIds.has(element.id);
+			uniqueIds.add(element.id);
+			if (!isDuplicate) {
+				return true;
+			}
+			return false;
+		});
 		return res;
 	}
 

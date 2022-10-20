@@ -1,11 +1,11 @@
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { UtsukushiEvent } from '@models/utsukushi-interaction.model';
-import { Guild } from 'discord.js';
+import { Guild, GuildEmoji } from 'discord.js';
 import { GlobalDataEmoji } from '@models/firebase/document-data.model';
 
 class EmojiListUpdateEvent implements UtsukushiEvent {
 
-	private async updateGuildEmojiListInDatabase(guild: Guild, client: UtsukushiClient) {
+	private async updateGuildEmojiListInDatabase(guild: Guild, client: UtsukushiClient, target?: GuildEmoji) {
 		const guildCache = await client.getDatabase().guilds.getByKey(guild.id);
 		if (!guildCache || !guildCache.value.shareEmojis) return;
 
@@ -17,7 +17,12 @@ class EmojiListUpdateEvent implements UtsukushiEvent {
 				name: emoji.name,
 			};
 		});
-		await client.getDatabase().global.deleteEmojis(emojiArray);
+
+
+		if (target) {
+			const old = [...emojiArray, <GlobalDataEmoji>{ animated: target.animated, id: target.id, name: target.name }];
+			await client.getDatabase().global.deleteEmojis(old);
+		}
 		await client.getDatabase().global.setEmojis(emojiArray);
 	}
 
@@ -28,11 +33,11 @@ class EmojiListUpdateEvent implements UtsukushiEvent {
 		});
 		client.on('emojiUpdate', (oldEmoji, emoji) => {
 			const guild = emoji.guild;
-			this.updateGuildEmojiListInDatabase(guild, client);
+			this.updateGuildEmojiListInDatabase(guild, client, oldEmoji);
 		});
 		client.on('emojiDelete', (emoji) => {
 			const guild = emoji.guild;
-			this.updateGuildEmojiListInDatabase(guild, client);
+			this.updateGuildEmojiListInDatabase(guild, client, emoji);
 		});
 	};
 }
