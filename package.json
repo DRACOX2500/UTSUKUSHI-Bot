@@ -5,7 +5,7 @@
     "scripts": {
         "start": "node -r tsconfig-paths/register -r ts-node ./dist/index.js",
         "build-dev": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist",
-        "restart": "npm run build & npm start",
+        "restart": "npm run build-dev & npm start",
         "test": "jest",
         "lint": "eslint . --ext .ts"
     },
