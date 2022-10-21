@@ -35,7 +35,7 @@ export class SoundEffectSubCommand {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(options.effect);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByUrl(options.effect);
 		if (!stream.readable) {
 			interaction.editReply('❌ Music not found !');
 			return;
