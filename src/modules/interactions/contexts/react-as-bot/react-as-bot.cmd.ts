@@ -36,8 +36,9 @@ export class ReactAsBotContext implements UtsukushiMessageContextCommand {
 			return;
 		}
 		const targetId = interaction.targetId;
+		const targetUrl = interaction.targetMessage.url;
 
-		const reply = new ReactAsBotContextReply(targetId, emojis, 0);
+		const reply = new ReactAsBotContextReply(targetId, targetUrl, emojis, 0);
 
 		await interaction.editReply(reply);
 	};

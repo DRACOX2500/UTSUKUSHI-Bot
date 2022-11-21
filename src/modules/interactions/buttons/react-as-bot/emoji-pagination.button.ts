@@ -22,11 +22,12 @@ export namespace ReactAsBotButtons {
 			const emojis = client.getDatabase().global.getEmojis();
 
 			const mes = interaction.message;
-			const targetId = mes.content.split('#')[1].split(' with')[0];
+			const targetId = mes.content.split('[#')[1].split('](')[0];
+			const targetUrl = mes.content.split('](')[1].split(') with')[0];
 
-			const s1 = mes.content.split('(')[1].split(' to ');
+			const s1 = mes.content.split('(**')[1].split('** to **');
 			const start = +s1[0];
-			const reply = new ReactAsBotContextReply(targetId, emojis, start + 24);
+			const reply = new ReactAsBotContextReply(targetId, targetUrl, emojis, start + 24);
 
 			await interaction.reply({ ...reply, ephemeral: true });
 		};
@@ -48,11 +49,12 @@ export namespace ReactAsBotButtons {
 			const emojis = client.getDatabase().global.getEmojis();
 
 			const mes = interaction.message;
-			const targetId = mes.content.split('#')[1].split(' with')[0];
+			const targetId = mes.content.split('[#')[1].split('](')[0];
+			const targetUrl = mes.content.split('](')[1].split(') with')[0];
 
-			const s1 = mes.content.split('(')[1].split(' to ');
+			const s1 = mes.content.split('(**')[1].split('** to **');
 			const start = +s1[0];
-			const reply = new ReactAsBotContextReply(targetId, emojis, start - 24);
+			const reply = new ReactAsBotContextReply(targetId, targetUrl, emojis, start - 24);
 
 			await interaction.reply({ ...reply, ephemeral: true });
 		};
