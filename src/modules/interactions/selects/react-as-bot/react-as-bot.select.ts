@@ -48,7 +48,7 @@ export class ReactAsBotSelect extends SelectMenuBuilder {
 		interaction: SelectMenuInteraction<CacheType>
 	): Promise<void> {
 		const mes = interaction.message;
-		const targetId = mes.content.split('#')[1].split(' with')[0];
+		const targetId = mes.content.split('[#')[1].split('](')[0];
 		if (!targetId || !interaction.channel) {
 			interaction.deferUpdate();
 			return;

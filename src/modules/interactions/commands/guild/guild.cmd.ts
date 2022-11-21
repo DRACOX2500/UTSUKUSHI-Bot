@@ -22,7 +22,7 @@ export class GuildCommand implements UtsukushiSlashCommand {
 
 		await interaction.deferReply();
 
-		const embed = new GuildEmbed(guild, client);
+		const embed = new GuildEmbed(guild, client, interaction);
 		const em = await embed.getEmbed();
 		const emExtra = await embed.getEmbedExtra();
 		await interaction.editReply({ embeds: [em, emExtra] });

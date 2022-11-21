@@ -5,6 +5,8 @@ import {
 	APIMessageComponentEmoji,
 	SelectMenuBuilder,
 	ButtonBuilder,
+	bold,
+	hyperlink,
 } from 'discord.js';
 import { ReactAsBotSelect } from '@modules/interactions/selects/react-as-bot/react-as-bot.select';
 import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
@@ -16,6 +18,7 @@ export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 
 	constructor(
 		private targetId: string,
+		private targetUrl: string,
 		private emojis: APIMessageComponentEmoji[],
 		private start = 0
 	) {
@@ -31,8 +34,8 @@ export class ReactAsBotContextReply implements WebhookEditMessageOptions {
 		}
 		emojis.sort((a, b) => { return Sort.byName(<string>a.name, <string>b.name); });
 		this.content =
-			`React to message #${this.targetId} with an emoji!\n` +
-			`Choose an emoji ! (${this.start + 1} to ${limit + 1} - ${
+			`React to message ${(hyperlink('#' + this.targetId, this.targetUrl))} with an emoji 👍!\n` +
+			`Choose an emoji ! (${bold(String(this.start + 1))} to ${bold(String(limit + 1))} - ${
 				this.emojis.length
 			})`;
 		this.components = [

@@ -33,7 +33,7 @@ export class NotifyCommand
 				.addStringOption((option) =>
 					option
 						.setName('channel')
-						.setDescription('Disable the notification system in your guild 🔕!')
+						.setDescription('The channel you want to be notified !')
 						.setAutocomplete(true)
 						.setRequired(true)
 				)
@@ -41,7 +41,7 @@ export class NotifyCommand
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('off')
-				.setDescription('Play Sound Effect in Vocal Channel 🔊🎶!')
+				.setDescription('Disable the notification system in your guild 🔕!')
 		);
 
 	readonly result = async (
