@@ -1,4 +1,4 @@
-import { bold, EmbedBuilder, Guild, italic, time } from 'discord.js';
+import { bold, ChatInputCommandInteraction, EmbedBuilder, Guild, italic, time } from 'discord.js';
 import { EmbedGuildData } from '@models/embeds/embed-guild-data.model';
 import { UtsukushiClient } from 'src/utsukushi-client';
 
@@ -7,12 +7,18 @@ export class GuildEmbed {
 	guild: EmbedGuildData;
 	client: UtsukushiClient;
 
-	constructor(guild: Guild, client: UtsukushiClient) {
+	private joinedAt!: Date;
+
+	constructor(guild: Guild, client: UtsukushiClient, interaction: ChatInputCommandInteraction) {
 		this.guildSource = guild;
 		this.guild = <EmbedGuildData>(<unknown>guild);
 		this.guild.iconUrl = guild.iconURL() ?? '';
 		this.guild.bannerUrl = guild.bannerURL() ?? '';
 		this.client = client;
+		interaction.guild?.members.fetch(interaction.user.id)
+			.then(user => {
+				this.joinedAt = <Date>user.joinedAt;
+			});
 	}
 
 	async getEmbed(): Promise<EmbedBuilder> {
@@ -32,7 +38,7 @@ export class GuildEmbed {
 			.setThumbnail(this.guild.iconUrl)
 			.setFields(
 				{ name: 'Created At', value: time(this.guild.createdAt) },
-				{ name: 'Joined At', value: time(this.guild.joinedAt) },
+				{ name: 'Joined At', value: time(this.joinedAt) },
 				{ name: 'Member Count', value: String(this.guild.memberCount) },
 				{
 					name: 'Booster Count',
