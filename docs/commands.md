@@ -53,12 +53,12 @@
 | **Version**     | 1.0.0                                                 |
 | **Description** | bot come in your voice channel and snores very loudly |
 
-### **/play `song (url_or_keywords)`** 
+### **/play `song (url_or_keywords)` `opti: bool [optional]`** 
 ![](https://img.shields.io/badge/Utsukushi-v1.0.0-yellow)
 
 |                 |                                                                   |
 |-----------------|-------------------------------------------------------------------|
-| **Version**     | 1.1.0                                                             |
+| **Version**     | 1.2.0                                                             |
 | **Description** | search music by URL or Keywords and play it in your voice channel |
 
 <img src="./img/play.png" width="400" alt="slash command play response">
@@ -68,6 +68,7 @@
 - Autocompletion when you choose your favorite music !
 - Increased sound quality !
 - Optimisation Options Available ( *! volume control off !* )
+- **✨ 1.2.0**: By default, play the last song played
 
 Buttons menu :
 
