@@ -108,6 +108,7 @@ Buttons menu :
 | **Version**     | 1.1.0                                                                               |
 | **Formerly**    | - /notify `channel: channel_name`                                                   |
 | **Description** | choose a channel, and UTSUKUSHI will notify you when someone enters a voice channel |
+
 ![](./img/notify.png)
 
 ### **/fuel `fuel: fuel_type` `search: search_method` `value: text`** 
