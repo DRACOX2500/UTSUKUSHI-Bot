@@ -25,47 +25,79 @@ Discord Bot for my private Discord Server & friends server.
 1. Clone projet : `git clone https://github.com/DRACOX2500/Discord-Bot.git`
 
 2. Install / Update packages manager  
-- Install **NodeJS** latest LTS version (*current : 17.10.1*)
-- Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 8.19.2*)
-- *Only Linux* : `apt install libtool` 
+   - Install **NodeJS** latest LTS version (*current : 17.10.1*)
+   - Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 8.19.2*)
+   - *Only Linux* : `apt install libtool` 
 
 3. Install dependencies
-- Execute following command : `npm i`
-- Install TypeScript & TypeScriptPath (Global) : `npm i -g typescript tspath`
-- If an **Opus error** is returned, try to remone project directory and reclone project
+   - Execute following command : `npm i`
+   - Install TypeScript & TypeScriptPath (Global) : `npm i -g typescript tspath`
+   - If an **Opus error** is returned, try to remone project directory and reclone project
 
 4. Environment Variables
-- Copy or Rename `.env.example` into `.env`
-- Complete the *.env file* with your values
+   - Copy or Rename `.env.example` into `.env`
+   - Complete the *.env file* with your values
 
 5. Start Utsukushi Project
-- Build : `npm run build`
-- Start : `npm start`
-- Build + Start : `npm restart`
+   - Build : `npm run build`
+   - Start : `npm start`
+   - Build + Start : `npm restart`
 
 ![](./docs/img/start.png)
 
 ## Interaction
-![](https://img.shields.io/badge/Slash_Commands-13-success)
-![](https://img.shields.io/badge/Context_Menus-1-success)
+![](https://img.shields.io/badge/Slash_Commands-17-success)
+![](https://img.shields.io/badge/Context_Menus-3-success)
 
-### Commands
+### Slash Commands
 
-Commands détails available in **[Commands.md](./docs/commands.md/commands.md)**
+Status : 
+   - ✅ stable
+   - 🧪 experimental
+   - ❌ deprecated
+
+|             **Name**              | **Description**                                                                                                                                                                                                                       | **Permission** | **DM** |       **status**       |
+|:---------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------:|:------:|:----------------------:|
+|            /big-burger            | Return a random burger picture                                                                                                                                                                                                        |      _No_      |   ✅    |  [❌](# "deprecated")   |
+|   [⭐](# "New")<br>/bot activity   | Set Utsukushi activity, Select activity type : <br> Play, Listen, Stream, Competing, Watch <br> And Enter an activity message                                                                                                         |      _No_      |   ✅    |    [✅](# "stable")     |
+|    [⭐](# "New")<br>/bot status    | Set Utsukushi status : <br> Online, Idle, Do not Disturb, Invisible                                                                                                                                                                   |      _No_      |   ✅    |    [✅](# "stable")     |
+|     [✨](# "Update")<br>/cache     | Manage your cache in Utsukushi Database :<br> - Delete: delete all your data in Utsukushi database<br>- Show: Utsukushi sends you your data in DM                                                                                     |      _No_      |   ✅    |    [✅](# "stable")     |
+|               /fuel               | (Only for france - Governmental API) <br>Search fuel data (Address, Services, Updated Date, Fuel Cost, City, Department, Region) map include !                                                                                        |      _No_      |   ✅    |    [✅](# "stable")     |
+|               /git                | Return Utsukushi Bot Github Repo                                                                                                                                                                                                      |      _No_      |   ✅    |    [✅](# "stable")     |
+|      [⭐](# "New")<br>/guild       | Return Guild information (Created At, Joined At, Member Count, Booster Count, Locale, Emojis, Stickers, Roles, Banned Users)                                                                                                          |      _No_      |   ❌    |    [✅](# "stable")     |
+|  [⭐](# "New")/guild-share-emoji   | Authorize the guild to share emojis with Utsukushi and other guild                                                                                                                                                                    |  ManageGuild   |   ❌    |    [✅](# "stable")     |
+|      [⭐](# "New")<br>/locale      | Change the local language of your guild                                                                                                                                                                                               |  ManageGuild   |   ❌    |    [✅](# "stable")     |
+|      [⭐](# "New")/notify on       | Choose a channel to notify when someone connects to a voice channel                                                                                                                                                                   |  ManageGuild   |   ❌    |    [✅](# "stable")     |
+|      [⭐](# "New")/notify off      | Disable notify system                                                                                                                                                                                                                 |  ManageGuild   |   ❌    |    [✅](# "stable")     |
+|               /ping               | 🤖 All bots started like this (Historic Command)                                                                                                                                                                                      |      _No_      |   ✅    |    [✅](# "stable")     |
+|               /play               | Play a music in voice channel, By default, plays the last music played (You can manage music with embed & buttons). <br>Search the music by keywords or YouTube URL, The keywords will be saved in the database and can be used later |      _No_      |   ❌    | [🧪](# "experimental") |
+|  [⭐](# "New")<br>/play-together   | Start a Discord Activity in voice Channel                                                                                                                                                                                             |      _No_      |   ❌    |  [❌](# "deprecated")   |
+| [⭐](# "New")<br>/soundeffect play | Play sound effect in voice channel                                                                                                                                                                                                    |      _No_      |   ❌    |    [✅](# "stable")     |
+| [⭐](# "New")<br>/soundeffect add  | Add sound effect in Utsukushi Database (30sec max only)                                                                                                                                                                               |      _No_      |   ❌    |    [✅](# "stable")     |
+|   [⭐](# "New")<br>/speak-as-bot   | Send a message as bot (attachment available)                                                                                                                                                                                          |      _No_      |   ✅    |    [✅](# "stable")     |
+
+
+More slash command details available in **[Commands.md](./docs/commands.md)**
 
 ### Context Menus
 
 #### What is a context menu ?
 
-*"Context Menus are application commands which appear when right clicking or tapping a user or a message, in the Apps submenu."*
+*"Context Menus are application commands which appear when right-clicking or tapping a user or a message, in the Apps submenu."*
 
 source: [discordjs.guide](https://discordjs.guide/interactions/context-menus.html)
 
-#### Delete Up To This
+Status :
+- ✅ stable
+- 🧪 experimental
+- ❌ deprecated
 
-![](./docs/img/ContextMenu.png)
+|           **Name**           | **Description**                                                                                                                                                | **Permission** | **DM** |       **status**       |
+|:----------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------:|:------:|:----------------------:|
+|      Delete Up To This       | Select a message, right click and select this options to delete all messages until selected message (selected message include) ![](./docs/img/ContextMenu.png) | ManageMessages |   ✅    |    [✅](# "stable")     |
+| [⭐](# "New")<br>React As Bot | Use the Utsukushi Emoji database to react to a message.                                                                                                        |      _No_      |   ✅    |    [✅](# "stable")     |
+| [⭐](# "New")<br>Reply As Bot | Reply to a message as Utsukushi Bot                                                                                                                            |      _No_      |   ✅    | [🧪](# "experimental") |
 
-Select a message, right click and select this options to delete all messages until selected message (selected message include)
 
 ## CI
 
