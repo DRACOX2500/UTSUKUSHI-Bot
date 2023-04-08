@@ -55,10 +55,11 @@ Status :
    - ✅ stable
    - 🧪 experimental
    - ❌ deprecated
+   - 💀 deleted
 
 |              **Name**              | **Description**                                                                                                                                                                                                                       | **Permission** | **DM** |       **status**       |
 |:----------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------:|:------:|:----------------------:|
-|            /big-burger             | Return a random burger picture                                                                                                                                                                                                        |      _No_      |   ✅    |  [❌](# "deprecated")   |
+|            /big-burger             | Return a random burger picture                                                                                                                                                                                                        |      _No_      |   ✅    |  [💀](# "deleted")   |
 |   [⭐](# "New")<br>/bot activity    | Set Utsukushi activity, Select activity type : <br> Play, Listen, Stream, Competing, Watch <br> And Enter an activity message                                                                                                         |      _No_      |   ✅    |    [✅](# "stable")     |
 |    [⭐](# "New")<br>/bot status     | Set Utsukushi status : <br> Online, Idle, Do not Disturb, Invisible                                                                                                                                                                   |      _No_      |   ✅    |    [✅](# "stable")     |
 |     [✨](# "Update")<br>/cache      | Manage your cache in Utsukushi Database :<br> - Delete: delete all your data in Utsukushi database<br>- Show: Utsukushi sends you your data in DM                                                                                     |      _No_      |   ✅    |    [✅](# "stable")     |
@@ -91,6 +92,7 @@ Status :
 - ✅ stable
 - 🧪 experimental
 - ❌ deprecated
+- 💀 deleted
 
 |           **Name**           | **Description**                                                                                                                                                | **Permission** | **DM** |       **status**       |
 |:----------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------:|:------:|:----------------------:|
