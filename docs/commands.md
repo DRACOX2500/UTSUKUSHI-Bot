@@ -2,7 +2,7 @@
 
 |  **Total**  | **Production** |  **Deleted**  |
 |:-----------:|:--------------:|:-------------:|
-|     18      |       17       |       1       |
+|     18      |       15       |       3       |
 
 
 ## Command 1.0.0
@@ -37,7 +37,7 @@
 | **Description** | get the URL GitHub repo |
 
 ### **/big-burger** 
-![](https://img.shields.io/badge/Utsukushi-v1.0.0-yellow) ![](https://img.shields.io/badge/DEPRECATED-red)
+![](https://img.shields.io/badge/Utsukushi-v1.0.0-yellow) ![](https://img.shields.io/badge/DELETED-red)
 
 |                 |                                  |
 |-----------------|----------------------------------|
@@ -166,7 +166,7 @@ Buttons menu :
 | **Description** | Disabled notify voice channel system |
 
 ### **/play-together**
-![](https://img.shields.io/badge/Utsukushi-v1.2.0-yellow) ![](https://img.shields.io/badge/DEPRECATED-red)
+![](https://img.shields.io/badge/Utsukushi-v1.2.0-yellow) ![](https://img.shields.io/badge/DELETED-red)
 
 |                 |                                           |
 |-----------------|-------------------------------------------|

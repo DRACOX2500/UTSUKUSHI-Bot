@@ -1,6 +1,6 @@
 # UTSUKUSHI BOT (Discord-Bot)
-![](https://img.shields.io/badge/Discord%20JS-14-blueviolet)
-![](https://img.shields.io/badge/Version-1.2-success)
+![](https://img.shields.io/badge/Discord%20JS-14.3-blueviolet)
+![](https://img.shields.io/badge/Version-1.2.1-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
@@ -72,7 +72,7 @@ Status :
 |    [⭐](# "New")<br>/notify off     | Disable notify system                                                                                                                                                                                                                 |  ManageGuild   |   ❌    |    [✅](# "stable")     |
 |               /ping                | 🤖 All bots started like this (Historic Command)                                                                                                                                                                                      |      _No_      |   ✅    |    [✅](# "stable")     |
 |      [✨](# "Update")<br>/play      | Play a music in voice channel, By default, plays the last music played (You can manage music with embed & buttons). <br>Search the music by keywords or YouTube URL, The keywords will be saved in the database and can be used later |      _No_      |   ❌    | [🧪](# "experimental") |
-|   [⭐](# "New")<br>/play-together   | Start a Discord Activity in voice Channel                                                                                                                                                                                             |      _No_      |   ❌    |  [❌](# "deprecated")   |
+|   [⭐](# "New")<br>/play-together   | Start a Discord Activity in voice Channel                                                                                                                                                                                             |      _No_      |   ❌    |  [💀](# "delete")   |
 | [⭐](# "New")<br>/soundeffect play  | Play sound effect in voice channel                                                                                                                                                                                                    |      _No_      |   ❌    |    [✅](# "stable")     |
 |  [⭐](# "New")<br>/soundeffect add  | Add sound effect in Utsukushi Database (30sec max only)                                                                                                                                                                               |      _No_      |   ❌    |    [✅](# "stable")     |
 |   [⭐](# "New")<br>/speak-as-bot    | Send a message as bot (attachment available)                                                                                                                                                                                          |      _No_      |   ✅    |    [✅](# "stable")     |

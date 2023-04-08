@@ -26,7 +26,6 @@ import {
 	UtsukushiContextCommand,
 	UtsukushiSlashCommand,
 } from '@models/utsukushi-command.model';
-import { cyan, lightMagenta, magenta } from 'ansicolor';
 import { ReactAsBotSelect } from './selects/react-as-bot/react-as-bot.select';
 import {
 	UtsukushiButton,
@@ -227,6 +226,7 @@ export class CommandManager {
 		client.on(
 			'interactionCreate',
 			async (interaction: Interaction<CacheType>) => {
+				console.log('interaction');
 				if (interaction.isChatInputCommand()) {
 					logger.info({
 						tag: 'interaction',
@@ -254,7 +254,7 @@ export class CommandManager {
 					});
 					await this.interactionContext(interaction, client);
 				}
-				else if (interaction.isSelectMenu()) {
+				else if (interaction.isStringSelectMenu()) {
 					logger.info({
 						tag: 'interaction',
 						user: { id: interaction.user.id, name: interaction.user.username },
