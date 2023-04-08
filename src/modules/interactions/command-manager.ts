@@ -226,7 +226,6 @@ export class CommandManager {
 		client.on(
 			'interactionCreate',
 			async (interaction: Interaction<CacheType>) => {
-				console.log('interaction');
 				if (interaction.isChatInputCommand()) {
 					logger.info({
 						tag: 'interaction',
