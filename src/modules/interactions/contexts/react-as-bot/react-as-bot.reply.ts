@@ -1,18 +1,18 @@
 /* eslint-disable no-empty-function */
 import {
-	WebhookEditMessageOptions,
 	ActionRowBuilder,
 	APIMessageComponentEmoji,
 	SelectMenuBuilder,
 	ButtonBuilder,
 	bold,
 	hyperlink,
+	WebhookMessageEditOptions,
 } from 'discord.js';
 import { ReactAsBotSelect } from '@modules/interactions/selects/react-as-bot/react-as-bot.select';
 import { ReactAsBotButtons } from '@modules/interactions/buttons/react-as-bot/emoji-pagination.button';
 import { Sort } from '@utils/sort';
 
-export class ReactAsBotContextReply implements WebhookEditMessageOptions {
+export class ReactAsBotContextReply implements WebhookMessageEditOptions {
 	content!: string;
 	readonly components;
 
