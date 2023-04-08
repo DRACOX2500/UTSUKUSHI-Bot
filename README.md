@@ -13,7 +13,7 @@ Discord Bot for my private Discord Server & friends server.
 
 ## Dependency
 - **[@Discordjs/voice](https://www.npmjs.com/package/@discordjs/voice)** : 0.16.0       # Manage Voice Channel Connection and Audio Player
-- **[@distube/ytdl-core](https://www.npmjs.com/package/@distube/ytdl-core)** : 4.11.5   # Youtube Downloader
+- **[@distube/ytdl-core](https://www.npmjs.com/package/@distube/ytdl-core)** : 4.11.8   # Youtube Downloader
 - **[Axios](https://www.npmjs.com/package/axios)** : 0.27.2                             # Http Requests
 - **[Discord.js](https://www.npmjs.com/package/discord.js)** : 14.9.0                   # Discord API
 - **[Dotenv](https://www.npmjs.com/package/dotenv)** : 16.0.1                           # Manage Environments Variables
@@ -25,8 +25,8 @@ Discord Bot for my private Discord Server & friends server.
 1. Clone projet : `git clone https://github.com/DRACOX2500/Discord-Bot.git`
 
 2. Install / Update packages manager  
-   - Install **NodeJS** latest LTS version (*current : 17.10.1*)
-   - Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 8.19.2*)
+   - Install **NodeJS** latest LTS version (*current : 18.15.0*)
+   - Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 9.6.4*)
    - *Only Linux* : `apt install libtool` 
 
 3. Install dependencies
