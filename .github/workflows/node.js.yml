@@ -26,8 +26,9 @@ jobs:
         cache-dependency-path: '**/package-lock.json'
     - run: npm ci
     - run: npm i -g typescript tspath
+    - run: cp utsukushi.config.example.json utsukushi.config.json
     - run: npm run build --if-present
-    
+
   quality:
     runs-on: ubuntu-latest
     strategy:
