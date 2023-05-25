@@ -103,7 +103,7 @@ export namespace YoutubeStream {
 			if (interaction && error.message === 'Sign in to confirm your age')
 				interaction.editReply(
 					'🔞 Sorry, but I can\'t play age restricted videos !'
-				);
+				).catch((err) => console.error('FAILED to edit interaction: ' + err));
 		});
 	}
 }
