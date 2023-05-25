@@ -54,7 +54,7 @@ export namespace YoutubeStream {
 		}
 
 		private async getReadable(url: string): Promise<Readable> {
-			const quality = process.env.YTDL_CORE_QUALITY || 'lowest';
+			const quality = process.env.YTDL_CORE_QUALITY ?? 'lowest';
 			return Promise.resolve(
 				ytdl(url, {
 					filter: 'audioonly',
@@ -65,7 +65,7 @@ export namespace YoutubeStream {
 		}
 
 		async getByUrl(url: string): Promise<{ url: string; readable: Readable }> {
-			if (!url.match(YOUTUBE_VIDEO_LINK_REGEX))
+			if (!RegExp(YOUTUBE_VIDEO_LINK_REGEX).exec(url))
 				throw new Error('param <url> is not a valid URL');
 			const readable = await this.getReadable(url);
 			return { url: url, readable: readable };
@@ -79,7 +79,7 @@ export namespace YoutubeStream {
 
 		static async getDataByURL(url: string): Promise<YtVideoItem> {
 			let vId = '';
-			if (url.match(YOUTUBE_MOBILE_VIDEO_LINK_REGEX))
+			if (RegExp(YOUTUBE_MOBILE_VIDEO_LINK_REGEX).exec(url))
 				vId = url.split('https://youtu.be/')[1].split('&')[0].split('?')[0];
 			else
 				vId = url
@@ -103,7 +103,7 @@ export namespace YoutubeStream {
 			if (interaction && error.message === 'Sign in to confirm your age')
 				interaction.editReply(
 					'🔞 Sorry, but I can\'t play age restricted videos !'
-				);
+				).catch((err) => console.error('FAILED to edit interaction: ' + err));
 		});
 	}
 }

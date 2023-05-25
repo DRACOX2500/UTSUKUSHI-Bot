@@ -1,11 +1,11 @@
 {
     "name": "bot-discord",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "main": "index.ts",
     "scripts": {
         "start": "node -r tsconfig-paths/register -r ts-node ./dist/index.js",
-        "build-dev": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist",
-        "restart": "npm run build-dev & npm start",
+        "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist",
+        "restart": "npm run build & npm start",
         "test": "jest",
         "lint": "eslint . --ext .ts"
     },
@@ -22,13 +22,14 @@
     "dependencies": {
         "@discordjs/opus": "^0.9.0",
         "@discordjs/voice": "^0.16.0",
-        "@distube/ytdl-core": "^4.11.8",
+        "@distube/ytdl-core": "^4.11.10",
         "ansicolor": "^1.1.100",
         "axios": "^0.27.2",
         "discord.js": "^14.9.0",
         "dotenv": "^16.0.1",
         "ffmpeg-static": "^5.1.0",
         "firebase": "^9.9.4",
+        "libsodium-wrappers": "^0.7.11",
         "pino": "^7.0.0-rc.9",
         "pino-pretty": "^9.1.1",
         "sodium-native": "^3.4.1",

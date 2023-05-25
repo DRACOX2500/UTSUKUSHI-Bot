@@ -3,13 +3,13 @@
 ## Project Structure
 
 ```
-.github/                        # GitHub Action CI scripts  
+.github/                        # GitHub Action CI scripts
 docs/                           # Project Docs
 src/
 |- api/                         # APIs Communications
 |- assets/                      # Images and other assets
 |- database/                    # Database Communications + Cache
-|- errors/                      # NodeJs Errors Manager 
+|- errors/                      # NodeJs Errors Manager
 |- models/                      # TS interfaces & types
 |- modules/
 |   |- interactions/            # All Discord Interactions Classes
@@ -21,7 +21,7 @@ src/
 |   |   |- selects/
 |   |   |- CommandDeployer.ts   # Command Deployer on Discord API
 |   |   |- CommandManager.ts    # Command Manager (Load & Receive)
-|   |- system/                
+|   |- system/
 |- utils/                       # Utilities Functions
 +- UtsukushiClient.ts                 # Utsukushi Discord Client
 test/
