@@ -65,7 +65,7 @@ export class UtsukushiAudioPlayer {
 	}
 
 	volumeDown(): void {
-		if (!this.resource || !this.resource.volume) return;
+		if (!this.resource?.volume) return;
 
 		let volume = this.resource.volume.volume;
 		volume = Math.round((volume - 0.1 + Number.EPSILON) * 10) / 10;
@@ -75,7 +75,7 @@ export class UtsukushiAudioPlayer {
 	}
 
 	volumeUp(): void {
-		if (!this.resource || !this.resource.volume) return;
+		if (!this.resource?.volume) return;
 
 		let volume = this.resource.volume.volume;
 		volume = Math.round((volume + 0.1 + Number.EPSILON) * 10) / 10;
@@ -85,7 +85,7 @@ export class UtsukushiAudioPlayer {
 	}
 
 	getVolume(): number {
-		if (!this.resource || !this.resource.volume) return 1;
+		if (!this.resource?.volume) return 1;
 		return this.resource.volume.volume;
 	}
 }
