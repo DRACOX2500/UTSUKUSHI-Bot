@@ -3,7 +3,7 @@ import pretty from 'pino-pretty';
 const logdir = './logs';
 
 const createSonicBoom = (dest: string) =>
-	pino.destination({ dest: dest, append: false, sync: false });
+	pino.destination({ dest: dest, append: false, sync: false, mkdir: true });
 
 const streams: pino.StreamEntry[] = [
 	{ stream: createSonicBoom(`${logdir}/info.log`) },
