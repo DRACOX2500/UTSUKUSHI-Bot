@@ -181,7 +181,7 @@ export class CommandManager {
 	) {
 		(<UtsukushiAutocompleteSlashCommand>(
 			this.commands.get(interaction.commandName)
-		))?.autocomplete(interaction, client);
+		))?.autocomplete(interaction, client).catch((err: Error) => logger.error({}, err.message));
 	}
 
 	private async interactionButton(
@@ -209,7 +209,7 @@ export class CommandManager {
 		client: UtsukushiClient
 	) {
 		if (interaction.customId === 'rab-select') {
-			ReactAsBotSelect.getEffect(interaction);
+			ReactAsBotSelect.getEffect(interaction).catch((err: Error) => logger.error({}, err.message));
 		}
 	}
 
@@ -218,7 +218,7 @@ export class CommandManager {
 		client: UtsukushiClient
 	) {
 		if (interaction.customId === 'rpab-modal') {
-			ReplyAsBotModal.getEffect(interaction);
+			ReplyAsBotModal.getEffect(interaction).catch((err: Error) => logger.error({}, err.message));
 		}
 	}
 

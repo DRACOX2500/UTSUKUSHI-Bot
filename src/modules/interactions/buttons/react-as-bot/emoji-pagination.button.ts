@@ -19,7 +19,7 @@ export namespace ReactAsBotButtons {
 			interaction: ButtonInteraction,
 			client: UtsukushiClient
 		): Promise<void> => {
-			const emojis = client.getDatabase().global.getEmojis();
+			const emojis = client.data.global.getEmojis();
 
 			const mes = interaction.message;
 			const targetId = mes.content.split('[#')[1].split('](')[0];
@@ -46,7 +46,7 @@ export namespace ReactAsBotButtons {
 			interaction: ButtonInteraction,
 			client: UtsukushiClient
 		): Promise<void> => {
-			const emojis = client.getDatabase().global.getEmojis();
+			const emojis = client.data.global.getEmojis();
 
 			const mes = interaction.message;
 			const targetId = mes.content.split('[#')[1].split('](')[0];

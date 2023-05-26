@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { PongEmbed } from '@modules/system/embeds/pong.embed';
 import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @SlashCommand `ping`
@@ -18,7 +19,7 @@ export class PingCommand implements UtsukushiSlashCommand {
 		client?: UtsukushiClient
 	): Promise<void> => {
 		if (!client) {
-			interaction.reply('‼️🤖 No Client found !');
+			interaction.reply('‼️🤖 No Client found !').catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 
@@ -27,7 +28,7 @@ export class PingCommand implements UtsukushiSlashCommand {
 			null;
 
 		const embedPong = new PongEmbed(sent, interaction, client);
-		interaction.editReply({ content: '', embeds: [embedPong.getEmbed()] });
+		interaction.editReply({ content: '', embeds: [embedPong.getEmbed()] }).catch((err: Error) => logger.error({}, err.message));
 	};
 }
 

@@ -10,6 +10,7 @@ import { UtsukushiAudioPlayer } from 'root/src/modules/system/audio/utsukushi-au
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { BUTTON } from 'src/constant';
 import { UtsukushiButton } from '@models/utsukushi-interaction.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 function isNotOK(interaction: ButtonInteraction, client: UtsukushiClient): boolean {
 	return (
@@ -35,7 +36,7 @@ export namespace VolumeButtons {
 			client: UtsukushiClient
 		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
-				interaction.reply(BUTTON.PLAY_RESPONSE);
+				interaction.reply(BUTTON.PLAY_RESPONSE).catch((err: Error) => logger.error({}, err.message));
 				return;
 			}
 
@@ -45,7 +46,7 @@ export namespace VolumeButtons {
 				(<UtsukushiAudioPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vDownEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vDownEmbed] });
+			interaction.message.edit({ embeds: [vDownEmbed] }).catch((err: Error) => logger.error({}, err.message));
 
 			await interaction.deferUpdate();
 		};
@@ -65,7 +66,7 @@ export namespace VolumeButtons {
 			client: UtsukushiClient
 		): Promise<void> => {
 			if (isNotOK(interaction, client)) {
-				interaction.reply(BUTTON.PLAY_RESPONSE);
+				interaction.reply(BUTTON.PLAY_RESPONSE).catch((err: Error) => logger.error({}, err.message));
 				return;
 			}
 			client.connection.botPlayer?.volumeUp();
@@ -74,7 +75,7 @@ export namespace VolumeButtons {
 				(<UtsukushiAudioPlayer>client.connection.botPlayer).getVolume() * 100 + '%';
 
 			const vUpEmbed = EmbedBuilder.from(interaction.message.embeds[0]);
-			interaction.message.edit({ embeds: [vUpEmbed] });
+			interaction.message.edit({ embeds: [vUpEmbed] }).catch((err: Error) => logger.error({}, err.message));
 
 			await interaction.deferUpdate();
 		};

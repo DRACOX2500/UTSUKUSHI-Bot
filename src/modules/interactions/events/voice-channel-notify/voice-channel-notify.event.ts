@@ -2,6 +2,7 @@ import { Guild, TextBasedChannel, VoiceChannel } from 'discord.js';
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { NotifyEmbed } from '@modules/system/embeds/notify.embed';
 import { UtsukushiEvent } from '@models/utsukushi-interaction.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 class VoiceChannelNotifyEvent implements UtsukushiEvent {
 	private async notifyGuild(
@@ -10,7 +11,7 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 		channelId: string,
 		guild: Guild
 	): Promise<void> {
-		const data = await client.getDatabase().guilds.getByKey(guild.id);
+		const data = await client.data.guilds.getByKey(guild.id);
 		if (data?.value.vocalNotifyChannel) {
 			const channelNotify: TextBasedChannel = await guild.channels
 				.fetch(data.value.vocalNotifyChannel)
@@ -23,7 +24,7 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 			});
 			const embedNotify = new NotifyEmbed(userJoin, channel);
 			const embed = embedNotify.getEmbed();
-			channelNotify?.send({ embeds: [embed] });
+			channelNotify?.send({ embeds: [embed] }).catch((err: Error) => logger.error({}, err.message));
 		}
 	}
 
@@ -45,8 +46,7 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 				const user = newState.id;
 				const channelId = <string>newState.channelId;
 				const guild = newState.guild;
-
-				this.notifyGuild(client, user, channelId, guild);
+				this.notifyGuild(client, user, channelId, guild).catch((err: Error) => logger.error({}, err.message));
 			}
 			if (newState.channelId === null) {
 				// 'a user left!'

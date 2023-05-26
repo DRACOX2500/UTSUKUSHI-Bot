@@ -12,6 +12,7 @@ import { UtsukushiClient } from 'src/utsukushi-client';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
 import { YoutubeStream } from '@modules/system/audio/audio-stream';
 import { PlayReply } from './play.reply';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 const enum Platform {
 	Youtube = 'youtube',
@@ -47,11 +48,13 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiClient
 	): Promise<void> => {
-		if (!interaction || !interaction.member || !interaction.guild) return;
+		if (!interaction?.member || !interaction.guild) return;
 
 		const VoiceChannel = (<any>interaction.member).voice.channel;
 		if (!VoiceChannel) {
-			interaction.reply('❌ You are not in a voice channel');
+			interaction
+				.reply('❌ You are not in a voice channel')
+				.catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 
@@ -63,38 +66,49 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 		if (!url) {
 			url = await client
-				.getDatabase()
+				.data
 				.guilds.getByKey(interaction.guild.id)
 				.then((response) => {
 					return <string>response?.value.lastPlayURL;
 				});
 			if (!url) {
-				interaction.editReply('❌ URL or Keywords are not available');
+				interaction
+					.editReply('❌ URL or Keywords are not available')
+					.catch((err: Error) => logger.error({}, err.message));
 				return;
 			}
 		}
 
-		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(url);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(
+			url
+		);
 
 		if (!stream.readable) {
-			interaction.editReply('❌ Music not found !');
+			interaction.editReply('❌ Music not found !').catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		YoutubeStream.attachEvent(stream.readable, interaction);
 
-		stream.readable.on('info', async (info: any) => {
+		stream.readable.on('info', (info: any) => {
 			if (!url || !stream) return;
 			const reply = new PlayReply(info, Platform.Youtube, opti);
-			interaction.editReply(reply);
+			interaction
+				.editReply(reply)
+				.catch((err: Error) => logger.error({}, err.message));
 
-			client.getDatabase().guilds.set(<string>interaction.guildId, {
+			client.data.guilds.set(<string>interaction.guildId, {
 				lastPlayURL: stream.url,
 			});
-			const keywordsCache = await client
-				.getDatabase()
-				.users.getByKey(interaction.user.id);
-			if (!url.match(/^https?:\/\//) && !keywordsCache?.value.keywords?.includes(url))
-				client.getDatabase().users.set(interaction.user.id, { keywords: [url] });
+			client.data.users.getByKey(interaction.user.id).then((user) => {
+				if (
+					url &&
+					!RegExp(/^https?:\/\//).exec(url) &&
+					!user?.value.keywords?.includes(url)
+				)
+					client
+						.data
+						.users.set(interaction.user.id, { keywords: [url] });
+			}).catch((err: Error) => logger.error({}, err.message));
 		});
 
 		client.connection.join(VoiceChannel);
@@ -110,8 +124,8 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		const focusedOption = interaction.options.getFocused(true);
 		let choices: string[] | undefined;
 
-		const data = await client.getDatabase().users.getByKey(interaction.user.id);
-		if (!data || !data.value.keywords) return;
+		const data = await client.data.users.getByKey(interaction.user.id);
+		if (!data?.value.keywords) return;
 
 		if (focusedOption.name === 'song') {
 			choices = data.value.keywords;
@@ -133,9 +147,11 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		if (!interaction) return;
 
 		const url = <string>interaction.message.embeds[0].url;
-		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(url);
+		const stream = await new YoutubeStream.YoutubeAudioStream().getByKeywords(
+			url
+		);
 		if (!stream.readable) {
-			interaction.editReply('❌ Music not found !');
+			interaction.editReply('❌ Music not found !').catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 

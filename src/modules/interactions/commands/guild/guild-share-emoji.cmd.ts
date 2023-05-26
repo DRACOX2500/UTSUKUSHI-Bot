@@ -50,13 +50,13 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 		);
 		if (option) {
 			const res = await client
-				.getDatabase()
+				.data
 				.global.setEmojis(arrayEmojis);
 			if (res) {
 				await interaction.editReply({
 					content: '✅ Emojis added to database successfully !',
 				});
-				client.getDatabase().guilds.set(guild.id, { shareEmojis: true });
+				client.data.guilds.set(guild.id, { shareEmojis: true });
 			}
 			else
 				await interaction.editReply({
@@ -65,14 +65,14 @@ export class GuildShareEmojiCommand implements UtsukushiSlashCommand {
 		}
 		else {
 			const res = await client
-				.getDatabase()
+				.data
 				.global.deleteEmojis(arrayEmojis);
 
 			if (res) {
 				await interaction.editReply({
 					content: '✅ Emojis deleted to database successfully !',
 				});
-				client.getDatabase().guilds.set(guild.id, { shareEmojis: false });
+				client.data.guilds.set(guild.id, { shareEmojis: false });
 			}
 			else
 				await interaction.editReply({

@@ -1,14 +1,15 @@
 import {
 	bold,
 	CacheType,
-	SelectMenuBuilder,
 	SelectMenuComponentOptionData,
-	SelectMenuInteraction,
-	SelectMenuOptionBuilder,
+	StringSelectMenuBuilder,
+	StringSelectMenuInteraction,
+	StringSelectMenuOptionBuilder,
 } from 'discord.js';
 import { GlobalDataEmoji } from '@models/firebase/document-data.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
-export class ReactAsBotSelect extends SelectMenuBuilder {
+export class ReactAsBotSelect extends StringSelectMenuBuilder {
 	constructor(
 		private emojis: GlobalDataEmoji[],
 		limit: number,
@@ -38,19 +39,19 @@ export class ReactAsBotSelect extends SelectMenuBuilder {
 			.setPlaceholder('Nothing selected')
 			.setMinValues(1)
 			.setMaxValues(5)
-			.addOptions(<SelectMenuOptionBuilder>(<unknown>selectOptions));
+			.addOptions(<StringSelectMenuOptionBuilder>(<unknown>selectOptions));
 
 		if (this.emojis.length < 5) this.setMaxValues(this.emojis.length);
 		if (this.emojis.length === 0) this.setMaxValues(0).setMinValues(0);
 	}
 
 	static async getEffect(
-		interaction: SelectMenuInteraction<CacheType>
+		interaction: StringSelectMenuInteraction<CacheType>
 	): Promise<void> {
 		const mes = interaction.message;
 		const targetId = mes.content.split('[#')[1].split('](')[0];
 		if (!targetId || !interaction.channel) {
-			interaction.deferUpdate();
+			interaction.deferUpdate().catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		const mesTarget = await interaction.channel.messages.fetch(targetId);
@@ -58,10 +59,10 @@ export class ReactAsBotSelect extends SelectMenuBuilder {
 			mesTarget.react(value).catch((error: Error) => {
 				if (error.message === 'Unknown Emoji') {
 					const emojiName = value.split(':')[1];
-					interaction.followUp({ content: `❌ This emoji (${bold(emojiName)}) is not supported !`, ephemeral: true });
+					interaction.followUp({ content: `❌ This emoji (${bold(emojiName)}) is not supported !`, ephemeral: true }).catch((err: Error) => logger.error({}, err.message));
 				}
 			});
 		});
-		interaction.deferUpdate();
+		interaction.deferUpdate().catch((err: Error) => logger.error({}, err.message));
 	}
 }

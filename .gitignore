@@ -17,3 +17,6 @@ utsukushi.config.json
 #IDE
 .vscode/
 .idea/
+
+#Logs
+logs/

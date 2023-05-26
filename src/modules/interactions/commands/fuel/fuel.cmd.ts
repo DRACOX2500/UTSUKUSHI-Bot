@@ -10,6 +10,7 @@ import { FuelEmbed } from '@modules/system/embeds/fuel.embed';
 import { API } from 'src/constant';
 import { FuelAPI } from '@api/fuel-fr/fuel.api';
 import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 enum FuelType {
 	GAZOLE = 'Gazole',
@@ -101,7 +102,7 @@ export class FuelCommand implements UtsukushiSlashCommand {
 			break;
 		case 4: {
 			let newValue = value;
-			if (value.match(/^\d$/)) newValue = '0' + value;
+			if (RegExp(/^\d$/).exec(value)) newValue = '0' + value;
 			api.setDepartementCode(newValue);
 			break;
 		}
@@ -113,7 +114,7 @@ export class FuelCommand implements UtsukushiSlashCommand {
 		const response = await api.getReponse();
 
 		if (typeof response === 'string' || response.length === 0) {
-			interaction.editReply(API.FUEL.ERROR);
+			interaction.editReply(API.FUEL.ERROR).catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 
@@ -125,13 +126,13 @@ export class FuelCommand implements UtsukushiSlashCommand {
 			const embed = fuelEmbed.getEmbed(i);
 			const image = await fuelEmbed.getImages(i);
 
-			channel.send({ embeds: [embed], files: [image] });
+			channel.send({ embeds: [embed], files: [image] }).catch((err: Error) => logger.error({}, err.message));
 
 			i++;
 		}
 		interaction.editReply(
 			`⛽ ${i} fuel source ${i > 1 ? 'have' : 'has'} been found !`
-		);
+		).catch((err: Error) => logger.error({}, err.message));
 	};
 }
 

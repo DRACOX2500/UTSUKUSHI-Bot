@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, ActionRowBuilder, But
 import { UtsukushiSlashCommand } from '@models/utsukushi-command.model';
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { buttons } from '@modules/interactions/buttons/speak-as-bot/speak-as-bot.button';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @SlashCommand `speak-as-bot`
@@ -30,7 +31,7 @@ export class SpeakAsBotCommand implements UtsukushiSlashCommand {
 	): Promise<void> => {
 		const message = interaction.options.getString('message', true);
 		if (message.length > 1950) {
-			interaction.reply({ content: '😔 Message is too long', ephemeral: true });
+			interaction.reply({ content: '😔 Message is too long', ephemeral: true }).catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		await interaction.deferReply({ ephemeral: true });
@@ -38,7 +39,7 @@ export class SpeakAsBotCommand implements UtsukushiSlashCommand {
 		const attach = attachment ? [attachment] : [];
 
 		const userId = interaction.user.id;
-		client.getDatabase().tempory.set(`sab-${userId}`, { message: message, attachments: attach });
+		client.data.tempory.set(`sab-${userId}`, { message: message, attachments: attach });
 
 		const confirm = buttons[0].button();
 		const cancel = buttons[1].button();
@@ -46,7 +47,7 @@ export class SpeakAsBotCommand implements UtsukushiSlashCommand {
 		const embed = new EmbedBuilder()
 			.setAuthor({ name: <string>client.user?.username, iconURL: <string>client.user?.avatarURL() })
 			.setDescription(message);
-		if (attachment && attachment.contentType?.startsWith('image/')) embed.setImage(attachment.url);
+		if (attachment?.contentType?.startsWith('image/')) embed.setImage(attachment.url);
 		else if (attachment) embed.setFooter({ text: '+ attachment' });
 
 		const row = new ActionRowBuilder<ButtonBuilder>()

@@ -1,6 +1,7 @@
 import { bold, ChatInputCommandInteraction, EmbedBuilder, Guild, italic, time } from 'discord.js';
 import { EmbedGuildData } from '@models/embeds/embed-guild-data.model';
 import { UtsukushiClient } from 'src/utsukushi-client';
+import { logger } from '../logger/logger';
 
 export class GuildEmbed {
 	guildSource: Guild;
@@ -18,7 +19,7 @@ export class GuildEmbed {
 		interaction.guild?.members.fetch(interaction.user.id)
 			.then(user => {
 				this.joinedAt = <Date>user.joinedAt;
-			});
+			}).catch((err: Error) => logger.error({}, err.message));
 	}
 
 	async getEmbed(): Promise<EmbedBuilder> {
@@ -50,7 +51,7 @@ export class GuildEmbed {
 
 	async getEmbedExtra(): Promise<EmbedBuilder> {
 		const embed = new EmbedBuilder();
-		const data = await this.client.getDatabase().guilds.getByKey(this.guildSource.id);
+		const data = await this.client.data.guilds.getByKey(this.guildSource.id);
 		let share = '';
 		if (data) share = `[Shared to Utsukushi : ${data.value.shareEmojis ? '✅' : '❌'}]`;
 

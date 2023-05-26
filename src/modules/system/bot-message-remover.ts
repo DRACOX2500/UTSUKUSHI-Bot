@@ -3,6 +3,7 @@ import {
 	MessageContextMenuCommandInteraction,
 	MessageManager,
 } from 'discord.js';
+import { logger } from './logger/logger';
 
 class BotMessageRemover {
 	private deleteMessage = 0;
@@ -17,7 +18,9 @@ class BotMessageRemover {
 			.then(async (messages) => {
 				const interactionId = await interaction.fetchReply();
 				messages.delete(interactionId.id);
-				messages.forEach((mes) => mes.delete());
+				messages.forEach((mes) => {
+					mes.delete().catch((err: Error) => logger.error({}, err.message));
+				});
 				await message.delete();
 				this.deleteMessage = messages.size + 1;
 			});

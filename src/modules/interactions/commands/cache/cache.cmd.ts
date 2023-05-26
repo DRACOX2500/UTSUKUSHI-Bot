@@ -53,7 +53,7 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		case CacheType.Clear: {
 			await interaction.deferReply({ ephemeral: true });
 			const clearBoolean = await client
-				.getDatabase()
+				.data
 				.users.reset(interaction.user.id);
 			if (clearBoolean)
 				await interaction.editReply({
@@ -68,7 +68,7 @@ export class CacheCommand implements UtsukushiSlashCommand {
 		case CacheType.Show: {
 			await interaction.deferReply({ ephemeral: true });
 			const data = await client
-				.getDatabase()
+				.data
 				.users.getByKey(interaction.user.id);
 			if (data) {
 				await interaction.user.send(

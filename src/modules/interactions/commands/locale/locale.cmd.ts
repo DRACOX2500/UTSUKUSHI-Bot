@@ -7,6 +7,7 @@ import {
 	CacheType,
 } from 'discord.js';
 import { UtsukushiAutocompleteSlashCommand } from '@models/utsukushi-command.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 type Choice = {
 	name: string;
@@ -52,11 +53,11 @@ export class LocaleCommand implements UtsukushiAutocompleteSlashCommand {
 			interaction.reply({
 				content: '❌ Guild set locale Failed !',
 				ephemeral: true,
-			});
+			}).catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 
-		guild.setPreferredLocale(locale);
+		guild.setPreferredLocale(locale).catch((err: Error) => logger.error({}, err.message));
 		await interaction.reply({
 			content: '🌐 Guild set locale Succefully !',
 			ephemeral: true,
