@@ -9,6 +9,7 @@ import {
 } from 'discord.js';
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { UtsukushiMessageContextCommand } from '@models/utsukushi-command.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @ContextCommand
@@ -26,20 +27,19 @@ export class DeleteUpToThisContext implements UtsukushiMessageContextCommand {
 	): Promise<void> => {
 		const message: Message = interaction.targetMessage;
 		const messagesManager: MessageManager | null =
-			interaction.channel?.messages || null;
+			interaction.channel?.messages ?? null;
 		if (!messagesManager) return;
 		if (client.removerManager.isFull) {
 			interaction
 				.reply('❌💣 I\'m already deleting somewhere, please try later')
 				.then(() => {
-					setTimeout(
-						() =>
-							interaction
-								.deleteReply()
-								.catch((error) => console.error(error.message)),
-						3000
-					);
-				});
+					setTimeout(() => {
+						interaction
+							.deleteReply()
+							.catch((error) => console.error(error.message));
+					}, 3000);
+				})
+				.catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		await interaction.deferReply();
@@ -51,14 +51,13 @@ export class DeleteUpToThisContext implements UtsukushiMessageContextCommand {
 					'❌💣 I\'m already deleting in this channel, please try later'
 				)
 				.then(() => {
-					setTimeout(
-						() =>
-							interaction
-								.deleteReply()
-								.catch((error) => console.error(error.message)),
-						3000
-					);
-				});
+					setTimeout(() => {
+						interaction
+							.deleteReply()
+							.catch((error) => console.error(error.message));
+					}, 3000);
+				})
+				.catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		const deleteMessage = await remover.run(
@@ -82,12 +81,12 @@ export class DeleteUpToThisContext implements UtsukushiMessageContextCommand {
 				}, 3000);
 			})
 			.catch(() => {
-				const c = <TextBasedChannel>interaction.channel;
+				const c = interaction.channel as TextBasedChannel;
 				c.send(
 					`💣 I Deleted **${deleteMessage}** Message${
 						deleteMessage === 1 ? '' : 's'
 					} !`
-				);
+				).catch((err: Error) => logger.error({}, err.message));
 			});
 	};
 }

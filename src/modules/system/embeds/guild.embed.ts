@@ -1,6 +1,7 @@
 import { bold, ChatInputCommandInteraction, EmbedBuilder, Guild, italic, time } from 'discord.js';
 import { EmbedGuildData } from '@models/embeds/embed-guild-data.model';
 import { UtsukushiClient } from 'src/utsukushi-client';
+import { logger } from '../logger/logger';
 
 export class GuildEmbed {
 	guildSource: Guild;
@@ -18,7 +19,7 @@ export class GuildEmbed {
 		interaction.guild?.members.fetch(interaction.user.id)
 			.then(user => {
 				this.joinedAt = <Date>user.joinedAt;
-			});
+			}).catch((err: Error) => logger.error({}, err.message));
 	}
 
 	async getEmbed(): Promise<EmbedBuilder> {

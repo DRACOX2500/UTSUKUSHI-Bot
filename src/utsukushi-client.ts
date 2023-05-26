@@ -17,6 +17,7 @@ import { CommandDeployer } from '@modules/interactions/command-deployer';
 import { UtsukushiCache } from '@database/utsukushi-cache';
 import { UtsukushiFirebase } from 'root/src/database/firebase';
 import json from '../package.json';
+import { logger } from './modules/system/logger/logger';
 
 config({ path: '.env' });
 
@@ -37,6 +38,8 @@ export class UtsukushiClient extends Client {
 
 	private errorManager!: NodeJSErrorManager;
 
+	private database!: UtsukushiFirebase.UtsukushiFirestore;
+
 	private defaultActivity: Activity = {
 		status: `version ${json.version}`,
 		type: ActivityType.Streaming,
@@ -53,22 +56,22 @@ export class UtsukushiClient extends Client {
 			],
 		});
 
-		this.DISCORD_TOKEN = process.env.DISCORD_TOKEN || '';
-		this.CLIENT_ID = process.env.CLIENT_ID || '';
-		this.FIREBASE_TOKEN = process.env.FIREBASE_TOKEN || '';
+		this.DISCORD_TOKEN = process.env.DISCORD_TOKEN ?? '';
+		this.CLIENT_ID = process.env.CLIENT_ID ?? '';
+		this.FIREBASE_TOKEN = process.env.FIREBASE_TOKEN ?? '';
 
 		this.removerManager = new BotMessageRemoverManager(
-			+(process.env.MAX_REMOVER_INSTANCES || 3)
+			+(process.env.MAX_REMOVER_INSTANCES ?? 3)
 		);
 
 		const auth = {
-			email: process.env.DB_EMAIL || '',
-			password: process.env.DB_PASSWORD || '',
+			email: process.env.DB_EMAIL ?? '',
+			password: process.env.DB_PASSWORD ?? '',
 		};
 
 		const authDB = !!+(process.argv[2] ?? 1);
 		if (authDB) {
-			const database = new UtsukushiFirebase.UtsukushiFirestore(this.FIREBASE_TOKEN, auth, (firestore: UtsukushiFirebase.UtsukushiFirestore) => {
+			this.database = new UtsukushiFirebase.UtsukushiFirestore(this.FIREBASE_TOKEN, auth, (firestore: UtsukushiFirebase.UtsukushiFirestore) => {
 				this.memory = new UtsukushiCache(firestore);
 				this.initEvents();
 			},
@@ -87,15 +90,15 @@ export class UtsukushiClient extends Client {
 			this.commandManager.commands,
 			this.commandManager.contexts
 		);
-		this.commandDeployer.deployGlobal({ test: test });
-		this.commandDeployer.deployPrivate({ test: test });
+		this.commandDeployer.deployGlobal({ test: test }).catch((err: Error) => logger.error({}, err.message));
+		this.commandDeployer.deployPrivate({ test: test }).catch((err: Error) => logger.error({}, err.message));
 		this.commandManager.initCommand(this);
-		this.commandManager.initBotEvents(this);
+		this.commandManager.initBotEvents(this).catch((err: Error) => logger.error({}, err.message));
 	}
 
 	loginBot(): void {
 		const login = !!+(process.argv[2] ?? 1);
-		if (login) this.login();
+		if (login) this.login().catch((err: Error) => logger.error({}, err.message));
 	}
 
 	private initEvents(): void {

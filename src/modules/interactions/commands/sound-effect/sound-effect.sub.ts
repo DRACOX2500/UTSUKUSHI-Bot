@@ -4,6 +4,7 @@ import { UtsukushiClient } from 'src/utsukushi-client';
 import { YOUTUBE_VIDEO_LINK_REGEX } from 'src/constant';
 import { Converter } from '@utils/converter';
 import { YoutubeStream } from '@modules/system/audio/audio-stream';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @Options
@@ -29,7 +30,7 @@ export class SoundEffectSubCommand {
 			interaction.reply({
 				content: '❌ You are not in a voice channel',
 				ephemeral: true,
-			});
+			}).catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 
@@ -37,15 +38,15 @@ export class SoundEffectSubCommand {
 
 		const stream = await new YoutubeStream.YoutubeAudioStream().getByUrl(options.effect);
 		if (!stream.readable) {
-			interaction.editReply('❌ Music not found !');
+			interaction.editReply('❌ Music not found !').catch((err: Error) => logger.error({}, err.message));
 			return;
 		}
 		YoutubeStream.attachEvent(stream.readable, interaction);
 
-		stream.readable.on('info', async () => {
-			return interaction.editReply({
+		stream.readable.on('info', () => {
+			interaction.editReply({
 				content: 'Play Sound Effect Succefully 🎶!',
-			});
+			}).catch((err: Error) => logger.error({}, err.message));
 		});
 
 		client.connection.join(channel);
@@ -59,7 +60,7 @@ export class SoundEffectSubCommand {
 		client: UtsukushiClient,
 		options: SoundEffectCommandOptions
 	) {
-		if (!options.url.match(YOUTUBE_VIDEO_LINK_REGEX)) {
+		if (!RegExp(YOUTUBE_VIDEO_LINK_REGEX).exec(options.url)) {
 			await interaction.reply({
 				content: '❌ Sound Effect URL isn\'t a YouTube video !',
 				ephemeral: true,
@@ -68,7 +69,7 @@ export class SoundEffectSubCommand {
 		}
 
 		const data = client.getDatabase().global.getSoundEffects();
-		if (data && data.some((effect) => effect.key === options.name)) {
+		if (data?.some((effect) => effect.key === options.name)) {
 			await interaction.reply({
 				content: `❌ Sound Effect key ${bold(options.name)} already exist !`,
 				ephemeral: true,

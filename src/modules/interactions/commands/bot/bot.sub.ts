@@ -6,6 +6,7 @@ import {
 import { UtsukushiClient } from 'src/utsukushi-client';
 import { TWITCH_LINK } from 'src/constant';
 import { Activity } from '@models/activity.model';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @Options
@@ -38,7 +39,7 @@ export class BotSubCommand {
 		interaction.reply({
 			content: '🤖 Bot activity has been change !',
 			ephemeral: true,
-		});
+		}).catch((err: Error) => logger.error({}, err.message));
 	}
 
 	protected async setStatus(
@@ -52,6 +53,6 @@ export class BotSubCommand {
 		interaction.reply({
 			content: '🤖 Bot status has been change !',
 			ephemeral: true,
-		});
+		}).catch((err: Error) => logger.error({}, err.message));
 	}
 }

@@ -8,6 +8,7 @@ import {
 } from '@models/firebase/document-data.model';
 import { CLEANER_TIMEOUT } from 'src/constant';
 import { UtsukushiFirebase } from './firebase';
+import { logger } from '../modules/system/logger/logger';
 
 type DatedObject<T> = { value: T; date: number };
 
@@ -63,7 +64,7 @@ class UserCache {
 		const map = this.cache.get(key);
 		if (map) value.keywords = map.value.keywords.concat(value.keywords);
 		this.cache.set(key, { value: value, date: Date.now() });
-		this.firebase.collections.user.set(key, value);
+		this.firebase.collections.user.set(key, value).catch((err: Error) => logger.error({}, err.message));
 		this.cleaner.reset();
 	}
 	async fetchByKey(key: string): Promise<DatedObject<UserData> | null> {
@@ -114,7 +115,7 @@ class GuildCache {
 	}
 	set(key: string, value: GuildData): void {
 		this.cache.set(key, { value: value, date: Date.now() });
-		this.firebase.collections.guild.set(key, value);
+		this.firebase.collections.guild.set(key, value).catch((err: Error) => logger.error({}, err.message));
 		this.cleaner.reset();
 	}
 	async fetchByKey(key: string): Promise<DatedObject<GuildData> | null> {
@@ -142,12 +143,12 @@ class GlobalCache {
 	private emojis!: GlobalDataEmoji[];
 
 	constructor(private firebase: UtsukushiFirebase.UtsukushiFirestore) {
-		this.fetchEmojis();
-		this.fetchSoundEffects();
+		this.fetchEmojis().catch((err: Error) => logger.error({}, err.message));
+		this.fetchSoundEffects().catch((err: Error) => logger.error({}, err.message));
 	}
 
 	setData(data: GlobalData): void {
-		this.firebase.collections.global.set(data);
+		this.firebase.collections.global.set(data).catch((err: Error) => logger.error({}, err.message));
 		this.data = data;
 	}
 
@@ -163,7 +164,7 @@ class GlobalCache {
 	}
 
 	setSoundEffects(effects: GlobalDataSoundEffect[]) {
-		this.firebase.collections.global.soundEffects.set(effects);
+		this.firebase.collections.global.soundEffects.set(effects).catch((err: Error) => logger.error({}, err.message));
 		this.soundeffects = this.soundeffects.concat(effects);
 	}
 

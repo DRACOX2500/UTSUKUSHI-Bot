@@ -31,7 +31,7 @@ export class ReactAsBotContext implements UtsukushiMessageContextCommand {
 		await interaction.deferReply({ ephemeral: true });
 
 		const emojis = client.getDatabase().global.getEmojis();
-		if (!emojis || !emojis.length) {
+		if (!emojis?.length) {
 			await interaction.editReply({ content: '❌ React Failed !' });
 			return;
 		}

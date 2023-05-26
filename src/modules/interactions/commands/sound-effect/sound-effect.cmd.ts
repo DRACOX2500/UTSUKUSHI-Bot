@@ -13,6 +13,7 @@ import {
 	SoundEffectSubCommand,
 } from './sound-effect.sub';
 import { Sort } from '@utils/sort';
+import { logger } from 'root/src/modules/system/logger/logger';
 
 /**
  * @SlashCommand `soundeffect`
@@ -70,11 +71,11 @@ export class SoundEffectCommand
 
 		// SubCommand  => Add
 		if (subCommand === 'add') {
-			this.add(interaction, client, options);
+			this.add(interaction, client, options).catch((err: Error) => logger.error({}, err.message));
 		}
 		// SubCommand  => Play
 		else if (subCommand === 'play') {
-			this.play(interaction, client, options);
+			this.play(interaction, client, options).catch((err: Error) => logger.error({}, err.message));
 		}
 	};
 
