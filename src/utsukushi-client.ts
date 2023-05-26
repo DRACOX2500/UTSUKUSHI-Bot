@@ -16,6 +16,7 @@ import { BotMessageRemoverManager } from '@modules/system/bot-message-remover';
 import { CommandDeployer } from '@modules/interactions/command-deployer';
 import { UtsukushiCache } from '@database/utsukushi-cache';
 import { UtsukushiFirebase } from 'root/src/database/firebase';
+import json from '../package.json';
 
 config({ path: '.env' });
 
@@ -37,7 +38,7 @@ export class UtsukushiClient extends Client {
 	private errorManager!: NodeJSErrorManager;
 
 	private defaultActivity: Activity = {
-		status: ':]',
+		status: `version ${json.version}`,
 		type: ActivityType.Streaming,
 		url: TWITCH_LINK,
 	};
