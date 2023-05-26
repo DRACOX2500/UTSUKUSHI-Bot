@@ -102,7 +102,7 @@ export class FuelCommand implements UtsukushiSlashCommand {
 			break;
 		case 4: {
 			let newValue = value;
-			if (value.match(/^\d$/)) newValue = '0' + value;
+			if (RegExp(/^\d$/).exec(value)) newValue = '0' + value;
 			api.setDepartementCode(newValue);
 			break;
 		}
