@@ -1,6 +1,6 @@
 # UTSUKUSHI BOT (Discord-Bot)
 ![](https://img.shields.io/badge/Discord%20JS-14.9-blueviolet)
-![](https://img.shields.io/badge/Version-1.2.1-success)
+![](https://img.shields.io/badge/Version-1.3.0-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
