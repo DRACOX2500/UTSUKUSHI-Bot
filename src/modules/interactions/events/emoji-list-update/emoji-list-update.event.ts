@@ -7,7 +7,7 @@ import { logger } from 'root/src/modules/system/logger/logger';
 class EmojiListUpdateEvent implements UtsukushiEvent {
 
 	private async updateGuildEmojiListInDatabase(guild: Guild, client: UtsukushiClient, target?: GuildEmoji) {
-		const guildCache = await client.getDatabase().guilds.getByKey(guild.id);
+		const guildCache = await client.data.guilds.getByKey(guild.id);
 		if (!guildCache?.value.shareEmojis) return;
 
 		const emojis = await guild.emojis.fetch();
@@ -22,9 +22,9 @@ class EmojiListUpdateEvent implements UtsukushiEvent {
 
 		if (target) {
 			const old = [...emojiArray, <GlobalDataEmoji>{ animated: target.animated, id: target.id, name: target.name }];
-			await client.getDatabase().global.deleteEmojis(old);
+			await client.data.global.deleteEmojis(old);
 		}
-		await client.getDatabase().global.setEmojis(emojiArray);
+		await client.data.global.setEmojis(emojiArray);
 	}
 
 	readonly event = async (client: UtsukushiClient): Promise<void> => {

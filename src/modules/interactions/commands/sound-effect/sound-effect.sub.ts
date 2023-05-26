@@ -68,7 +68,7 @@ export class SoundEffectSubCommand {
 			return;
 		}
 
-		const data = client.getDatabase().global.getSoundEffects();
+		const data = client.data.global.getSoundEffects();
 		if (data?.some((effect) => effect.key === options.name)) {
 			await interaction.reply({
 				content: `❌ Sound Effect key ${bold(options.name)} already exist !`,
@@ -88,7 +88,7 @@ export class SoundEffectSubCommand {
 			return;
 		}
 
-		client.getDatabase().global.setSoundEffects([{
+		client.data.global.setSoundEffects([{
 			key: options.name,
 			url: options.url,
 		}]);

@@ -122,7 +122,7 @@ export class UtsukushiClient extends Client {
 		this.user?.setStatus(status);
 	}
 
-	getDatabase(): UtsukushiCache {
+	get data(): UtsukushiCache {
 		return this.memory;
 	}
 }

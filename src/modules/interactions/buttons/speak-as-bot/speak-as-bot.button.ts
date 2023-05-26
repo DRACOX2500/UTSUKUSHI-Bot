@@ -19,12 +19,12 @@ export namespace SpeakAsBotButtons {
 			client: UtsukushiClient
 		): Promise<void> => {
 			const userId = interaction.user.id;
-			const message = client.getDatabase().tempory.get(`sab-${userId}`);
+			const message = client.data.tempory.get(`sab-${userId}`);
 			if (!message) {
 				await interaction.deferUpdate();
 				return;
 			}
-			client.getDatabase().tempory.delete(`sab-${userId}`);
+			client.data.tempory.delete(`sab-${userId}`);
 
 			await interaction.channel?.send({ content: message.message, files: message.attachments });
 			await interaction.deferUpdate();
@@ -46,7 +46,7 @@ export namespace SpeakAsBotButtons {
 			client: UtsukushiClient
 		): Promise<void> => {
 			const userId = interaction.user.id;
-			client.getDatabase().tempory.delete(`sab-${userId}`);
+			client.data.tempory.delete(`sab-${userId}`);
 			await interaction.deferUpdate();
 		};
 	}

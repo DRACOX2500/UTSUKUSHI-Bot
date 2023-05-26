@@ -66,7 +66,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 
 		if (!url) {
 			url = await client
-				.getDatabase()
+				.data
 				.guilds.getByKey(interaction.guild.id)
 				.then((response) => {
 					return <string>response?.value.lastPlayURL;
@@ -96,17 +96,17 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 				.editReply(reply)
 				.catch((err: Error) => logger.error({}, err.message));
 
-			client.getDatabase().guilds.set(<string>interaction.guildId, {
+			client.data.guilds.set(<string>interaction.guildId, {
 				lastPlayURL: stream.url,
 			});
-			client.getDatabase().users.getByKey(interaction.user.id).then((user) => {
+			client.data.users.getByKey(interaction.user.id).then((user) => {
 				if (
 					url &&
 					!RegExp(/^https?:\/\//).exec(url) &&
 					!user?.value.keywords?.includes(url)
 				)
 					client
-						.getDatabase()
+						.data
 						.users.set(interaction.user.id, { keywords: [url] });
 			}).catch((err: Error) => logger.error({}, err.message));
 		});
@@ -124,7 +124,7 @@ export class PlayCommand implements UtsukushiAutocompleteSlashCommand {
 		const focusedOption = interaction.options.getFocused(true);
 		let choices: string[] | undefined;
 
-		const data = await client.getDatabase().users.getByKey(interaction.user.id);
+		const data = await client.data.users.getByKey(interaction.user.id);
 		if (!data?.value.keywords) return;
 
 		if (focusedOption.name === 'song') {

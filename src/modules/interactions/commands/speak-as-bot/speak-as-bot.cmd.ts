@@ -39,7 +39,7 @@ export class SpeakAsBotCommand implements UtsukushiSlashCommand {
 		const attach = attachment ? [attachment] : [];
 
 		const userId = interaction.user.id;
-		client.getDatabase().tempory.set(`sab-${userId}`, { message: message, attachments: attach });
+		client.data.tempory.set(`sab-${userId}`, { message: message, attachments: attach });
 
 		const confirm = buttons[0].button();
 		const cancel = buttons[1].button();

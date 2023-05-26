@@ -85,7 +85,7 @@ export class SoundEffectCommand
 	): Promise<void> => {
 		if (interaction.options.getSubcommand() === 'play') {
 			const focusedOption = interaction.options.getFocused(true);
-			let data = client.getDatabase().global.getSoundEffects();
+			let data = client.data.global.getSoundEffects();
 
 			if (data) {
 				data = data.filter((choice) =>

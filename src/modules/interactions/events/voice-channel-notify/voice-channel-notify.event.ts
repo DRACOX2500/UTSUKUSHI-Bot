@@ -11,7 +11,7 @@ class VoiceChannelNotifyEvent implements UtsukushiEvent {
 		channelId: string,
 		guild: Guild
 	): Promise<void> {
-		const data = await client.getDatabase().guilds.getByKey(guild.id);
+		const data = await client.data.guilds.getByKey(guild.id);
 		if (data?.value.vocalNotifyChannel) {
 			const channelNotify: TextBasedChannel = await guild.channels
 				.fetch(data.value.vocalNotifyChannel)

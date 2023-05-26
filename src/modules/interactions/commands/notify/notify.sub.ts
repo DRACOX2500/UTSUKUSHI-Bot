@@ -17,7 +17,7 @@ export class NotifySubCommand {
 		}
 		await interaction.deferReply();
 		client
-			.getDatabase()
+			.data
 			.guilds.set(interaction.guild.id, { vocalNotifyChannel: null });
 		interaction.editReply('🔕 Notify Channel Removed successfully !').catch((err: Error) => logger.error({}, err.message));
 	}
@@ -31,7 +31,7 @@ export class NotifySubCommand {
 			return;
 		}
 		await interaction.deferReply();
-		client.getDatabase().guilds.set(interaction.guild.id, {
+		client.data.guilds.set(interaction.guild.id, {
 			vocalNotifyChannel: options.channel,
 		});
 		interaction.editReply('🔔 Channel setup successfully !').catch((err: Error) => logger.error({}, err.message));

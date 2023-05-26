@@ -35,7 +35,7 @@ export class BotSubCommand {
 
 		client.setActivity(newActivity);
 
-		client.getDatabase().global.setData({ activity: newActivity });
+		client.data.global.setData({ activity: newActivity });
 		interaction.reply({
 			content: '🤖 Bot activity has been change !',
 			ephemeral: true,
@@ -49,7 +49,7 @@ export class BotSubCommand {
 	): Promise<void> {
 		client.setStatus(<PresenceStatusData>options.status);
 
-		client.getDatabase().global.setData({ status: options.status });
+		client.data.global.setData({ status: options.status });
 		interaction.reply({
 			content: '🤖 Bot status has been change !',
 			ephemeral: true,
