@@ -1,6 +1,6 @@
 # UTSUKUSHI BOT (Discord-Bot)
 ![](https://img.shields.io/badge/Discord%20JS-14.9-blueviolet)
-![](https://img.shields.io/badge/Version-1.3.0-success)
+![](https://img.shields.io/badge/Version-2.0.0-success)
 
 ![](https://img.shields.io/badge/Node.js-43853D?&logo=node.js&logoColor=white)
 ![](https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E)
@@ -24,10 +24,10 @@ Discord Bot for my private Discord Server & friends server.
 
 1. Clone projet : `git clone https://github.com/DRACOX2500/Discord-Bot.git`
 
-2. Install / Update packages manager  
+2. Install / Update packages manager
    - Install **NodeJS** latest LTS version (*current : 18.15.0*)
    - Install / Update **NPM** : `npm i -g npm@<latest-version>` (*current 9.6.4*)
-   - *Only Linux* : `apt install libtool` 
+   - *Only Linux* : `apt install libtool`
 
 3. Install dependencies
    - Execute following command : `npm i`
@@ -51,7 +51,7 @@ Discord Bot for my private Discord Server & friends server.
 
 ### Slash Commands
 
-Status : 
+Status :
    - ✅ stable
    - 🧪 experimental
    - ❌ deprecated

@@ -1,6 +1,6 @@
 {
     "name": "bot-discord",
-    "version": "1.3.0",
+    "version": "2.0.0-snapshot",
     "main": "index.ts",
     "scripts": {
         "start": "node -r tsconfig-paths/register -r ts-node ./dist/index.js",
