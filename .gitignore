@@ -8,7 +8,7 @@ coverage/
 #TypeScript
 dist/
 
-#local
+#Local
 logs/*.log
 .env
 .v1.0/

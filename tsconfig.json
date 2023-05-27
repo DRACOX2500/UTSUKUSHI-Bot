@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "declaration": true,
+        "removeComments": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2022",
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "*": ["node_modules/*"],
+            "@/*": ["src/*"],
+        },
+        "pretty": true,
+        "incremental": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "noEmit": false
+    },
+    "include": ["index.ts", "src/**/*.ts", "test/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}
