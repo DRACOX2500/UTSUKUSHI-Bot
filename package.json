@@ -4,18 +4,19 @@
 	"author": "DRACOX2500",
 	"license": "MIT",
 	"description": "Discord Bot for a private Discord Server",
-	"readme": "",
 	"repository": {
-		"url": ""
+		"url": "https://github.com/DRACOX2500/UTSUKUSHI-Bot"
 	},
 	"main": "index.ts",
 	"scripts": {
-		"build": "tsc index.ts",
+		"build": "tsc --project tsconfig.json",
+		"watch": "tsc --project tsconfig.json --watch",
 		"deploy-commands": "echo \"Error: no deploy-commands specified\" && exit 1",
 		"reset-commands": "echo \"Error: no reset-commands specified\" && exit 1",
-		"start": "node dist/index.js",
-		"super-start": "npm run build && deploy-commands  && npm run start",
-		"nodemon": "echo \"Error: no nodemon specified\" && exit 1",
+		"start": "ts-node dist/index.js",
+		"build-start": "npm run build && npm run start",
+		"super-start": "npm run build && deploy-commands && npm run start",
+		"nodemon": "nodemon",
 		"lint": "echo \"Error: no lint specified\" && exit 1",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -27,11 +28,14 @@
 		"typescript"
 	],
 	"dependencies": {
+		"ansicolor": "^1.1.100",
 		"discord.js": "^14.11.0",
 		"dotenv": "^16.0.3"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.22",
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.0.4"
 	}
 }
