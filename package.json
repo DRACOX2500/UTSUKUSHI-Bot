@@ -10,6 +10,13 @@
 	},
 	"main": "index.ts",
 	"scripts": {
+		"build": "tsc index.ts",
+		"deploy-commands": "echo \"Error: no deploy-commands specified\" && exit 1",
+		"reset-commands": "echo \"Error: no reset-commands specified\" && exit 1",
+		"start": "node dist/index.js",
+		"super-start": "npm run build && deploy-commands  && npm run start",
+		"nodemon": "echo \"Error: no nodemon specified\" && exit 1",
+		"lint": "echo \"Error: no lint specified\" && exit 1",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
@@ -24,6 +31,7 @@
 		"dotenv": "^16.0.3"
 	},
 	"devDependencies": {
+		"nodemon": "^2.0.22",
 		"typescript": "^5.0.4"
 	}
 }
