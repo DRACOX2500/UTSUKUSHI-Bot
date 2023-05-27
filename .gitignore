@@ -11,6 +11,7 @@ dist/
 #local
 logs/*.log
 .env
+.v1.0/
 src/assets/*.webp
 utsukushi.config.json
 
