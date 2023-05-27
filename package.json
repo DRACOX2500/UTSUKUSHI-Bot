@@ -10,6 +10,7 @@
 	"main": "index.ts",
 	"scripts": {
 		"build": "tsc --project tsconfig.json",
+		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
 		"deploy-commands": "echo \"Error: no deploy-commands specified\" && exit 1",
 		"reset-commands": "echo \"Error: no reset-commands specified\" && exit 1",
@@ -23,8 +24,11 @@
 	"keywords": [
 		"bot",
 		"discord",
-		"music",
+		"discord-bot",
+		"discord-js",
 		"javascript",
+		"music",
+		"nodejs",
 		"typescript"
 	],
 	"dependencies": {
