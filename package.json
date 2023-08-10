@@ -12,11 +12,12 @@
 		"build": "tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
-		"deploy-commands": "echo \"Error: no deploy-commands specified\" && exit 1",
-		"reset-commands": "echo \"Error: no reset-commands specified\" && exit 1",
+		"deploy-command": "ts-node dist/index.js",
+		"deploy-commands": "ts-node dist/index.js",
+		"reset-commands": "ts-node dist/index.js",
 		"start": "ts-node dist/index.js",
 		"build-start": "npm run build && npm run start",
-		"super-start": "npm run build && deploy-commands && npm run start",
+		"super-start": "npm run build && npm run deploy-commands && npm run start",
 		"nodemon": "nodemon",
 		"lint": "echo \"Error: no lint specified\" && exit 1",
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -29,17 +30,21 @@
 		"javascript",
 		"music",
 		"nodejs",
+		"music",
 		"typescript"
 	],
 	"dependencies": {
 		"ansicolor": "^1.1.100",
-		"discord.js": "^14.11.0",
-		"dotenv": "^16.0.3"
+		"discord.js": "^14.12.1",
+		"dotenv": "^16.3.1",
+		"pino": "^8.15.0",
+		"pino-pretty": "^10.2.0",
+		"rxjs": "^7.8.1"
 	},
 	"devDependencies": {
-		"nodemon": "^2.0.22",
+		"nodemon": "^3.0.1",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.2.0",
-		"typescript": "^5.0.4"
+		"typescript": "^5.1.6"
 	}
 }

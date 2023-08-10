@@ -1,3 +1,5 @@
-import { utsukushiASCIILog } from "@/core/logger";
+import { environment } from "@/environment";
+import { main } from "@/main";
 
-utsukushiASCIILog();
+
+main(environment.NPM_SCRIPT, process.argv);

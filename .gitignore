@@ -9,6 +9,7 @@ coverage/
 dist/
 
 #Local
+package-lock.json
 logs/*.log
 .env
 .v1.0/
