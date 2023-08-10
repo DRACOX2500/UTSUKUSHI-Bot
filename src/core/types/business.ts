@@ -14,3 +14,7 @@ export interface BotConfig {
         activity: BotActivity;
     }
 }
+
+export interface UtsukushiBotConfig extends BotConfig {
+    ignoreDB: boolean;
+}

@@ -80,3 +80,7 @@ export function botFinishDeployCommand(size: number) {
 		)
 	);
 }
+
+export function botConnectedDB() {
+	logger.info(green('Connect to Database !'))
+}

@@ -75,7 +75,7 @@ export class CommandManager {
 		}
 		catch (err) {
 			// Not .js or .ts files
-            logger.error(err)
+            logger.error(err);
 		}
         return list;
 	}
@@ -94,6 +94,22 @@ export class CommandManager {
         return list;
     }
 
+    resetAll(): Promise<void>
+    {
+        return (async () => {
+            const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
+
+            try {
+                await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
+					body: [],
+				});
+            }
+            catch (error) {
+                logger.error(error);
+            }
+        })();
+    }
+
     deployAll(): Promise<number>
     {
         const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
@@ -110,7 +126,7 @@ export class CommandManager {
 				botFinishDeployCommand(cmds.length);
 			}
 			catch (error) {
-				console.error(error);
+				logger.error(error);
 				return 1;
 			}
 			return 0;

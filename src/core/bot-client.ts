@@ -12,7 +12,7 @@ export class BotClient extends Client {
 	private username: string = ERROR_USERNAME;
 	private readonly config: BotConfig;
 
-	constructor(profil: ProgProfil = 'prod', intents: GatewayIntentBits[] = [], config?: BotConfig) {
+	constructor(profil: ProgProfil = 'prod', intents: GatewayIntentBits[] = [], config?: Partial<BotConfig>) {
 		super({ intents });
 		this.config = {
 			default: {
