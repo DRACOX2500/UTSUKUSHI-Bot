@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, Message } from "discord.js";
 import { UtsukushiBotClient } from "../../client";
 import { Getter } from "@/core/utils/getter";
-import { PONG_COLOR } from "@/constants";
+import { PONG_COLOR, PONG_SMASH_CHANCE } from "@/constants";
 
 export class PongEmbedBuilder extends EmbedBuilder {
     private timestamp: number;
@@ -38,7 +38,7 @@ export class PongEmbedBuilder extends EmbedBuilder {
 	}
 
 	private get title(): string {
-		if (Getter.randomNumber(5) === 1)
+		if (Getter.randomNumber(PONG_SMASH_CHANCE) === 1)
 		return '🏓🔥 ***SMAAAAAAAAAAAAAAAAASH !!!!!***';
 		else return '🏓 ***Pong !***';
 	}

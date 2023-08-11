@@ -3,11 +3,11 @@ import { BotActivity, BotConfig, ProgProfil } from './types/business';
 import { environment } from '@/environment';
 import { botLoginLog } from '@/core/logger';
 import { ERROR_USERNAME, TWITCH_LINK } from '@/constants';
-import { CommandManager } from './commands-manager';
+import { InteractionsManager } from './interactions-manager';
 
 export class BotClient extends Client {
 
-	protected _cmdManager: CommandManager;
+	protected _cmdManager: InteractionsManager;
 
 	private username: string = ERROR_USERNAME;
 	private readonly config: BotConfig;
@@ -25,11 +25,14 @@ export class BotClient extends Client {
 			},
 			...config,
 		};
-		this._cmdManager = new CommandManager();
+		this._cmdManager = new InteractionsManager(this);
 		this.initBotEvents();
 	}
 
 	private initBotEvents(): void {
+		this.on('interactionCreate', (interaction) =>
+			this._cmdManager.handleInteractions(interaction, this)
+		);
 		this.on('ready', async (client: Client) => {
 			this.setUsername(client.user?.username);
 			botLoginLog(this.username);
@@ -55,7 +58,7 @@ export class BotClient extends Client {
 		this.user?.setStatus(status);
 	}
 
-	get cmdManager(): CommandManager {
+	get cmdManager(): InteractionsManager {
 		return this._cmdManager;
 	}
 }

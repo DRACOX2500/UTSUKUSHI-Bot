@@ -5,8 +5,8 @@ export function main(command: string, args: any[]) {
     switch (command) {
         case 'start':
             {
-                const client = new UtsukushiBotClient();
                 utsukushiASCIILog();
+                const client = new UtsukushiBotClient();
                 client.login();
             }
             break;

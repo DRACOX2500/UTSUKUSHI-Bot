@@ -5,7 +5,9 @@ import { BotSlashCommand } from "./types/bot-command";
 import { botFinishDeployCommand, botStartDeployCommand, logger } from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
-import { REST, Routes } from 'discord.js';
+import { CacheType, Interaction, InteractionType, REST, Routes } from 'discord.js';
+import { command } from '../bot/interactions/slash-commands/ping.cmd';
+import { ERROR_COMMAND } from '@/constants';
 
 interface CommandManagerConfig {
     commandsPath: string[];
@@ -27,7 +29,7 @@ const DEFAULT_CONFIG = {
     ],
 }
 
-export class CommandManager {
+export class InteractionsManager {
 
     config: CommandManagerConfig;
 
@@ -131,5 +133,17 @@ export class CommandManager {
 			}
 			return 0;
 		})();
+    }
+
+    async handleInteractions(
+        interaction: Interaction<CacheType>,
+        client: BotClient
+    ): Promise<void>
+    {
+        logger.info(`[${interaction.type}] - ${interaction.user.username}`);
+        if (interaction.isChatInputCommand()) {
+            if (!client) interaction.reply(ERROR_COMMAND);
+            else this._commands[interaction.commandName].result(interaction, client);
+        }
     }
 }
