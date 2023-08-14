@@ -2,5 +2,5 @@
     "watch": ["src", "index.ts", ".env"],
     "ext": "ts",
     "ignore": ["*.spec.ts"],
-    "exec": "npm run build-start"
+    "exec": "npm run build-dev"
   }

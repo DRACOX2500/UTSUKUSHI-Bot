@@ -16,8 +16,11 @@
 		"deploy-commands": "ts-node dist/index.js",
 		"reset-commands": "ts-node dist/index.js",
 		"start": "ts-node dist/index.js",
+		"dev": "ts-node dist/index.js --profile dev",
 		"build-start": "npm run build && npm run start",
 		"super-start": "npm run build && npm run deploy-commands && npm run start",
+		"build-dev": "npm run build && npm run dev",
+		"super-dev": "npm run build && npm run deploy-commands && npm run dev",
 		"nodemon": "nodemon",
 		"lint": "echo \"Error: no lint specified\" && exit 1",
 		"test": "echo \"Error: no test specified\" && exit 1"

@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { SCHEMAS } from "../database";
+import { BotActivity } from "@/core/types/business";
 
 const systemSchema = new Schema({
     emojis: {
@@ -23,5 +24,14 @@ const systemSchema = new Schema({
     },
     status: String,
 })
+
+
+systemSchema.methods.updateActivity = async function(activity: BotActivity) {
+
+}
+
+systemSchema.statics.findFirst = async function() {
+    return this.find({}, { limit: 1 })[0] ?? null;
+}
 
 export = model(SCHEMAS.SYSTEM, systemSchema);

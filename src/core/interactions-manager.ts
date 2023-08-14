@@ -2,12 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { BotSlashCommand } from "./types/bot-command";
-import { botFinishDeployCommand, botStartDeployCommand, logger } from './logger';
+import { botFinishDeployCommand, botFinishResetCommand, botStartDeployCommand, botStartResetCommand, logger } from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
-import { CacheType, Interaction, InteractionType, REST, Routes } from 'discord.js';
-import { command } from '../bot/interactions/slash-commands/ping.cmd';
-import { ERROR_COMMAND } from '@/constants';
+import { CacheType, Interaction, REST, Routes } from 'discord.js';
+import { ERROR_COMMAND } from './constants';
 
 interface CommandManagerConfig {
     commandsPath: string[];
@@ -102,9 +101,13 @@ export class InteractionsManager {
             const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
 
             try {
+                botStartResetCommand();
+
                 await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
 					body: [],
 				});
+
+                botFinishResetCommand();
             }
             catch (error) {
                 logger.error(error);
@@ -142,8 +145,17 @@ export class InteractionsManager {
     {
         logger.info(`[${interaction.type}] - ${interaction.user.username}`);
         if (interaction.isChatInputCommand()) {
-            if (!client) interaction.reply(ERROR_COMMAND);
-            else this._commands[interaction.commandName].result(interaction, client);
+            if (!client) {
+                interaction.reply(ERROR_COMMAND);
+                logger.error(`Command ${interaction.commandName} : No client !`);
+            }
+            else {
+                try {
+                    await this._commands[interaction.commandName].result(interaction, client);
+                } catch (error) {
+                    logger.error(`Command ${interaction.commandName} : Command Error`, error);
+                }
+            }
         }
     }
 }

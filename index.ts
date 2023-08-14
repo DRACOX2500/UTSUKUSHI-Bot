@@ -1,5 +1,3 @@
-import { environment } from "@/environment";
 import { main } from "@/main";
 
-
-main(environment.NPM_SCRIPT, process.argv);
+main(process.env.npm_lifecycle_event ?? '', process.argv);

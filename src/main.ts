@@ -1,11 +1,16 @@
+import { ProfileService } from "@/services/profile-service";
 import { UtsukushiBotClient } from "@/bot/client";
-import { utsukushiASCIILog } from "@/core/logger";
+import { logger, utsukushiASCIILog } from "@/core/logger";
 
 export function main(command: string, args: any[]) {
+    ProfileService.initProfile(args);
+    utsukushiASCIILog();
+    logger.info(`Start with "${ProfileService.profile}" profile !`);
+    logger.info(`User environment from "${ProfileService.envPath}"`);
     switch (command) {
+        case 'dev':
         case 'start':
             {
-                utsukushiASCIILog();
                 const client = new UtsukushiBotClient();
                 client.login();
             }

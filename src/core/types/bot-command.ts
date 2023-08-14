@@ -8,6 +8,7 @@ import {
 	AutocompleteInteraction,
 	UserContextMenuCommandInteraction,
 	MessageContextMenuCommandInteraction,
+	SlashCommandSubcommandBuilder,
 } from 'discord.js';
 import { BotClient } from '../bot-client';
 
@@ -15,6 +16,8 @@ type BotSlashCommandType =
 	| SlashCommandBuilder
 	| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
 	| SlashCommandSubcommandsOnlyBuilder;
+
+type BotSubSlashCommandType = (subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder
 
 type BotContextCommandType = ContextMenuCommandBuilder;
 
@@ -35,7 +38,10 @@ export interface BotPrivateCommand {
 	readonly guildId: string[] | null | undefined;
 }
 
-export interface BotCommand<T extends CommandInteraction> {
+export interface BotCommand<
+	T extends BotClient,
+	I extends CommandInteraction
+> {
 	/**
 	 * @Command SlashCommand | ContextMenuCommand
 	 */
@@ -44,72 +50,85 @@ export interface BotCommand<T extends CommandInteraction> {
 	 * Function that responds to the command
 	 */
 	readonly result: (
-		interaction: T,
-		client: BotClient,
-		options?: BotCommandOptions
+		interaction: I,
+		client: T,
+		options?: Partial<BotCommandOptions>
 	) => Promise<void>;
 }
 
-export interface BotSlashCommand
-	extends BotCommand<ChatInputCommandInteraction> {
+export interface BotSlashCommand<T extends BotClient = BotClient>
+	extends BotCommand<T, ChatInputCommandInteraction> {
 	/**
 	 * @Command SlashCommand
 	 */
 	readonly command: BotSlashCommandType;
 	readonly result: (
 		interaction: ChatInputCommandInteraction,
-		client: BotClient,
-		options?: BotCommandOptions
+		client: T,
+		options?: Partial<BotCommandOptions>
+	) => Promise<void>;
+}
+
+export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any> {
+	/**
+	 * @Command SubSlashCommand
+	 */
+	readonly subcommand: BotSubSlashCommandType;
+	readonly result: (
+		interaction: ChatInputCommandInteraction,
+		client: T,
+		options?: O
 	) => Promise<void>;
 }
 
 export interface BotContextCommand<
-	T extends ContextMenuCommandInteraction
-> extends Omit<BotCommand<ContextMenuCommandInteraction>, 'result'> {
+	T extends BotClient,
+	I extends ContextMenuCommandInteraction
+> extends Omit<BotCommand<T, ContextMenuCommandInteraction>, 'result'> {
 	/**
 	 * @Command ContextMenuCommand
 	 */
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
-		interaction: T,
-		client: BotClient,
-		options?: BotCommandOptions
+		interaction: I,
+		client: T,
+		options?: Partial<BotCommandOptions>
 	) => Promise<void>;
 }
 
-export interface BotMessageContextCommand
-	extends BotContextCommand<MessageContextMenuCommandInteraction> {
+export interface BotMessageContextCommand<T extends BotClient>
+	extends BotContextCommand<T, MessageContextMenuCommandInteraction> {
 	/**
 	 * @Command ContextMenuCommand
 	 */
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
 		interaction: MessageContextMenuCommandInteraction,
-		client: BotClient,
-		options?: BotCommandOptions
+		client: T,
+		options?: Partial<BotCommandOptions>
 	) => Promise<void>;
 }
 
-export interface BotUserContextCommand
-	extends BotContextCommand<UserContextMenuCommandInteraction> {
+export interface BotUserContextCommand<T extends BotClient>
+	extends BotContextCommand<T, UserContextMenuCommandInteraction> {
 	/**
 	 * @Command ContextMenuCommand
 	 */
 	readonly command: ContextMenuCommandBuilder;
 	readonly result: (
 		interaction: UserContextMenuCommandInteraction,
-		client: BotClient,
-		options?: BotCommandOptions
+		client: T,
+		options?: Partial<BotCommandOptions>
 	) => Promise<void>;
 }
 
-export interface BotAutocompleteSlashCommand
-	extends BotSlashCommand {
+export interface BotAutocompleteSlashCommand<T extends BotClient>
+	extends BotSlashCommand<T> {
 	/**
 	 * Function that responds to the AutocompleteInteraction
 	 */
 	readonly autocomplete: (
 		interaction: AutocompleteInteraction,
-		client: BotClient
+		client: T
 	) => Promise<void>;
 }

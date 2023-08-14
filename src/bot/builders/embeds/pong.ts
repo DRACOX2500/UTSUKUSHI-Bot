@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, Message } from "discord.js";
-import { UtsukushiBotClient } from "../../client";
 import { Getter } from "@/core/utils/getter";
 import { PONG_COLOR, PONG_SMASH_CHANCE } from "@/constants";
+import { BotClient } from "@/core/bot-client";
 
 export class PongEmbedBuilder extends EmbedBuilder {
     private timestamp: number;
@@ -10,7 +10,7 @@ export class PongEmbedBuilder extends EmbedBuilder {
 	constructor(
 		message: Message | null,
 		interaction: ChatInputCommandInteraction | null,
-		private client: UtsukushiBotClient
+		private client: BotClient
 	) {
 		super();
 		this.timestamp = this.getPongLatency(

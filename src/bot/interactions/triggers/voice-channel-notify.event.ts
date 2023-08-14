@@ -1,4 +1,4 @@
-import { UtsukushiBotClient } from "@/bot/client";
+import { BotClient } from "@/core/bot-client";
 import { logger } from "@/core/logger";
 import { BotTrigger } from "@/core/types/bot-interaction";
 import { Guild } from "discord.js";
@@ -9,7 +9,7 @@ import { Guild } from "discord.js";
  */
 export class VoiceChannelNotifyTrigger implements BotTrigger {
 	private async notifyGuild(
-		client: UtsukushiBotClient,
+		client: BotClient,
 		user: string,
 		channelId: string,
 		guild: Guild
@@ -31,7 +31,7 @@ export class VoiceChannelNotifyTrigger implements BotTrigger {
 		// }
 	}
 
-	readonly trigger = async (client: UtsukushiBotClient): Promise<void> => {
+	readonly trigger = async (client: BotClient): Promise<void> => {
 		client.on('voiceStateUpdate', async (oldState, newState) => {
 			// TODO: rework
 			if (oldState.channelId === newState.channelId) {

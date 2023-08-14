@@ -39,7 +39,7 @@ export const logger = pino(
 );
 
 /**
- * Make a console.log of UTSUKUSHI title with version project
+ * Make a log of UTSUKUSHI title with version project
  */
 export function utsukushiASCIILog(): void {
     logger.info(
@@ -57,21 +57,21 @@ export function utsukushiASCIILog(): void {
 }
 
 /**
- * Make a console.log of Bot login
+ * Make a log of Bot login
  */
 export function botLoginLog(name: string) {
     logger.info(lightYellow(`Logged in as ${cyan(name)}!`));
 }
 
 /**
- * Make a console.log when Bot commands deployement started
+ * Make a log when Bot commands deployement started
  */
 export function botStartDeployCommand() {
 	logger.info(lightGreen('Started refreshing application global (/) commands...'));
 }
 
 /**
- * Make a console.log when Bot commands deployement finished
+ * Make a log when Bot commands deployement finished
  */
 export function botFinishDeployCommand(size: number) {
 	logger.info(
@@ -79,6 +79,20 @@ export function botFinishDeployCommand(size: number) {
 			`Successfully reloaded application ${size} global (/) commands !`
 		)
 	);
+}
+
+/**
+ * Make a log when Bot commands reset started
+ */
+export function botStartResetCommand() {
+	logger.info(lightGreen('Started reset all (/) commands...'));
+}
+
+/**
+ * Make a log when Bot commands reset finished
+ */
+export function botFinishResetCommand() {
+	logger.info(green(`Successfully reset all (/) commands !`));
 }
 
 export function botConnectedDB() {

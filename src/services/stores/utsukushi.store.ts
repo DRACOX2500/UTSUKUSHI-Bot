@@ -1,27 +1,31 @@
-import { Guild } from "discord.js";
-import { BehaviorSubject, Observable } from "rxjs";
+import { AbstractStore } from "./abstract-store";
+import { UtsukushiSystem } from "@/types/business";
+import { UserStore } from './user.store';
+import { GuildStore } from "./guild.store";
+import System from '@/database/schemas/system.schema';
+import { DEFAULT_SYSTEM } from "@/constants";
 
-export class UtsukushiStore {
+export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
 
-    private _config$: Observable<any>;
-    private _configSubject$: BehaviorSubject<any>;
+    readonly users: UserStore;
+    readonly guilds: GuildStore ;
 
     constructor() {
-        this._configSubject$ = new BehaviorSubject({});
-        this._config$ = this._configSubject$.asObservable();
+        super(System, DEFAULT_SYSTEM);
+        this.users = new UserStore();
+        this.guilds = new GuildStore();
     }
 
-    init() {
-        //TODO: get from database
-        const value = {};
-        this._configSubject$.next(value);
+    private async initDefault(): Promise<void> {
+        const syst = new System(this.value);
+        await syst.save();
     }
 
-    get config(): Guild[] {
-        return this._configSubject$.value;
-    }
-
-    get config$(): Observable<Guild[]> {
-        return this._config$;
+    async initialize() {
+        const res = await this.schema.find().limit(1).exec();
+        if (res.length === 0) await this.initDefault();
+        super.init(res[0] ?? this.value);
+        this.users.init([]);
+        this.guilds.init([]);
     }
 }

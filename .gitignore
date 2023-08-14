@@ -11,7 +11,8 @@ dist/
 #Local
 package-lock.json
 logs/*.log
-.env
+.env*
+!.env.example
 .v1.0/
 src/assets/*.webp
 utsukushi.config.json

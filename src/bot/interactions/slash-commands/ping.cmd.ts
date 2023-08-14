@@ -1,5 +1,5 @@
 import { PongEmbedBuilder } from "@/bot/builders/embeds/pong";
-import { UtsukushiBotClient } from "@/bot/client";
+import { BotClient } from "@/core/bot-client";
 import { logger } from "@/core/logger";
 import { BotSlashCommand } from "@/core/types/bot-command";
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
@@ -16,7 +16,7 @@ export class PingCommand implements BotSlashCommand {
 
 	readonly result = async (
 		interaction: ChatInputCommandInteraction,
-		client?: UtsukushiBotClient
+		client?: BotClient
 	): Promise<void> => {
 		if (!client) {
 			interaction.reply('‼️🤖 No Client found !').catch((err: Error) => logger.error({}, err.message));

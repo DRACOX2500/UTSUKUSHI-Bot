@@ -1,10 +1,10 @@
 import { ActivityType, PresenceStatusData } from "discord.js";
 
-export type ProgProfil = 'prod' | 'dev' | 'test';
+export type ProgProfile = 'prod' | 'dev' | 'test';
 
 export interface BotActivity {
 	status: string;
-	type: ActivityType | number;
+	code: ActivityType | number;
 	url: string;
 }
 
@@ -13,8 +13,4 @@ export interface BotConfig {
         status: PresenceStatusData;
         activity: BotActivity;
     }
-}
-
-export interface UtsukushiBotConfig extends BotConfig {
-    ignoreDB: boolean;
 }
