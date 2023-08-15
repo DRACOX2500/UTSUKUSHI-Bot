@@ -35,7 +35,7 @@ export interface BotPrivateCommand {
 	 * Set guild ID if you want to deploy this command on a specific guild,
 	 * else this command will be deploy globally
 	 */
-	readonly guildId: string[] | null | undefined;
+	readonly guildIds: string[];
 }
 
 export interface BotCommand<
@@ -96,7 +96,7 @@ export interface BotContextCommand<
 	) => Promise<void>;
 }
 
-export interface BotMessageContextCommand<T extends BotClient>
+export interface BotMessageContextCommand<T extends BotClient = BotClient>
 	extends BotContextCommand<T, MessageContextMenuCommandInteraction> {
 	/**
 	 * @Command ContextMenuCommand
@@ -109,7 +109,7 @@ export interface BotMessageContextCommand<T extends BotClient>
 	) => Promise<void>;
 }
 
-export interface BotUserContextCommand<T extends BotClient>
+export interface BotUserContextCommand<T extends BotClient = BotClient>
 	extends BotContextCommand<T, UserContextMenuCommandInteraction> {
 	/**
 	 * @Command ContextMenuCommand
@@ -122,7 +122,7 @@ export interface BotUserContextCommand<T extends BotClient>
 	) => Promise<void>;
 }
 
-export interface BotAutocompleteSlashCommand<T extends BotClient>
+export interface BotAutocompleteSlashCommand<T extends BotClient = BotClient>
 	extends BotSlashCommand<T> {
 	/**
 	 * Function that responds to the AutocompleteInteraction

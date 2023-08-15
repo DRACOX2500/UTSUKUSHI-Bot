@@ -9,12 +9,12 @@ import { UtsukushiBotClient } from "@/bot/client";
  *  - `bot activity [activity-type] [activity-message]` : Change Utsukushi profile activity !
  *  - `bot status [status-type]` : Change Utsukushi profile status !
  */
-export class BotCommand implements BotSlashCommand<UtsukushiBotClient>, BotPrivateCommand {
+class BotCommand implements BotSlashCommand<UtsukushiBotClient>, BotPrivateCommand {
 
 	private subCmdActivity = new BotActivitySubCommand();
 	private subCmdStatus = new BotStatusSubCommand();
 
-	readonly guildId = [];
+	readonly guildIds = [];
 	// TODO :
 	// readonly guildId = config.privateCommands[0].bot.length
 	// 	? config.privateCommands[0].bot

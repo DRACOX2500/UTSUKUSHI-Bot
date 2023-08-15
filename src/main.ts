@@ -1,6 +1,7 @@
 import { ProfileService } from "@/services/profile-service";
 import { UtsukushiBotClient } from "@/bot/client";
 import { logger, utsukushiASCIILog } from "@/core/logger";
+import { NodeJsService } from "./services/nodejs-service";
 
 export function main(command: string, args: any[]) {
     ProfileService.initProfile(args);
@@ -21,11 +22,11 @@ export function main(command: string, args: any[]) {
                     ignoreDB: true,
                     ignoreStore: true,
                 });
-                client.cmdManager.resetAll();
+                const id = NodeJsService.getArg('--guild-id', args);
+                if (id) client.cmdManager.resetGuild(id);
+                else client.cmdManager.resetAll();
             }
             break;
-        case 'deploy-command':
-            throw new Error("script not exist !");
         case 'deploy-commands':
             {
                 const client = new UtsukushiBotClient({

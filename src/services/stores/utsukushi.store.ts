@@ -30,7 +30,7 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
         else this.setDoc(new SystemModel(res[0]));
         super.set(res[0] ?? this.value);
         this.users.set([]);
-        this.guilds.set([]);
+        this.guilds.set({});
     }
 
     async updateActivity(activity: BotActivity) {

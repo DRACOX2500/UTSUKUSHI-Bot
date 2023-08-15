@@ -1,4 +1,4 @@
-import { cyan, green, lightGreen, lightYellow, red, yellow } from 'ansicolor';
+import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yellow } from 'ansicolor';
 import json from 'package';
 import pino from 'pino';
 import pretty from 'pino-pretty';
@@ -8,18 +8,18 @@ const DATE_NOW = Date.now();
 const INIT_DATE = new Date(DATE_NOW).toLocaleDateString().replaceAll('/', '');
 const INIT_TIME = new Date(DATE_NOW).toLocaleTimeString().replaceAll(':', '');
 
-const createSonicBoom = (dest: string) =>
-	pino.destination({ dest: dest, append: false, sync: false, mkdir: true });
+const DEST = `${LOG_DIR}/info${INIT_DATE + INIT_TIME}.log`;
+const SONIC_BOOM_CONFIG = { dest: DEST, append: false, sync: false, mkdir: true };
 
 const streams: any[] = [
-	{ stream: createSonicBoom(`${LOG_DIR}/info${INIT_DATE + INIT_TIME}.log`) },
+	{ stream: pino.destination(SONIC_BOOM_CONFIG) },
 	{
 		stream: pretty({
 			colorize: true,
 			sync: true,
 		}),
 	},
-	{ level: 'error', stream: createSonicBoom(`${LOG_DIR}/error${INIT_DATE + INIT_TIME}.log`) },
+	{ level: 'error', stream: pino.destination(SONIC_BOOM_CONFIG) },
 ];
 
 export const logger = pino(
@@ -93,6 +93,38 @@ export function botStartResetCommand() {
  */
 export function botFinishResetCommand() {
 	logger.info(green(`Successfully reset all (/) commands !`));
+}
+
+/**
+ * Make a log when Bot guild commands deployement started
+ */
+export function botStartGuildDeployCommand(guildId: string) {
+	logger.info(lightGreen(`Started refreshing guild "${guildId}" application global (/) commands...`));
+}
+
+/**
+ * Make a log when Bot guild commands deployement finished
+ */
+export function botFinishGuildDeployCommand(guildId: string, size: number) {
+	logger.info(
+		green(
+			`Successfully reloaded guild "${guildId}" application ${size} global (/) commands !`
+		)
+	);
+}
+
+/**
+ * Make a log when Bot guild commands reset started
+ */
+export function botStartGuildResetCommand(guildId: string) {
+	logger.info(magenta(`Started reset all guild "${guildId}" (/) commands...`));
+}
+
+/**
+ * Make a log when Bot guild commands reset finished
+ */
+export function botFinishGuildResetCommand(guildId: string) {
+	logger.info(lightMagenta(`Successfully reset all guild "${guildId}" (/) commands !`));
 }
 
 export function botConnectedDB() {

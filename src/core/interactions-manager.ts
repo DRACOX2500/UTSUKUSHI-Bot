@@ -1,29 +1,37 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { BotSlashCommand } from "./types/bot-command";
-import { botFinishDeployCommand, botFinishResetCommand, botStartDeployCommand, botStartResetCommand, logger } from './logger';
+import { BotAutocompleteSlashCommand, BotPrivateCommand, BotSlashCommand } from "./types/bot-command";
+import { botFinishDeployCommand, botFinishGuildDeployCommand, botFinishGuildResetCommand, botFinishResetCommand, botStartDeployCommand, botStartGuildDeployCommand, botStartGuildResetCommand, botStartResetCommand, logger } from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
 import { CacheType, Interaction, REST, Routes } from 'discord.js';
 import { ERROR_COMMAND } from './constants';
+import { BotTrigger } from './types/bot-interaction';
 
 interface CommandManagerConfig {
     commandsPath: string[];
+    triggersPath: string[];
     contextPath: string[];
 }
 
+const INTERACTION_PATH = [
+    environment.SRC_PATH,
+    'bot',
+    'interactions',
+]
+
 const DEFAULT_CONFIG = {
     commandsPath: [
-        environment.SRC_PATH,
-        'bot',
-        'interactions',
+        ...INTERACTION_PATH,
         'slash-commands'
     ],
+    triggersPath: [
+        ...INTERACTION_PATH,
+        'triggers'
+    ],
     contextPath: [
-        environment.SRC_PATH,
-        'bot',
-        'interactions',
+        ...INTERACTION_PATH,
         'contexts'
     ],
 }
@@ -41,10 +49,11 @@ export class InteractionsManager {
     ) {
         this.client = client;
         this.config = config;
-        this.importSlashCommands();
+        this.loadSlashCommands();
+        this.loadTriggers();
     }
 
-    private importSlashCommands(): void
+    private loadSlashCommands(): void
     {
         const commandsPath = path.join(...this.config.commandsPath);
 
@@ -55,6 +64,21 @@ export class InteractionsManager {
 			if (!command) continue;
 
 			this._commands[command.command.name] = command;
+		}
+    }
+
+    private loadTriggers(): void
+    {
+        if (!this.client) return;
+        const commandsPath = path.join(...this.config.triggersPath);
+
+		const list = this.importPaths(commandsPath, /\.trigger\.[jt]s$/);
+
+		for (const file of list.flat()) {
+			const trigger: BotTrigger = require(file).trigger;
+			if (!trigger) continue;
+
+			trigger.trigger(this.client);
 		}
     }
 
@@ -95,7 +119,53 @@ export class InteractionsManager {
         return list;
     }
 
-    resetAll(): Promise<void>
+    async resetGuild(guildId: string): Promise<void>
+    {
+        if (guildId?.length === 0) return;
+        return (async () => {
+            const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
+
+            try {
+                botStartGuildResetCommand(guildId);
+
+                await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
+					body: [],
+				});
+
+                botFinishGuildResetCommand(guildId);
+            }
+            catch (error) {
+                logger.error(error);
+            }
+        })();
+    }
+
+    async deployGuild(guildId: string): Promise<number>
+    {
+        const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
+        const cmds = this.commandsList
+            .filter(cmd => (cmd as unknown as BotPrivateCommand).guildIds?.includes(guildId))
+            .map(_cmd => _cmd.command);
+
+        return (async (): Promise<number> => {
+			try {
+				botStartGuildDeployCommand(guildId);
+
+				await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
+					body: cmds,
+				});
+
+				botFinishGuildDeployCommand(guildId, cmds.length);
+			}
+			catch (error) {
+				logger.error(error);
+				return 1;
+			}
+			return 0;
+		})();
+    }
+
+    async resetAll(): Promise<void>
     {
         return (async () => {
             const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
@@ -115,7 +185,7 @@ export class InteractionsManager {
         })();
     }
 
-    deployAll(): Promise<number>
+    async deployAll(): Promise<number>
     {
         const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
         const cmds = this.commandsList.map(_cmd => _cmd.command);
@@ -153,9 +223,13 @@ export class InteractionsManager {
                     logger.info(`[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`);
                     await this._commands[interaction.commandName].result(interaction, client);
                 } catch (error) {
+                    interaction.reply('❌ Error 500 : Bip Boop... 🤖')
                     logger.error(`Command ${interaction.commandName} : Command Error`, error);
                 }
             }
+        }
+        else if (interaction.isAutocomplete()) {
+            (this._commands[interaction.commandName] as BotAutocompleteSlashCommand).autocomplete(interaction, client);
         }
     }
 }

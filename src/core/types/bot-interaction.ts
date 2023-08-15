@@ -10,6 +10,6 @@ export interface BotButton {
 	) => Promise<void>;
 }
 
-export interface BotTrigger {
-	readonly trigger: (client: BotClient) => Promise<void>;
+export interface BotTrigger<T extends BotClient = BotClient> {
+	readonly trigger: (client: T) => Promise<void>;
 }

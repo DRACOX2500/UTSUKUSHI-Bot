@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { Song } from "@/types/business";
+import { SCHEMAS } from "@/database/database";
 
-const songSchema = new Schema({
+const songSchema = new Schema<Song>({
     url: {
         type: String,
         require: true,
@@ -10,4 +11,4 @@ const songSchema = new Schema({
     title: String,
 })
 
-export = model(SCHEMAS.SONG, songSchema);
+export const SongModel = model<Song>(SCHEMAS.SONG, songSchema);

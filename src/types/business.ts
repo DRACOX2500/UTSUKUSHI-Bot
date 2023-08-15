@@ -26,8 +26,8 @@ export interface Guild {
     id: string;
     name: string;
     emojisShared: boolean;
-    vocalNotifyChannel?: string;
-    lastPlay: Song;
+    vocalNotifyChannel?: string | null;
+    lastPlay?: Song;
     soundEffects: SoundEffect[];
 }
 

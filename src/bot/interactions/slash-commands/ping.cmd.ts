@@ -8,7 +8,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
  * @SlashCommand `ping`
  *  - `ping` : Reply with pong message
  */
-export class PingCommand implements BotSlashCommand {
+class PingCommand implements BotSlashCommand {
 	readonly command = new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Replies with Pong 🏓!')

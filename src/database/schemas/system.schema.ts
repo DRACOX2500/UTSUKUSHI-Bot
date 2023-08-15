@@ -1,9 +1,6 @@
-import { Document, Model, Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { Schema, model } from "mongoose";
 import { UtsukushiSystem } from "@/types/business";
-
-
-type SystemDocType = Document<any, any, UtsukushiSystem>;
+import { SCHEMAS } from "@/database/database";
 
 const systemSchema = new Schema<UtsukushiSystem>({
     emojis: {

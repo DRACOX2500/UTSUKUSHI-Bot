@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { User } from "@/types/business";
+import { SCHEMAS } from "@/database/database";
 
-const userSchema = new Schema({
+const userSchema = new Schema<User>({
     id: {
         type: String,
         require: true,
@@ -20,4 +21,4 @@ const userSchema = new Schema({
     }
 })
 
-export = model(SCHEMAS.USER, userSchema);
+export const UserModel = model<User>(SCHEMAS.USER, userSchema);

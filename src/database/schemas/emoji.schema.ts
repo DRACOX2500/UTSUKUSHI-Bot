@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { Emoji } from "@/types/business";
+import { SCHEMAS } from "@/database/database";
 
-
-const emojiSchema = new Schema({
+const emojiSchema = new Schema<Emoji>({
     id: {
         type: String,
         required: true,
@@ -19,4 +19,4 @@ const emojiSchema = new Schema({
     }
 })
 
-export = model(SCHEMAS.EMOJI, emojiSchema);
+export const EmojiModel = model<Emoji>(SCHEMAS.EMOJI, emojiSchema);

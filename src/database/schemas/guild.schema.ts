@@ -1,7 +1,10 @@
 import { Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { Guild } from "@/types/business";
+import { SCHEMAS } from "@/database/database";
 
-const guildSchema = new Schema({
+export const GUILD_SCHEMA = 'Guild';
+
+const guildSchema = new Schema<Guild>({
     id: {
         type: String,
         require: true,
@@ -30,4 +33,4 @@ const guildSchema = new Schema({
     },
 })
 
-export = model(SCHEMAS.GUILD, guildSchema);
+export const GuildModel = model<Guild>(SCHEMAS.GUILD, guildSchema);

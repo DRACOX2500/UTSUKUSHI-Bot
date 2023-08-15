@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
-import { SCHEMAS } from "../database";
+import { SoundEffect } from "@/types/business";
+import { SCHEMAS } from "@/database/database";
 
-
-const soundEffectSchema = new Schema({
+const soundEffectSchema = new Schema<SoundEffect>({
     name: {
         type: String,
         required: true,
@@ -13,4 +13,4 @@ const soundEffectSchema = new Schema({
     }
 })
 
-export = model(SCHEMAS.SOUND_EFFECT, soundEffectSchema);
+export const SoundEffectModel = model<SoundEffect>(SCHEMAS.SOUND_EFFECT, soundEffectSchema);
