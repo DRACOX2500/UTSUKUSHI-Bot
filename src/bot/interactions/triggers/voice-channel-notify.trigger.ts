@@ -29,7 +29,6 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 
 	readonly trigger = async (client: UtsukushiBotClient): Promise<void> => {
 		client.on('voiceStateUpdate', async (oldState, newState) => {
-			console.log('event : ');
 			if (
 				oldState.channelId != null &&
 				newState.channelId != null

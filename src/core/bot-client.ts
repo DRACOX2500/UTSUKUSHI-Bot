@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, PresenceStatusData } from 'discord.js';
 import { BotActivity, BotConfig, ProgProfile } from './types/business';
-import { botLoginLog } from './logger';
+import { botLoginLog, logger } from './logger';
 import { InteractionsManager } from './interactions-manager';
 import { DEFAULT_ACTIVITY, ERROR_USERNAME } from './constants';
 import { BotClientEvents } from './bot-client-events';
@@ -32,8 +32,22 @@ export class BotClient extends Client implements BotClientEvents {
 			this.setStatus(this.config.default.status);
 			this.onAfterReady();
 		});
-		this.on('error', console.error);
-		this.on('warn', console.warn);
+		this.on('error', logger.error);
+		this.on('warn', logger.warn);
+
+		this.on('shardError', (error) => {
+			logger.error(
+				{ tag: 'WebSocket', error: error },
+				'A websocket connection encountered an error : ' + error.message
+			);
+		});
+
+		process.on('unhandledRejection', (error: any) => {
+			logger.error(
+				{ tag: 'Promise Rejection', error: error },
+				'Unhandled promise rejection : ' + error?.message
+			);
+		});
 	}
 
 	setUsername(username?: string): void {
