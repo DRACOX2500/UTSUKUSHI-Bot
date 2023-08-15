@@ -1,8 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Document, Model, Schema, model } from "mongoose";
 import { SCHEMAS } from "../database";
-import { BotActivity } from "@/core/types/business";
+import { UtsukushiSystem } from "@/types/business";
 
-const systemSchema = new Schema({
+
+type SystemDocType = Document<any, any, UtsukushiSystem>;
+
+const systemSchema = new Schema<UtsukushiSystem>({
     emojis: {
         type: [{
             type: Schema.Types.ObjectId,
@@ -25,13 +28,4 @@ const systemSchema = new Schema({
     status: String,
 })
 
-
-systemSchema.methods.updateActivity = async function(activity: BotActivity) {
-
-}
-
-systemSchema.statics.findFirst = async function() {
-    return this.find({}, { limit: 1 })[0] ?? null;
-}
-
-export = model(SCHEMAS.SYSTEM, systemSchema);
+export const SystemModel = model<UtsukushiSystem>(SCHEMAS.SYSTEM, systemSchema);

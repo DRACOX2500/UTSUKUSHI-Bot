@@ -143,7 +143,6 @@ export class InteractionsManager {
         client: BotClient
     ): Promise<void>
     {
-        logger.info(`[${interaction.type}] - ${interaction.user.username}`);
         if (interaction.isChatInputCommand()) {
             if (!client) {
                 interaction.reply(ERROR_COMMAND);
@@ -151,6 +150,7 @@ export class InteractionsManager {
             }
             else {
                 try {
+                    logger.info(`[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`);
                     await this._commands[interaction.commandName].result(interaction, client);
                 } catch (error) {
                     logger.error(`Command ${interaction.commandName} : Command Error`, error);

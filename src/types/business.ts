@@ -3,6 +3,7 @@ import { PresenceStatusData } from "discord.js";
 
 export interface UtsukushiBotConfig extends BotConfig {
     ignoreDB: boolean;
+    ignoreStore: boolean;
 }
 
 export interface Emoji {

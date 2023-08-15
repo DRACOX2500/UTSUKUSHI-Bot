@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export function connectMongoDB(): void {
     mongoose.set("strictQuery", true);
-    mongoose.connect(environment.DB_URL, { autoCreate: true })
+    mongoose.connect(environment.DB_URL)
         .then(() => botConnectedDB())
         .catch(error => logger.error(error));
 }

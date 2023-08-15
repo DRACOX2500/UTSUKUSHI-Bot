@@ -17,7 +17,10 @@ export function main(command: string, args: any[]) {
             break;
         case 'reset-commands':
             {
-                const client = new UtsukushiBotClient({ ignoreDB: true });
+                const client = new UtsukushiBotClient({
+                    ignoreDB: true,
+                    ignoreStore: true,
+                });
                 client.cmdManager.resetAll();
             }
             break;
@@ -25,7 +28,10 @@ export function main(command: string, args: any[]) {
             throw new Error("script not exist !");
         case 'deploy-commands':
             {
-                const client = new UtsukushiBotClient({ ignoreDB: true });
+                const client = new UtsukushiBotClient({
+                    ignoreDB: true,
+                    ignoreStore: true,
+                });
                 client.cmdManager.deployAll();
             }
             break;

@@ -57,8 +57,7 @@ export class BotActivitySubCommand implements BotSubSlashCommand<UtsukushiBotCli
 
 			client.setActivity(newActivity);
 
-			// TODO: save activity
-			// client.data.global.setData({ activity: newActivity });
+			client.store.updateActivity(newActivity);
 			interaction.reply({
 				content: '🤖 Bot activity has been change !',
 				ephemeral: true,
@@ -95,7 +94,7 @@ export class BotStatusSubCommand implements BotSubSlashCommand<UtsukushiBotClien
 
 		client.setStatus(options.status as PresenceStatusData);
 
-		// client.data.global.setData({ status: options.status });
+		client.store.updateStatus(options.status as PresenceStatusData);
 		interaction.reply({
 			content: '🤖 Bot status has been change !',
 			ephemeral: true,

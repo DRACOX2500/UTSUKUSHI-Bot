@@ -1,6 +1,8 @@
 import { DEFAULT_ACTIVITY } from "./core/constants";
 import { UtsukushiSystem } from "./types/business";
 
+export const AFTER_READY = 5000;
+
 export const PONG_SMASH_CHANCE = 100;
 export const PONG_COLOR = {
 	GREEN: 0x41df19,

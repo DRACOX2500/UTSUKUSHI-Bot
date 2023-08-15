@@ -1,6 +1,6 @@
+import { AFTER_READY } from "@/constants";
 import { BotClient } from "@/core/bot-client";
 import { OnAfterReady } from "@/core/bot-client-events";
-import { BotActivity } from "@/core/types/business";
 import { connectMongoDB } from "@/database/database";
 import { ProfileService } from "@/services/profile-service";
 import { UtsukushiStore } from "@/services/stores/utsukushi.store";
@@ -9,7 +9,7 @@ import { GatewayIntentBits } from "discord.js";
 
 export class UtsukushiBotClient extends BotClient implements OnAfterReady {
 
-    readonly store: UtsukushiStore;
+    readonly store!: UtsukushiStore;
 
     constructor(config?: Partial<UtsukushiBotConfig>) {
         super(
@@ -23,13 +23,17 @@ export class UtsukushiBotClient extends BotClient implements OnAfterReady {
             config
         );
         if (!config?.ignoreDB) connectMongoDB();
-        this.store = new UtsukushiStore();
-        this.store.initialize();
+        if (!config?.ignoreStore) {
+            this.store = new UtsukushiStore();
+            this.store.initialize();
+        }
     }
 
     override onAfterReady(): void {
-        const syst = this.store.value
-        super.setActivity(syst.activity);
-        super.setStatus(syst.status);
+        setTimeout(() => {
+            const syst = this.store.value
+            super.setActivity(syst.activity);
+            super.setStatus(syst.status);
+        }, AFTER_READY);
     }
 }
