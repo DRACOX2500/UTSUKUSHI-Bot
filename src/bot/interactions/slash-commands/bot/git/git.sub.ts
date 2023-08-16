@@ -23,6 +23,6 @@ export class GitSubCommand extends BotSubSlashCommand {
 		interaction.reply({
 			content: GITHUB_LINK,
 			ephemeral: true,
-		});;
+		});
 	};
 }

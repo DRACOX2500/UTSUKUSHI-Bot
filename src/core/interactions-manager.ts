@@ -230,17 +230,11 @@ export class InteractionsManager {
     ): Promise<void>
     {
         if (interaction.isChatInputCommand()) {
-            if (!client) {
-                interaction.reply(ERROR_COMMAND);
-                logger.error(`Command ${interaction.commandName} : No client !`);
-            }
-            else {
-                try {
-                    logger.info(`[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`);
-                    await this._commands[interaction.commandName].result(interaction, client);
-                } catch (error) {
-                    logger.error(`Command ${interaction.commandName} : Command Error`, error);
-                }
+            try {
+                logger.chatCommand(interaction);
+                await this._commands[interaction.commandName].result(interaction, client);
+            } catch (error) {
+                logger.error(`Command ${interaction.commandName} : Command Error`, error);
             }
         }
         else if (interaction.isAutocomplete()) {

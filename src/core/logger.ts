@@ -2,6 +2,7 @@ import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yello
 import json from 'package';
 import pino from 'pino';
 import pretty from 'pino-pretty';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 const LOG_DIR = './logs';
 const DATE_NOW = Date.now();
@@ -153,6 +154,13 @@ const logger = {
 	botConnectedDB() {
 		log.info(green('Connect to Database !'))
 	},
+
+	chatCommand(interaction: ChatInputCommandInteraction) {
+		const prefix = `[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`;
+		const subcommand = interaction.options.getSubcommand();
+		if (subcommand) logger.info(`${prefix} ${subcommand}`);
+		else logger.info(prefix);
+	}
 }
 
 export default logger;

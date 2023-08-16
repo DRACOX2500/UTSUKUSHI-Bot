@@ -1,7 +1,6 @@
 import { Guild as GuildDJS } from 'discord.js';
 import { Emoji, Guild } from "@/types/business";
 import { GuildModel } from "@/database/schemas/guild.schema";
-import { HydratedDocument } from "mongoose";
 import { AbstractRecordStore } from "./abstract-record-store";
 
 export class GuildStore extends AbstractRecordStore<Guild> {
@@ -10,20 +9,26 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         super(GuildModel, {});
     }
 
+    override save(id: string, value: Guild): Guild {
+        const _value: Guild = {
+            id: value.id,
+            emojisShared: value.emojisShared,
+            soundEffects: value.soundEffects,
+            vocalNotifyChannel: value.vocalNotifyChannel,
+        }
+        return super.save(id, _value);
+    }
+
     private async getFromDB(guildId: string): Promise<Guild | null> {
         const doc = await GuildModel.findOne({ id: guildId }).exec();
-        if (doc) {
-            this.save(doc.id, doc);
-            return doc;
-        }
+        if (doc) return this.save(doc.id, doc);
         return null;
     }
 
-    async create(guild: Guild): Promise<HydratedDocument<Guild>> {
+    async create(guild: Guild): Promise<Guild> {
         const doc = new GuildModel(guild);
         const saved = await doc.save();
-        this.save(saved.id, saved);
-        return saved;
+        return this.save(saved.id, saved);
     }
 
     async getOrCreate(guild: GuildDJS): Promise<Guild> {
@@ -47,8 +52,8 @@ export class GuildStore extends AbstractRecordStore<Guild> {
 
     async updateNotify(guild: GuildDJS, notifyChannelId: string | null) {
         const doc = await this.getOrCreate(guild);
-        const updoc = await GuildModel.findByIdAndUpdate(
-            (doc as any)._id,
+        const updoc = await GuildModel.findOneAndUpdate(
+            { id: doc.id },
             {
                 vocalNotifyChannel: notifyChannelId,
             },
@@ -58,6 +63,10 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         // .populate('soundEffects')
         .exec();
         if (updoc) this.save(updoc.id, updoc);
+    }
+
+    async removeDoc(guild: GuildDJS) {
+        await this.schema.deleteOne({ id: guild.id }).exec();
     }
 
     async addAllEmoji(guild: GuildDJS, emojis: Emoji[]) {
