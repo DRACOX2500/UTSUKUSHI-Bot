@@ -42,7 +42,7 @@ class AbstractCommand<
 		client: T,
 		options?: any
 	): Promise<void> {
-		const subCommand = interaction.options.getSubcommand(true);
+		const subCommand = interaction.options.getSubcommand();
 		if (subCommand && this.cmdsList.length) this.execSubResult(
 			subCommand,
 			interaction,
@@ -73,7 +73,11 @@ export abstract class BotSlashCommand<
 	}
 
 	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
-        // OVERRIDE
+        const subCommand = interaction.options.getSubcommand();
+		if (subCommand) (this.cmds[subCommand] as BotSubSlashCommand).autocomplete(
+			interaction,
+			client
+		);
     }
 }
 
@@ -88,9 +92,6 @@ export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O
 	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder {
 		this.command = subCommandGroup;
 		return this.command;
-	}
-	async result(interaction: ChatInputCommandInteraction<CacheType>, client: T, options?: O | undefined): Promise<void> {
-		super.result(interaction, client, options);
 	}
 }
 

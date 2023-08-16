@@ -34,7 +34,8 @@ export class LocaleSubCommand extends BotSubSlashCommand {
 		}
 
         const guild = interaction.guild;
-		const langage = interaction.options.getString('locale', true) as Locale;
+        const option = interaction.options.getString('language', true) as keyof typeof Locale;
+		const langage = Locale[option];
 
         await interaction.deferReply({ ephemeral: true });
 		await guild.setPreferredLocale(langage);
