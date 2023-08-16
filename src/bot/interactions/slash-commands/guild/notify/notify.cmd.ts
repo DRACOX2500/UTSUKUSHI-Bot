@@ -1,7 +1,8 @@
 import { UtsukushiBotClient } from "@/bot/client";
+import { BotSlashCommand } from "@/core/bot-command";
 import { ERROR_COMMAND } from "@/core/constants";
 import { logger } from "@/core/logger";
-import { BotAutocompleteSlashCommand } from "@/core/types/bot-command";
+import { BotAutocompleteSlashCommand, BotSubSlashCommand } from "@/core/types/bot-command";
 import { Sort } from "@/core/utils/sort";
 import { DiscordService } from "@/services/discord-service";
 import { SlashCommandBuilder, PermissionsBitField, ChatInputCommandInteraction, AutocompleteInteraction, CacheType, ChannelType } from "discord.js";
@@ -13,24 +14,30 @@ import { SlashCommandBuilder, PermissionsBitField, ChatInputCommandInteraction, 
  * @DefaultMemberPermissions `ManageGuild`
  * - `notify [channel]` : set **TextChannel** to notify when guild members join voice channel
  */
-export class NotifyCommand implements BotAutocompleteSlashCommand<UtsukushiBotClient> {
-	readonly command = new SlashCommandBuilder()
-		.setName('notify')
-		.setDescription('Notify when someone join a voice channel 🔔!')
-		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
-		.addStringOption((option) =>
-			option
-				.setName('channel')
-				.setDescription('The channel you want to be notified !')
-				.setAutocomplete(true)
-				.setRequired(true)
-		);
+export class NotifyCommand
+	extends BotSlashCommand
+	implements BotAutocompleteSlashCommand<UtsukushiBotClient> {
 
-	readonly result = async (
+	constructor() {
+		super();
+		this.command
+			.setName('notify')
+			.setDescription('Notify when someone join a voice channel 🔔!')
+			.setDMPermission(false)
+			.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+			.addStringOption((option) =>
+				option
+					.setName('channel')
+					.setDescription('The channel you want to be notified !')
+					.setAutocomplete(true)
+					.setRequired(true)
+			);
+	}
+
+	override async result(
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiBotClient
-	): Promise<void> => {
+	): Promise<void> {
 		if (!interaction.guild) throw new Error(ERROR_COMMAND);
 		await interaction.deferReply();
 
@@ -42,10 +49,10 @@ export class NotifyCommand implements BotAutocompleteSlashCommand<UtsukushiBotCl
 		interaction.editReply('🔔 Channel updated successfully !').catch((err: Error) => logger.error(err.message));
 	};
 
-	readonly autocomplete = async (
+	async autocomplete(
 		interaction: AutocompleteInteraction<CacheType>,
 		_client: UtsukushiBotClient
-	): Promise<void> => {
+	): Promise<void> {
 		const channels = interaction.guild?.channels.cache
 		if (channels) {
 			const focusedOption = interaction.options.getFocused(true);

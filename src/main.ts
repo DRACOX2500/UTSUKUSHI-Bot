@@ -7,7 +7,7 @@ export function main(command: string, args: any[]) {
     ProfileService.initProfile(args);
     utsukushiASCIILog();
     logger.info(`Start with "${ProfileService.profile}" profile !`);
-    logger.info(`User environment from "${ProfileService.envPath}"`);
+    logger.info(`Use environment variables from "${ProfileService.envPath}"`);
     switch (command) {
         case 'dev':
         case 'start':

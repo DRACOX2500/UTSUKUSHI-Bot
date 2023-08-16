@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { BotAutocompleteSlashCommand, BotPrivateCommand, BotSlashCommand } from "./types/bot-command";
+import { BotAutocompleteSlashCommand, BotSlashCommand, BotSubGroupSlashCommand, BotSubSlashCommand } from "./types/bot-command";
 import { botFinishDeployCommand, botFinishGuildDeployCommand, botFinishGuildResetCommand, botFinishResetCommand, botStartDeployCommand, botStartGuildDeployCommand, botStartGuildResetCommand, botStartResetCommand, logger } from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
@@ -59,7 +59,7 @@ export class InteractionsManager {
 
 		const list = this.importPaths(commandsPath, /\.cmd\.[jt]s$/);
 
-		for (const file of list.flat()) {
+		for (const file of list) {
 			const command: BotSlashCommand = require(file).command;
 			if (!command) continue;
 
@@ -74,7 +74,7 @@ export class InteractionsManager {
 
 		const list = this.importPaths(commandsPath, /\.trigger\.[jt]s$/);
 
-		for (const file of list.flat()) {
+		for (const file of list) {
 			const trigger: BotTrigger = require(file).trigger;
 			if (!trigger) continue;
 
@@ -85,16 +85,16 @@ export class InteractionsManager {
     private importPaths(
 		absolutePath: string,
 		regex?: RegExp
-	): string[][] {
-        const list: string[][] = []
+	): string[] {
+        const list: string[] = []
 		try {
 			fs.readdirSync(absolutePath).forEach((filefolder) => {
 				const pathFile = path.join(absolutePath, filefolder);
 
                 if (regex?.exec(filefolder)) {
-                    list.push([pathFile]);
+                    list.push(pathFile);
                 } else if (fs.statSync(pathFile).isDirectory()) {
-					this.importPaths(pathFile, regex);
+					list.push(...this.importPaths(pathFile, regex));
 				}
 			});
 		}
@@ -102,8 +102,24 @@ export class InteractionsManager {
 			// Not .js or .ts files
             logger.error(err);
 		}
-        return list;
+        return list.flat();
 	}
+
+    private sizesub(command: BotSlashCommand): number {
+        let curr = 0;
+        for (const key in command.cmds) {
+            const cmd = command.cmds[key];
+            if ((cmd as any).cmds)
+                curr += Object.keys((cmd as any).cmds).length
+            else curr += 1;
+        }
+        if (curr === 0) return 1;
+        return curr;
+    }
+
+    private size(cmds: BotSlashCommand[]): number {
+        return cmds.reduce((curr, cmd) => this.sizesub(cmd) + curr, 0);
+    }
 
     get commands(): Record<string, BotSlashCommand>
     {
@@ -144,7 +160,7 @@ export class InteractionsManager {
     {
         const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
         const cmds = this.commandsList
-            .filter(cmd => (cmd as unknown as BotPrivateCommand).guildIds?.includes(guildId))
+            .filter(cmd => cmd.guildIds?.includes(guildId))
             .map(_cmd => _cmd.command);
 
         return (async (): Promise<number> => {
@@ -198,7 +214,7 @@ export class InteractionsManager {
 					body: cmds,
 				});
 
-				botFinishDeployCommand(cmds.length);
+				botFinishDeployCommand(this.size(this.commandsList));
 			}
 			catch (error) {
 				logger.error(error);

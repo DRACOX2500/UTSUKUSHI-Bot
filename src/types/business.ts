@@ -24,7 +24,6 @@ export interface Song {
 
 export interface Guild {
     id: string;
-    name: string;
     emojisShared: boolean;
     vocalNotifyChannel?: string | null;
     lastPlay?: Song;
@@ -33,7 +32,6 @@ export interface Guild {
 
 export interface User {
     id: string;
-    username: string;
     songs: Song[];
 }
 

@@ -1,27 +1,29 @@
 import { PongEmbedBuilder } from "@/bot/builders/embeds/pong";
 import { BotClient } from "@/core/bot-client";
 import { logger } from "@/core/logger";
-import { BotSlashCommand } from "@/core/types/bot-command";
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { BotSlashCommand } from "@/core/bot-command";
+import { ChatInputCommandInteraction } from "discord.js";
+import { ERROR_COMMAND } from "@/core/constants";
 
 /**
  * @SlashCommand `ping`
  *  - `ping` : Reply with pong message
  */
-class PingCommand implements BotSlashCommand {
-	readonly command = new SlashCommandBuilder()
-		.setName('ping')
-		.setDescription('Replies with Pong 🏓!')
-		.setDMPermission(true);
+class PingCommand extends BotSlashCommand {
 
-	readonly result = async (
+	constructor() {
+		super();
+		this.command
+			.setName('ping')
+			.setDescription('Replies with Pong 🏓!')
+			.setDMPermission(true);
+	}
+
+	async result(
 		interaction: ChatInputCommandInteraction,
 		client?: BotClient
-	): Promise<void> => {
-		if (!client) {
-			interaction.reply('‼️🤖 No Client found !').catch((err: Error) => logger.error({}, err.message));
-			return;
-		}
+	): Promise<void> {
+		if (!client) throw new Error(ERROR_COMMAND);
 
 		const sent =
 			(await interaction.reply({ content: 'Pinging...', fetchReply: true })) ??

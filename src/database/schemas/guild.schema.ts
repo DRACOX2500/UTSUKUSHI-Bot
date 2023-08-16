@@ -10,10 +10,6 @@ const guildSchema = new Schema<Guild>({
         require: true,
         unique: true,
     },
-    name: {
-        type: String,
-        require: true,
-    },
     emojisShared: {
         type: Boolean,
         default: false,

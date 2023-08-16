@@ -32,7 +32,6 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         else {
             const _save: Guild = {
                 id: guild.id,
-                name: guild.name,
                 emojisShared: false,
                 soundEffects: [],
             };

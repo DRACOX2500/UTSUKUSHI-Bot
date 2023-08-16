@@ -8,10 +8,6 @@ const userSchema = new Schema<User>({
         require: true,
         unique: true,
     },
-    username: {
-        type: String,
-        require: true,
-    },
     songs: {
         type: [{
             type: Schema.Types.ObjectId,

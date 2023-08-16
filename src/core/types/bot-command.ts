@@ -9,6 +9,7 @@ import {
 	UserContextMenuCommandInteraction,
 	MessageContextMenuCommandInteraction,
 	SlashCommandSubcommandBuilder,
+	SlashCommandSubcommandGroupBuilder,
 } from 'discord.js';
 import { BotClient } from '../bot-client';
 
@@ -27,17 +28,6 @@ type BotCommandType =
 
 export interface BotCommandOptions {}
 
-/**
- * Command to deploy on specific guild
- */
-export interface BotPrivateCommand {
-	/**
-	 * Set guild ID if you want to deploy this command on a specific guild,
-	 * else this command will be deploy globally
-	 */
-	readonly guildIds: string[];
-}
-
 export interface BotCommand<
 	T extends BotClient,
 	I extends CommandInteraction
@@ -49,36 +39,66 @@ export interface BotCommand<
 	/**
 	 * Function that responds to the command
 	 */
-	readonly result: (
+	result(
 		interaction: I,
 		client: T,
 		options?: Partial<BotCommandOptions>
-	) => Promise<void>;
+	): Promise<void>;
 }
 
-export interface BotSlashCommand<T extends BotClient = BotClient>
-	extends BotCommand<T, ChatInputCommandInteraction> {
-	/**
-	 * @Command SlashCommand
-	 */
-	readonly command: BotSlashCommandType;
-	readonly result: (
-		interaction: ChatInputCommandInteraction,
-		client: T,
-		options?: Partial<BotCommandOptions>
-	) => Promise<void>;
-}
-
-export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any> {
+interface SharedSubSlashCommand<T extends BotClient = BotClient, O = any> {
+	name: string;
 	/**
 	 * @Command SubSlashCommand
 	 */
-	readonly subcommand: BotSubSlashCommandType;
-	readonly result: (
+	readonly command: SlashCommandSubcommandGroupBuilder | SlashCommandSubcommandBuilder;
+	result(
 		interaction: ChatInputCommandInteraction,
 		client: T,
 		options?: O
-	) => Promise<void>;
+	): Promise<void>;
+}
+
+export interface BotSlashCommand<
+	T extends BotClient = BotClient,
+	B extends BotSubGroupSlashCommand<T, any> | BotSubSlashCommand<T, any> = BotSubSlashCommand<T, any>
+>
+	extends BotCommand<T, ChatInputCommandInteraction> {
+	/**
+	 * Set guild ID if you want to deploy this command on a specific guild,
+	 * else this command will be deploy globally
+	 */
+	readonly guildIds: string[];
+	/**
+	 * SubCommands list
+	 */
+	readonly cmds: Record<string, B>;
+	/**
+	 * @Command SlashCommand
+	 */
+	command: BotSlashCommandType;
+}
+
+export interface BotSubGroupSlashCommand<T extends BotClient = BotClient, O = any>
+	extends SharedSubSlashCommand<T, O> {
+	/**
+	 * SubCommands list
+	 */
+	readonly cmds: Record<string, BotSubSlashCommand<T>>;
+	/**
+	 * @Command SubSlashCommand
+	 */
+	readonly command: SlashCommandSubcommandGroupBuilder;
+	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder
+}
+
+export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any>
+	extends SharedSubSlashCommand<T, O> {
+	/**
+	 * @Command SubSlashCommand
+	 */
+	readonly command: SlashCommandSubcommandBuilder;
+	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder
 }
 
 export interface BotContextCommand<
@@ -127,8 +147,8 @@ export interface BotAutocompleteSlashCommand<T extends BotClient = BotClient>
 	/**
 	 * Function that responds to the AutocompleteInteraction
 	 */
-	readonly autocomplete: (
+	autocomplete(
 		interaction: AutocompleteInteraction,
 		client: T
-	) => Promise<void>;
+	): Promise<void>;
 }
