@@ -1,5 +1,5 @@
 import { UtsukushiBotClient } from "@/bot/client";
-import { logger } from "@/core/logger";
+import logger from "@/core/logger";
 import { BotTrigger } from "@/core/types/bot-interaction";
 import { Guild, GuildEmoji } from "discord.js";
 

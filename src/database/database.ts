@@ -1,11 +1,11 @@
-import { botConnectedDB, logger } from "@/core/logger";
+import logger from "@/core/logger";
 import { environment } from "@/environment";
 import mongoose from "mongoose";
 
 export function connectMongoDB(): void {
     mongoose.set("strictQuery", true);
     mongoose.connect(environment.DB_URL)
-        .then(() => botConnectedDB())
+        .then(() => logger.botConnectedDB())
         .catch(error => logger.error(error));
 }
 

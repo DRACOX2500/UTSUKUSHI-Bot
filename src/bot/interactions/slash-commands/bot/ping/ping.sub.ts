@@ -1,6 +1,6 @@
 import { PongEmbedBuilder } from "@/bot/builders/embeds/pong";
 import { BotClient } from "@/core/bot-client";
-import { logger } from "@/core/logger";
+import logger from "@/core/logger";
 import { BotSubSlashCommand } from "@/core/bot-command";
 import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { ERROR_COMMAND } from "@/core/constants";

@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, PresenceStatusData } from 'discord.js';
 import { BotActivity, BotConfig, ProgProfile } from './types/business';
-import { botLoginLog, logger } from './logger';
+import logger from './logger';
 import { InteractionsManager } from './interactions-manager';
 import { DEFAULT_ACTIVITY, ERROR_USERNAME } from './constants';
 import { BotClientEvents } from './bot-client-events';
@@ -28,7 +28,7 @@ export class BotClient extends Client implements BotClientEvents {
 		);
 		this.on('ready', async (client: Client) => {
 			this.setUsername(client.user?.username);
-			botLoginLog(this.username);
+			logger.botLoginLog(this.username);
 			this.setStatus(this.config.default.status);
 			this.onAfterReady();
 		});

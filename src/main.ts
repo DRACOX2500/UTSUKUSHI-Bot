@@ -1,13 +1,12 @@
 import { ProfileService } from "@/services/profile-service";
 import { UtsukushiBotClient } from "@/bot/client";
-import { logger, utsukushiASCIILog } from "@/core/logger";
+import logger from "@/core/logger";
 import { NodeJsService } from "./services/nodejs-service";
 
 export function main(command: string, args: any[]) {
     ProfileService.initProfile(args);
-    utsukushiASCIILog();
-    logger.info(`Start with "${ProfileService.profile}" profile !`);
-    logger.info(`Use environment variables from "${ProfileService.envPath}"`);
+    logger.utsukushiASCIILog();
+    logger.startUp(ProfileService.profile, ProfileService.envPath);
     switch (command) {
         case 'dev':
         case 'start':

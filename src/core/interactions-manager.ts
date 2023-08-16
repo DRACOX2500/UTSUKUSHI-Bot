@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { BotAutocompleteSlashCommand, BotSlashCommand, BotSubGroupSlashCommand, BotSubSlashCommand } from "./types/bot-command";
-import { botFinishDeployCommand, botFinishGuildDeployCommand, botFinishGuildResetCommand, botFinishResetCommand, botStartDeployCommand, botStartGuildDeployCommand, botStartGuildResetCommand, botStartResetCommand, logger } from './logger';
+import { BotAutocompleteSlashCommand, BotSlashCommand } from "./types/bot-command";
+import logger from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
 import { CacheType, Interaction, REST, Routes } from 'discord.js';
@@ -142,13 +142,13 @@ export class InteractionsManager {
             const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
 
             try {
-                botStartGuildResetCommand(guildId);
+                logger.botStartGuildResetCommand(guildId);
 
                 await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
 					body: [],
 				});
 
-                botFinishGuildResetCommand(guildId);
+                logger.botFinishGuildResetCommand(guildId);
             }
             catch (error) {
                 logger.error(error);
@@ -165,13 +165,13 @@ export class InteractionsManager {
 
         return (async (): Promise<number> => {
 			try {
-				botStartGuildDeployCommand(guildId);
+				logger.botStartGuildDeployCommand(guildId);
 
 				await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
 					body: cmds,
 				});
 
-				botFinishGuildDeployCommand(guildId, cmds.length);
+				logger.botFinishGuildDeployCommand(guildId, cmds.length);
 			}
 			catch (error) {
 				logger.error(error);
@@ -187,13 +187,13 @@ export class InteractionsManager {
             const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
 
             try {
-                botStartResetCommand();
+                logger.botStartResetCommand();
 
                 await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
 					body: [],
 				});
 
-                botFinishResetCommand();
+                logger.botFinishResetCommand();
             }
             catch (error) {
                 logger.error(error);
@@ -208,13 +208,13 @@ export class InteractionsManager {
 
         return (async (): Promise<number> => {
 			try {
-				botStartDeployCommand();
+				logger.botStartDeployCommand();
 
 				await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
 					body: cmds,
 				});
 
-				botFinishDeployCommand(this.size(this.commandsList));
+				logger.botFinishDeployCommand(this.size(this.commandsList));
 			}
 			catch (error) {
 				logger.error(error);
