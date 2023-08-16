@@ -2,21 +2,21 @@ import { BotSlashCommand } from "@/core/bot-command";
 import { ActivityType, ChatInputCommandInteraction, CacheType, SlashCommandBuilder } from "discord.js";
 import { UtsukushiBotClient } from "@/bot/client";
 import { BotSubCommandOptions } from "@/types/commands";
-import { BotActivitySubCommand } from "./activity/activity.sub";
-import { BotStatusSubCommand } from "./status/status.sub";
+import { ActivitySubCommand } from "./activity/activity.sub";
+import { StatusSubCommand } from "./status/status.sub";
 
 /**
  * @SlashCommand `bot-admin`
  *  - `bot activity [activity-type] [activity-message]` : Change Utsukushi profile activity !
  *  - `bot status [status-type]` : Change Utsukushi profile status !
  */
-class BotCommand extends BotSlashCommand<UtsukushiBotClient> {
+class BotAdminCommand extends BotSlashCommand<UtsukushiBotClient> {
 
 	constructor() {
-		super([
-			new BotActivitySubCommand(),
-			new BotStatusSubCommand()
-		]);
+		super({
+			'activity': new ActivitySubCommand(),
+			'status': new StatusSubCommand()
+		});
 
 		this.command
 			.setName('bot-admin')
@@ -35,4 +35,4 @@ class BotCommand extends BotSlashCommand<UtsukushiBotClient> {
 	}
 }
 
-export const command = new BotCommand();
+export const command = new BotAdminCommand();

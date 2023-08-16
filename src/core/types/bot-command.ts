@@ -47,7 +47,6 @@ export interface BotCommand<
 }
 
 interface SharedSubSlashCommand<T extends BotClient = BotClient, O = any> {
-	name: string;
 	/**
 	 * @Command SubSlashCommand
 	 */
@@ -77,6 +76,13 @@ export interface BotSlashCommand<
 	 * @Command SlashCommand
 	 */
 	command: BotSlashCommandType;
+	/**
+	 * Function that responds to the AutocompleteInteraction
+	 */
+	autocomplete(
+		interaction: AutocompleteInteraction,
+		client: T
+	): Promise<void>;
 }
 
 export interface BotSubGroupSlashCommand<T extends BotClient = BotClient, O = any>
@@ -89,7 +95,7 @@ export interface BotSubGroupSlashCommand<T extends BotClient = BotClient, O = an
 	 * @Command SubSlashCommand
 	 */
 	readonly command: SlashCommandSubcommandGroupBuilder;
-	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder
+	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder;
 }
 
 export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any>
@@ -98,7 +104,14 @@ export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any>
 	 * @Command SubSlashCommand
 	 */
 	readonly command: SlashCommandSubcommandBuilder;
-	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder
+	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder;
+	/**
+	 * Function that responds to the AutocompleteInteraction
+	 */
+	autocomplete(
+		interaction: AutocompleteInteraction,
+		client: T
+	): Promise<void>;
 }
 
 export interface BotContextCommand<

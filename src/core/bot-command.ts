@@ -1,4 +1,4 @@
-import { CacheType, ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { AutocompleteInteraction, CacheType, ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
 import { BotClient } from "./bot-client";
 import {
 	BotSlashCommand as BotSlashCommandType,
@@ -12,14 +12,8 @@ class AbstractCommand<
 > {
 	cmds: Record<string, B>;
 
-	constructor(cmds: B[] = []) {
-		this.cmds = this.toRecord(cmds);
-	}
-
-	private toRecord(cmds: B[]): Record<string, B> {
-		const record: Record<string, B> = {};
-		cmds.forEach((_cmd) => record[_cmd.name] = _cmd)
-		return record;
+	constructor(cmds: Record<string, B> = {}) {
+		this.cmds = cmds;
 	}
 
 	protected execSubResult(
@@ -67,7 +61,7 @@ export abstract class BotSlashCommand<
 	guildIds: string[];
     command: SlashCommandBuilder;
 
-	constructor(cmds: B[] = [], guildIds: string[] = []) {
+	constructor(cmds: Record<string, B> = {}, guildIds: string[] = []) {
 		super(cmds)
 		this.guildIds = guildIds;
 		this.command = new SlashCommandBuilder();
@@ -77,15 +71,18 @@ export abstract class BotSlashCommand<
 				this.command.addSubcommand(_s => (sub as BotSubSlashCommandType<T, any>).set(_s))
 		);
 	}
+
+	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
+        // OVERRIDE
+    }
 }
 
 export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O = any>
 	extends AbstractCommand<T>
 	implements BotSubGroupSlashCommandType<T, O> {
-	name!: string;
 	command!: SlashCommandSubcommandGroupBuilder;
 
-	constructor(cmds: BotSubSlashCommandType<T, any>[] = []) {
+	constructor(cmds: Record<string, BotSubSlashCommandType<T, any>> = {}) {
 		super(cmds);
 	}
 	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder {
@@ -100,7 +97,6 @@ export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O
 export abstract class BotSubSlashCommand<T extends BotClient = BotClient, O = any>
 	implements BotSubSlashCommandType<T, O> {
 	command!: SlashCommandSubcommandBuilder;
-	name!: string;
 
 	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
 		this.command = subcommand;
@@ -109,4 +105,7 @@ export abstract class BotSubSlashCommand<T extends BotClient = BotClient, O = an
 	async result(interaction: ChatInputCommandInteraction<CacheType>, client: T, options?: O | undefined): Promise<void> {
 		// OVERRIDE
 	}
+	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
+        // OVERRIDE
+    }
 }

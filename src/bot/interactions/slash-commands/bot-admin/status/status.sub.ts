@@ -1,19 +1,18 @@
 import { UtsukushiBotClient } from "@/bot/client";
-import { ERROR_COMMAND } from "@/core/constants";
+import { ERROR_COMMAND, ERROR_CMD_MESSAGE } from "@/core/constants";
 import { logger } from "@/core/logger";
 import { BotSubSlashCommand } from "@/core/bot-command";
 import { BotSubCommandOptions } from "@/types/commands";
 import { SlashCommandSubcommandBuilder, SlashCommandStringOption, ChatInputCommandInteraction, CacheType, PresenceStatusData } from "discord.js";
 
 /**
- * @SubCommand
+ * @SubSlashCommand
  */
-export class BotStatusSubCommand extends BotSubSlashCommand<UtsukushiBotClient, BotSubCommandOptions> {
-    name: string = 'status';
+export class StatusSubCommand extends BotSubSlashCommand<UtsukushiBotClient, BotSubCommandOptions> {
 
 	override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
         subcommand
-            .setName(this.name)
+            .setName('status')
             .setDescription('Change Bot status 🤖!')
             .addStringOption((option: SlashCommandStringOption) =>
                 option
@@ -35,7 +34,10 @@ export class BotStatusSubCommand extends BotSubSlashCommand<UtsukushiBotClient, 
 		client: UtsukushiBotClient,
 		options?: BotSubCommandOptions) : Promise<void>
 	{
-		if (!options) throw new Error(ERROR_COMMAND);
+		if (!options) {
+			await interaction.reply({ content: ERROR_CMD_MESSAGE, ephemeral: true });
+            throw new Error(ERROR_COMMAND);
+		}
 
 		client.setStatus(options.status as PresenceStatusData);
 

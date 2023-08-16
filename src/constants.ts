@@ -3,6 +3,8 @@ import { UtsukushiSystem } from "./types/business";
 
 export const AFTER_READY = 5000;
 
+export const GITHUB_LINK = 'https://github.com/DRACOX2500/Discord-Bot';
+
 export const PONG_SMASH_CHANCE = 100;
 export const PONG_COLOR = {
 	GREEN: 0x41df19,

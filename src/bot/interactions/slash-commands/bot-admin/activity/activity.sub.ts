@@ -1,5 +1,5 @@
 import { UtsukushiBotClient } from "@/bot/client";
-import { ERROR_COMMAND, TWITCH_LINK } from "@/core/constants";
+import { ERROR_COMMAND, ERROR_CMD_MESSAGE, TWITCH_LINK } from "@/core/constants";
 import { logger } from "@/core/logger";
 import { BotSubSlashCommand } from "@/core/bot-command";
 import { BotActivity } from "@/core/types/business";
@@ -9,14 +9,13 @@ import { SlashCommandSubcommandBuilder, SlashCommandIntegerOption, ActivityType,
 export const NAME = 'activity'
 
 /**
- * @SubCommand
+ * @SubSlashCommand
  */
-export class BotActivitySubCommand extends BotSubSlashCommand<UtsukushiBotClient, BotSubCommandOptions> {
-    name: string = 'activity';
+export class ActivitySubCommand extends BotSubSlashCommand<UtsukushiBotClient, BotSubCommandOptions> {
 
     override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
         subcommand
-            .setName(this.name)
+            .setName('activity')
             .setDescription('Change Bot activity 🤖!')
             .addIntegerOption((option: SlashCommandIntegerOption) =>
                 option
@@ -45,20 +44,23 @@ export class BotActivitySubCommand extends BotSubSlashCommand<UtsukushiBotClient
         client: UtsukushiBotClient,
         options?: BotSubCommandOptions) : Promise<void>
 	{
-			if (!options) throw new Error(ERROR_COMMAND);
+        if (!options) {
+			await interaction.reply({ content: ERROR_CMD_MESSAGE, ephemeral: true });
+            throw new Error(ERROR_COMMAND);
+		}
 
-			const newActivity: BotActivity = {
-				status: options.activityMessage,
-				code: options.activityType,
-				url: TWITCH_LINK,
-			};
+        const newActivity: BotActivity = {
+            status: options.activityMessage,
+            code: options.activityType,
+            url: TWITCH_LINK,
+        };
 
-			client.setActivity(newActivity);
+        client.setActivity(newActivity);
 
-			client.store.updateActivity(newActivity);
-			interaction.reply({
-				content: '🤖 Bot activity has been change !',
-				ephemeral: true,
-			}).catch((err: Error) => logger.error({}, err.message));
+        client.store.updateActivity(newActivity);
+        interaction.reply({
+            content: '🤖 Bot activity has been change !',
+            ephemeral: true,
+        }).catch((err: Error) => logger.error({}, err.message));
 	};
 }

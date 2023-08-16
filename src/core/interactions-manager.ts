@@ -239,7 +239,6 @@ export class InteractionsManager {
                     logger.info(`[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`);
                     await this._commands[interaction.commandName].result(interaction, client);
                 } catch (error) {
-                    interaction.reply('❌ Error 500 : Bip Boop... 🤖')
                     logger.error(`Command ${interaction.commandName} : Command Error`, error);
                 }
             }

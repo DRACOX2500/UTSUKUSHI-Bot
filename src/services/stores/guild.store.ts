@@ -1,5 +1,5 @@
 import { Guild as GuildDJS } from 'discord.js';
-import { Guild } from "@/types/business";
+import { Emoji, Guild } from "@/types/business";
 import { GuildModel } from "@/database/schemas/guild.schema";
 import { HydratedDocument } from "mongoose";
 import { AbstractRecordStore } from "./abstract-record-store";
@@ -58,5 +58,25 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         // .populate('soundEffects')
         .exec();
         if (updoc) this.save(updoc.id, updoc);
+    }
+
+    async addAllEmoji(guild: GuildDJS, emojis: Emoji[]) {
+        //TODO: method
+    }
+
+    async removeAllEmoji(guild: GuildDJS) {
+        //TODO: method
+    }
+
+    async addEmoji(guild: GuildDJS, emojis: Emoji) {
+        //TODO: method
+    }
+
+    async updateEmoji(guild: GuildDJS, emojis: Emoji) {
+        //TODO: method
+    }
+
+    async removeEmoji(guild: GuildDJS, emojis: Emoji) {
+        //TODO: method
     }
 }

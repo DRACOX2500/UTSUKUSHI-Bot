@@ -1,22 +1,21 @@
 import { PongEmbedBuilder } from "@/bot/builders/embeds/pong";
 import { BotClient } from "@/core/bot-client";
 import { logger } from "@/core/logger";
-import { BotSlashCommand } from "@/core/bot-command";
-import { ChatInputCommandInteraction } from "discord.js";
+import { BotSubSlashCommand } from "@/core/bot-command";
+import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { ERROR_COMMAND } from "@/core/constants";
 
 /**
- * @SlashCommand `ping`
+ * @SubSlashCommand `ping`
  *  - `ping` : Reply with pong message
  */
-class PingCommand extends BotSlashCommand {
+export class PingSubCommand extends BotSubSlashCommand {
 
-	constructor() {
-		super();
-		this.command
+	override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
+		subcommand
 			.setName('ping')
-			.setDescription('Replies with Pong 🏓!')
-			.setDMPermission(true);
+			.setDescription('Replies with Pong 🏓!');
+		return super.set(subcommand);
 	}
 
 	async result(
@@ -33,5 +32,3 @@ class PingCommand extends BotSlashCommand {
 		interaction.editReply({ content: '', embeds: [embedPong] }).catch((err: Error) => logger.error({}, err.message));
 	};
 }
-
-export const command = new PingCommand();
