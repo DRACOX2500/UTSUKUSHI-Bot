@@ -5,14 +5,14 @@ import { UtsukushiBotClient } from "@/bot/client";
 
 /**
  * @SubSlashCommand `remove`
- *  - `remove` : remove guild data
+ *  - `remove` : remove user data
  */
 export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 	override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
 		subcommand
 			.setName('remove')
-			.setDescription('Remove guild data from database 💥!');
+			.setDescription('Remove your data from database 💥!');
 		return super.set(subcommand);
 	}
 
@@ -20,19 +20,19 @@ export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		interaction: ChatInputCommandInteraction,
 		client: UtsukushiBotClient
 	): Promise<void> {
-		const guild = interaction.guild;
-		if (!guild) {
+		const user = interaction.user;
+		if (!user) {
 			await interaction.reply({ content: ERROR_CMD_GUILD, ephemeral: true });
             throw new Error(ERROR_COMMAND);
 		}
 
 		await interaction.deferReply({ ephemeral: true });
 
-		client.store.guilds.removeDoc(guild)
+		client.store.users.removeDoc(user)
 			.then(() => {
-				client.store.guilds.remove(guild.id);
-				interaction.editReply('✅ Guild data removed successfully !');
+				client.store.users.remove(user.id);
+				interaction.editReply('✅ User data removed successfully !');
 			})
-			.catch(() => interaction.editReply('❌ Failed to remove Guild data !'));
+			.catch(() => interaction.editReply('❌ Failed to remove User data !'));
 	};
 }
