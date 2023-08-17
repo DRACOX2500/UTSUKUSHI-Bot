@@ -2,7 +2,7 @@ import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yello
 import json from 'package';
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import { ChatInputCommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, ButtonInteraction } from 'discord.js';
 
 const LOG_DIR = './logs';
 const DATE_NOW = Date.now();
@@ -54,7 +54,7 @@ const logger = {
 	},
 
 	error(value: any, error?: any) {
-		log.error(value, error);
+		log.error(error, value);
 	},
 
 	startUp(profile: string, envPath: string) {
@@ -157,9 +157,16 @@ const logger = {
 
 	chatCommand(interaction: ChatInputCommandInteraction) {
 		const prefix = `[SlashCommand] ${interaction.user.username} : ${interaction.commandName}`;
-		const subcommand = interaction.options.getSubcommand();
-		if (subcommand) logger.info(`${prefix} ${subcommand}`);
-		else logger.info(prefix);
+		try {
+			const subcommand = interaction.options.getSubcommand();
+			logger.info(`${prefix} ${subcommand}`);
+		} catch (error) {
+			logger.info(prefix);
+		}
+	},
+
+	button(interaction: ButtonInteraction) {
+		logger.info(`[Button] ${interaction.user.username} : ${interaction.customId}`);
 	}
 }
 

@@ -30,7 +30,10 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		else {
 			const json = JSON.stringify(userData, null, '\t')
 			const safetext = DiscordService.limitText(json, 1950);
-			await interaction.editReply(codeBlock('json', safetext));
+			await interaction.user.send(codeBlock('json', safetext));
+			await interaction.editReply({
+				content: '✅ Data sent',
+			});
 		}
 	};
 }

@@ -1,10 +1,11 @@
-import { AutocompleteInteraction, CacheType, ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
 import { BotClient } from "./bot-client";
 import {
 	BotSlashCommand as BotSlashCommandType,
 	BotSubSlashCommand as BotSubSlashCommandType,
 	BotSubGroupSlashCommand as BotSubGroupSlashCommandType
 } from './types/bot-command';
+import { BotButton as BotButtonType } from './types/bot-interaction';
 
 class AbstractCommand<
 	T extends BotClient = BotClient,
@@ -109,4 +110,24 @@ export abstract class BotSubSlashCommand<T extends BotClient = BotClient, O = an
 	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
         // OVERRIDE
     }
+}
+
+export abstract class BotButtonBuilder extends ButtonBuilder {
+	constructor(id: string, disable: boolean = false) {
+		super();
+
+        this
+            .setCustomId(id)
+            .setDisabled(disable);
+	}
+}
+
+export abstract class BotButton<
+	T extends BotClient = BotClient,
+	B extends BotButtonBuilder = BotButtonBuilder
+> implements BotButtonType<T, B> {
+	button!: B;
+	async result(interaction: ButtonInteraction<CacheType>, client: T): Promise<void> {
+		// OVERRIDE
+	}
 }

@@ -6,14 +6,7 @@ import logger from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
 import { CacheType, Interaction, REST, Routes } from 'discord.js';
-import { ERROR_COMMAND } from './constants';
-import { BotTrigger } from './types/bot-interaction';
-
-interface CommandManagerConfig {
-    commandsPath: string[];
-    triggersPath: string[];
-    contextPath: string[];
-}
+import { BotButton, BotTrigger, CommandManagerConfig } from './types/bot-interaction';
 
 const INTERACTION_PATH = [
     environment.SRC_PATH,
@@ -21,7 +14,11 @@ const INTERACTION_PATH = [
     'interactions',
 ]
 
-const DEFAULT_CONFIG = {
+const DEFAULT_CONFIG: CommandManagerConfig = {
+    buttonsPath: [
+        ...INTERACTION_PATH,
+        'buttons'
+    ],
     commandsPath: [
         ...INTERACTION_PATH,
         'slash-commands'
@@ -41,6 +38,7 @@ export class InteractionsManager {
     config: CommandManagerConfig;
 
     private client: BotClient | null;
+    private _buttons: Record<string, BotButton> = {};
     private _commands: Record<string, BotSlashCommand> = {};
 
     constructor(
@@ -51,6 +49,7 @@ export class InteractionsManager {
         this.config = config;
         this.loadSlashCommands();
         this.loadTriggers();
+        this.loadButtons();
     }
 
     private loadSlashCommands(): void
@@ -79,6 +78,21 @@ export class InteractionsManager {
 			if (!trigger) continue;
 
 			trigger.trigger(this.client);
+		}
+    }
+
+    private loadButtons(): void
+    {
+        if (!this.client) return;
+        const commandsPath = path.join(...this.config.buttonsPath);
+
+		const list = this.importPaths(commandsPath, /\.btn\.[jt]s$/);
+
+		for (const file of list) {
+			const button: BotButton = require(file).button;
+			if (!button) continue;
+
+            this._buttons[(button.button.data as any).custom_id] = button;
 		}
     }
 
@@ -229,7 +243,10 @@ export class InteractionsManager {
         client: BotClient
     ): Promise<void>
     {
-        if (interaction.isChatInputCommand()) {
+        if (interaction.isAutocomplete()) {
+            (this._commands[interaction.commandName] as BotAutocompleteSlashCommand).autocomplete(interaction, client);
+        }
+        else if (interaction.isChatInputCommand()) {
             try {
                 logger.chatCommand(interaction);
                 await this._commands[interaction.commandName].result(interaction, client);
@@ -237,8 +254,13 @@ export class InteractionsManager {
                 logger.error(`Command ${interaction.commandName} : Command Error`, error);
             }
         }
-        else if (interaction.isAutocomplete()) {
-            (this._commands[interaction.commandName] as BotAutocompleteSlashCommand).autocomplete(interaction, client);
+        else if (interaction.isButton()) {
+            try {
+                logger.button(interaction);
+                await this._buttons[interaction.customId].result(interaction, client);
+            } catch (error) {
+                logger.error(`Button ${interaction.customId} : Command Error`, error);
+            }
         }
     }
 }

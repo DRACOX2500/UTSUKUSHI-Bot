@@ -1,13 +1,23 @@
 import { ButtonBuilder, ButtonInteraction } from 'discord.js';
 import { BotClient } from '../bot-client';
 
-export interface BotButton {
-	readonly button: (disabled?: boolean) => ButtonBuilder;
+export interface CommandManagerConfig {
+    buttonsPath: string[];
+    commandsPath: string[];
+    triggersPath: string[];
+    contextPath: string[];
+}
 
-	readonly result: (
+export interface BotButton<
+	T extends BotClient =  BotClient,
+	B extends ButtonBuilder = ButtonBuilder
+> {
+	button: B;
+
+	result(
 		interaction: ButtonInteraction,
-		client: BotClient
-	) => Promise<void>;
+		client: T
+	): Promise<void>;
 }
 
 export interface BotTrigger<T extends BotClient = BotClient> {

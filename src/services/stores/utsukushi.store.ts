@@ -12,8 +12,11 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
     readonly users: UserStore;
     readonly guilds: GuildStore ;
 
+    readonly clipboard: Record<string, any> ;
+
     constructor() {
         super(SystemModel, DEFAULT_SYSTEM);
+        this.clipboard = {};
         this.users = new UserStore();
         this.guilds = new GuildStore();
     }
