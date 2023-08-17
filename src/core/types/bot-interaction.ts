@@ -8,11 +8,8 @@ export interface CommandManagerConfig {
     contextPath: string[];
 }
 
-export interface BotButton<
-	T extends BotClient =  BotClient,
-	B extends ButtonBuilder = ButtonBuilder
-> {
-	button: B;
+export interface BotButton<T extends BotClient =  BotClient> {
+	button: ButtonBuilder;
 
 	result(
 		interaction: ButtonInteraction,

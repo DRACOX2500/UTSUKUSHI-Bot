@@ -122,11 +122,8 @@ export abstract class BotButtonBuilder extends ButtonBuilder {
 	}
 }
 
-export abstract class BotButton<
-	T extends BotClient = BotClient,
-	B extends BotButtonBuilder = BotButtonBuilder
-> implements BotButtonType<T, B> {
-	button!: B;
+export abstract class BotButton<T extends BotClient = BotClient> implements BotButtonType<T> {
+	button!: BotButtonBuilder;
 	async result(interaction: ButtonInteraction<CacheType>, client: T): Promise<void> {
 		// OVERRIDE
 	}
