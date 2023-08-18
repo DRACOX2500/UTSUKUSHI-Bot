@@ -13,7 +13,7 @@ package-lock.json
 logs/*.log
 .env*
 .cache/
-commands.config.json
+config.json
 !.env.example
 .v1.0/
 src/assets/*.webp

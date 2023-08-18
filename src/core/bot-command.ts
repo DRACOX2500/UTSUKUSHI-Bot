@@ -1,9 +1,11 @@
-import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
 import { BotClient } from "./bot-client";
 import {
 	BotSlashCommand as BotSlashCommandType,
 	BotSubSlashCommand as BotSubSlashCommandType,
-	BotSubGroupSlashCommand as BotSubGroupSlashCommandType
+	BotSubGroupSlashCommand as BotSubGroupSlashCommandType,
+	BotMessageContextCommand,
+	BotCommandOptions
 } from './types/bot-command';
 import { BotButton as BotButtonType } from './types/bot-interaction';
 
@@ -112,6 +114,23 @@ export abstract class BotSubSlashCommand<T extends BotClient = BotClient, O = an
     }
 }
 
+export abstract class BotContextCommand<T extends BotClient = BotClient, O = any>
+	implements BotMessageContextCommand<T> {
+	command!: ContextMenuCommandBuilder;
+
+	constructor() {
+		this.command = new ContextMenuCommandBuilder();
+	}
+
+	async result(
+		interaction: MessageContextMenuCommandInteraction<CacheType>,
+		client: T,
+		options?: Partial<BotCommandOptions> | undefined): Promise<void> {
+		// OVERRIDE
+	};
+
+}
+
 export abstract class BotButtonBuilder extends ButtonBuilder {
 	constructor(id: string, disable: boolean = false) {
 		super();
@@ -125,6 +144,19 @@ export abstract class BotButtonBuilder extends ButtonBuilder {
 export abstract class BotButton<T extends BotClient = BotClient> implements BotButtonType<T> {
 	button!: BotButtonBuilder;
 	async result(interaction: ButtonInteraction<CacheType>, client: T): Promise<void> {
+		// OVERRIDE
+	}
+}
+
+export class BotModal<T extends BotClient = BotClient> extends ModalBuilder {
+	custom_id: string;
+	constructor(id: string) {
+		super();
+		this.custom_id = id;
+		this.setCustomId(this.custom_id);
+	}
+
+	async result(interaction: ModalSubmitInteraction, client: T): Promise<void> {
 		// OVERRIDE
 	}
 }

@@ -4,6 +4,7 @@ import { PresenceStatusData } from "discord.js";
 export interface PrivateiInteraction {
     guild: string
     commands: string[],
+    contexts: string[],
 }
 
 export interface ConfigJson {

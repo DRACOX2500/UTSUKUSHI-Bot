@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { BotAutocompleteSlashCommand, BotSlashCommand } from "./types/bot-command";
+import { BotContextCommand, BotSlashCommand } from "./types/bot-command";
 import logger from './logger';
 import { environment } from '@/environment';
 import { BotClient } from './bot-client';
@@ -10,6 +10,7 @@ import { BotButton, BotTrigger, CommandManagerConfig } from './types/bot-interac
 import { ConfigJson, PrivateiInteraction } from '@/types/business';
 import CONFIG_JSON from 'config';
 import { Array } from './utils/array';
+import { BotModal } from './bot-command';
 
 const CONFIG: ConfigJson = CONFIG_JSON;
 
@@ -36,6 +37,10 @@ const DEFAULT_CONFIG: CommandManagerConfig = {
         ...INTERACTION_PATH,
         'contexts'
     ],
+    modalsPath: [
+        ...INTERACTION_PATH,
+        'modals'
+    ],
 }
 
 export class InteractionsManager {
@@ -45,6 +50,8 @@ export class InteractionsManager {
     private client: BotClient | null;
     private _buttons: Record<string, BotButton> = {};
     private _commands: Record<string, BotSlashCommand> = {};
+    private _contexts: Record<string, BotContextCommand> = {};
+    private _modals: Record<string, BotModal> = {};
 
     constructor(
         client: BotClient | null = null,
@@ -53,14 +60,11 @@ export class InteractionsManager {
         this.client = client;
         this.config = config;
         this.loadSlashCommands();
+        this.loadContexts();
         this.loadTriggers();
         this.loadButtons();
+        this.loadModals();
     }
-
-    // private privateSlashCommand(command: BotSlashCommand) {
-    //     const privateCmd = CONFIG.private.slashCommands.find(_cmd => _cmd.command === command.command.name);
-    //     if (privateCmd) command.guildIds = privateCmd.guildIds;
-    // }
 
     private loadSlashCommands(): void
     {
@@ -72,8 +76,21 @@ export class InteractionsManager {
 			const command: BotSlashCommand = require(file).command;
 			if (!command) continue;
 
-            // this.privateSlashCommand(command);
 			this._commands[command.command.name] = command;
+		}
+    }
+
+    private loadContexts(): void
+    {
+        const commandsPath = path.join(...this.config.contextPath);
+
+		const list = this.importPaths(commandsPath, /\.ctx\.[jt]s$/);
+
+		for (const file of list) {
+			const context: BotContextCommand = require(file).context;
+			if (!context) continue;
+
+			this._contexts[context.command.name] = context;
 		}
     }
 
@@ -104,6 +121,21 @@ export class InteractionsManager {
 			if (!button) continue;
 
             this._buttons[(button.button.data as any).custom_id] = button;
+		}
+    }
+
+    private loadModals(): void
+    {
+        if (!this.client) return;
+        const commandsPath = path.join(...this.config.modalsPath);
+
+		const list = this.importPaths(commandsPath, /\.mdl\.[jt]s$/);
+
+		for (const file of list) {
+			const modal: BotModal = require(file).modal;
+			if (!modal) continue;
+
+            this._modals[modal.custom_id] = modal;
 		}
     }
 
@@ -160,6 +192,15 @@ export class InteractionsManager {
         return list;
     }
 
+    get contextsList(): BotContextCommand[]
+    {
+        const list = [];
+        for (const key in this._contexts) {
+            list.push(this._contexts[key]);
+        }
+        return list;
+    }
+
     async resetGuild(guildId: string): Promise<void>
     {
         if (guildId?.length === 0) return;
@@ -185,9 +226,16 @@ export class InteractionsManager {
     {
         const guildId = privateI.guild;
         const cmdList = privateI.commands;
+        const ctxList = privateI.contexts;
         if (guildId?.length > 0) {
             const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
             const cmds = cmdList.map(name => this._commands[name]);
+            const ctxs = ctxList.map(name => this._contexts[name]);
+
+            const body = [
+                ...cmds.map(_cmd => _cmd.command),
+                ...ctxs.map(_ctx => _ctx.command),
+            ]
 
             return (async (): Promise<number> => {
                 try {
@@ -197,7 +245,7 @@ export class InteractionsManager {
                         body: cmds.map(_cmd => _cmd.command),
                     });
 
-                    logger.botFinishGuildDeployCommand(guildId, this.size(cmds));
+                    logger.botFinishGuildDeployCommand(guildId, this.size(cmds), ctxs.length);
                 }
                 catch (error) {
                     logger.error(error);
@@ -233,20 +281,28 @@ export class InteractionsManager {
     {
         const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
         const privateCmdNames = Array.removeDuplicate(CONFIG.private.map((_private) => _private.commands).flat());
+        const privateCtxNames = Array.removeDuplicate(CONFIG.private.map((_private) => _private.contexts).flat());
         const cmds = this.commandsList
             .filter(_cmd => !privateCmdNames.includes(_cmd.command.name));
+        const ctxs = this.contextsList
+            .filter(_ctx => !privateCtxNames.includes(_ctx.command.name));
 
-        CONFIG.private.forEach((_private) => this.deployGuild(_private))
+        CONFIG.private.forEach((_private) => this.deployGuild(_private));
+
+        const body = [
+            ...cmds.map(_cmd => _cmd.command),
+            ...ctxs.map(_ctx => _ctx.command)
+        ];
 
         return (async (): Promise<number> => {
 			try {
 				logger.botStartDeployCommand();
 
 				await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
-					body: cmds.map(_cmd => _cmd.command),
+					body,
 				});
 
-				logger.botFinishDeployCommand(this.size(cmds));
+				logger.botFinishDeployCommand(this.size(cmds), ctxs.length);
 			}
 			catch (error) {
 				logger.error(error);
@@ -262,7 +318,7 @@ export class InteractionsManager {
     ): Promise<void>
     {
         if (interaction.isAutocomplete()) {
-            (this._commands[interaction.commandName] as BotAutocompleteSlashCommand).autocomplete(interaction, client);
+            this._commands[interaction.commandName].autocomplete(interaction, client);
         }
         else if (interaction.isChatInputCommand()) {
             try {
@@ -278,6 +334,22 @@ export class InteractionsManager {
                 await this._buttons[interaction.customId].result(interaction, client);
             } catch (error) {
                 logger.error(`Button ${interaction.customId} : Command Error`, error);
+            }
+        }
+        else if (interaction.isContextMenuCommand()) {
+            try {
+                logger.context(interaction);
+                await this._contexts[interaction.commandName].result(interaction, client);
+            } catch (error) {
+                logger.error(`Context ${interaction.commandName} : Command Error`, error);
+            }
+        }
+        else if (interaction.isModalSubmit()) {
+            try {
+                logger.modal(interaction);
+                await this._modals[interaction.customId].result(interaction, client);
+            } catch (error) {
+                logger.error(`Context ${interaction.customId} : Command Error`, error);
             }
         }
     }

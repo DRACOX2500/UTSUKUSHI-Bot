@@ -2,7 +2,8 @@
     "private": [
         {
             "guild": "773701138284281877",
-            "commands": ["bot-admin"]
+            "commands": ["bot-admin"],
+            "contexts": []
         }
     ]
 }

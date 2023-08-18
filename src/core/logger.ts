@@ -2,7 +2,7 @@ import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yello
 import json from 'package';
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import { ChatInputCommandInteraction, ButtonInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, ButtonInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 
 const LOG_DIR = './logs';
 const DATE_NOW = Date.now();
@@ -97,10 +97,10 @@ const logger = {
 	/**
 	 * Make a log when Bot commands deployement finished
 	 */
-	botFinishDeployCommand(size: number) {
+	botFinishDeployCommand(cmdSize: number, ctxSize: number) {
 		log.info(
 			green(
-				`Successfully reloaded application ${size} global (/) commands !`
+				`Successfully reloaded application ${cmdSize} global (/) commands & ${ctxSize} contexts !`
 			)
 		);
 	},
@@ -129,10 +129,10 @@ const logger = {
 	/**
 	 * Make a log when Bot guild commands deployement finished
 	 */
-	botFinishGuildDeployCommand(guildId: string, size: number) {
+	botFinishGuildDeployCommand(guildId: string, cmdSize: number, ctxSize: number) {
 		log.info(
 			green(
-				`Successfully reloaded guild "${guildId}" application ${size} global (/) commands !`
+				`Successfully reloaded guild "${guildId}" application ${cmdSize} global (/) commands & ${ctxSize} contexts !`
 			)
 		);
 	},
@@ -167,6 +167,14 @@ const logger = {
 
 	button(interaction: ButtonInteraction) {
 		logger.info(`[Button] ${interaction.user.username} : ${interaction.customId}`);
+	},
+
+	context(interaction: MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction) {
+		logger.info(`[Context] ${interaction.user.username} : ${interaction.commandName}`);
+	},
+
+	modal(interaction: ModalSubmitInteraction) {
+		logger.info(`[Modal] ${interaction.user.username} : ${interaction.customId}`);
 	}
 }
 
