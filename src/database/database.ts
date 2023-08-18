@@ -1,11 +1,16 @@
+import { UtsukushiBotClient } from "@/bot/client";
+import { BOT_EVENTS } from "@/constants";
 import logger from "@/core/logger";
 import { environment } from "@/environment";
 import mongoose from "mongoose";
 
-export function connectMongoDB(): void {
+export function connectMongoDB(client: UtsukushiBotClient): void {
     mongoose.set("strictQuery", true);
     mongoose.connect(environment.DB_URL)
-        .then(() => logger.botConnectedDB())
+        .then(() => {
+            logger.botConnectedDB();
+            client.emit(BOT_EVENTS.DATABASE_CONNECTED);
+        })
         .catch(error => logger.error(error));
 }
 

@@ -1,7 +1,13 @@
 import { DEFAULT_ACTIVITY } from "./core/constants";
 import { UtsukushiSystem } from "./types/business";
 
-export const CACHE_REPO = '.cache'
+export const CACHE_REPO = '.cache';
+
+export const BOT_EVENTS = {
+	DATABASE_CONNECTED: '@DatabaseConnected',
+	READY: '@Ready',
+	STORE_INIT: '@StoreInit'
+}
 
 export const LOGO_MUSIC_BLUE = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/musical-notes_1f3b6.png';
 export const LOGO_MUSIC_PURPLE = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/facebook/65/multiple-musical-notes_1f3b6.png';

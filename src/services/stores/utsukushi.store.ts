@@ -3,9 +3,10 @@ import { UtsukushiSystem } from "@/types/business";
 import { UserStore } from './user.store';
 import { GuildStore } from "./guild.store";
 import { SystemModel } from '@/database/schemas/system.schema';
-import { DEFAULT_SYSTEM } from "@/constants";
+import { BOT_EVENTS, DEFAULT_SYSTEM } from "@/constants";
 import { BotActivity } from "@/core/types/business";
 import { PresenceStatusData } from "discord.js";
+import { UtsukushiBotClient } from "@/bot/client";
 
 export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
 
@@ -23,21 +24,20 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
 
     private async initDefault(): Promise<void> {
         const systDoc = new SystemModel(this.value);
-        this.setDoc(systDoc);
         await systDoc.save();
     }
 
-    async initialize() {
+    async initialize(client: UtsukushiBotClient) {
         const res = await this.schema.find().limit(1).exec();
         if (res.length === 0) await this.initDefault();
-        else this.setDoc(new SystemModel(res[0]));
         super.set(res[0] ?? this.value);
         this.users.set({});
         this.guilds.set({});
+        client.emit(BOT_EVENTS.STORE_INIT);
     }
 
     async updateActivity(activity: BotActivity) {
-        const doc = new SystemModel(this.doc);
+        const doc: any = await this.schema.find().limit(1).exec();
         const updoc = await SystemModel.findByIdAndUpdate(
             doc._id,
             {
@@ -52,7 +52,7 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
     }
 
     async updateStatus(status: PresenceStatusData) {
-        const doc = new SystemModel(this.doc);
+        const doc: any = await this.schema.find().limit(1).exec();
         const updoc = await SystemModel.findByIdAndUpdate(
             doc._id,
             {

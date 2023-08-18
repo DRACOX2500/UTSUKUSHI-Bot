@@ -1,15 +1,26 @@
-import { AFTER_READY } from "@/constants";
+import { BOT_EVENTS } from "@/constants";
 import { BotClient } from "@/core/bot-client";
 import { OnAfterReady } from "@/core/bot-client-events";
+import { Starter } from "@/core/starter";
 import { connectMongoDB } from "@/database/database";
 import { ProfileService } from "@/services/profile-service";
 import { UtsukushiStore } from "@/services/stores/utsukushi.store";
+import { OnAfterDatabaseReady, OnAfterStoreInit, OnAfterUtsukushiReady } from "@/types/bot-client-events";
 import { UtsukushiBotConfig } from "@/types/business";
 import { GatewayIntentBits } from "discord.js";
 
-export class UtsukushiBotClient extends BotClient implements OnAfterReady {
+const REQUIREMENT = [
+    'utsukushi',
+    'database',
+    'login',
+    'store'
+];
+
+export class UtsukushiBotClient extends BotClient
+    implements OnAfterReady, OnAfterDatabaseReady, OnAfterUtsukushiReady, OnAfterStoreInit {
 
     readonly store!: UtsukushiStore;
+	protected readonly starter: Starter;
 
     constructor(config?: Partial<UtsukushiBotConfig>) {
         super(
@@ -22,18 +33,38 @@ export class UtsukushiBotClient extends BotClient implements OnAfterReady {
             ],
             config
         );
-        if (!config?.ignoreDB) connectMongoDB();
+        this.starter = new Starter(REQUIREMENT, () => this.setBotStatusData());
+        this.on(BOT_EVENTS.DATABASE_CONNECTED, this.onAfterDatabaseReady);
+        this.on(BOT_EVENTS.READY, this.onAfterUtsukushiReady);
+        this.on(BOT_EVENTS.STORE_INIT, this.onAfterStoreInit);
+
+        if (!config?.ignoreDB) connectMongoDB(this);
         if (!config?.ignoreStore) {
             this.store = new UtsukushiStore();
-            this.store.initialize();
+            this.store.initialize(this);
         }
+        this.emit(BOT_EVENTS.READY);
+    }
+
+    setBotStatusData(): void {
+        const syst = this.store.value;
+        super.setActivity(syst.activity);
+        super.setStatus(syst.status);
     }
 
     override onAfterReady(): void {
-        setTimeout(() => {
-            const syst = this.store.value
-            super.setActivity(syst.activity);
-            super.setStatus(syst.status);
-        }, AFTER_READY);
+        this.starter.check('login');
+    }
+
+    onAfterDatabaseReady(): void {
+        this.starter.check('database');
+    }
+
+    onAfterUtsukushiReady(): void {
+        this.starter.check('utsukushi');
+    }
+
+    onAfterStoreInit(): void {
+        this.starter.check('store');
     }
 }
