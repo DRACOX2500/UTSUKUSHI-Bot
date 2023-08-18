@@ -29,7 +29,6 @@ export class BotClient extends Client implements BotClientEvents {
 		this.on('ready', async (client: Client) => {
 			this.setUsername(client.user?.username);
 			logger.botLoginLog(this.username);
-			this.setStatus(this.config.default.status);
 			this.onAfterReady();
 		});
 		this.on('error', logger.error);

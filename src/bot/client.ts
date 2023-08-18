@@ -48,6 +48,7 @@ export class UtsukushiBotClient extends BotClient
 
     setBotStatusData(): void {
         const syst = this.store.value;
+        console.log(syst);
         super.setActivity(syst.activity);
         super.setStatus(syst.status);
     }

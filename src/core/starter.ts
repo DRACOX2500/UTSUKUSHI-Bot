@@ -1,4 +1,4 @@
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, takeWhile } from "rxjs";
 
 export class Starter {
 
@@ -6,7 +6,10 @@ export class Starter {
 
     constructor(value: string[], onReady: () => void) {
         this.record = new BehaviorSubject(this.toRecord(value));
-        this.record.subscribe(() => {
+        this.record
+        // .pipe(takeWhile(() => this.isAllChecked))
+        .subscribe((res) => {
+            console.log('sub', res);
             if (this.isAllChecked) onReady();
         })
     }
