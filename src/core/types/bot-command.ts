@@ -67,7 +67,7 @@ export interface BotSlashCommand<
 	 * Set guild ID if you want to deploy this command on a specific guild,
 	 * else this command will be deploy globally
 	 */
-	readonly guildIds: string[];
+	guildIds: string[];
 	/**
 	 * SubCommands list
 	 */

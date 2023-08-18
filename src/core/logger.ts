@@ -141,14 +141,14 @@ const logger = {
 	 * Make a log when Bot guild commands reset started
 	 */
 	botStartGuildResetCommand(guildId: string) {
-		log.info(magenta(`Started reset all guild "${guildId}" (/) commands...`));
+		log.info(magenta(`Started reset guild "${guildId}" (/) commands...`));
 	},
 
 	/**
 	 * Make a log when Bot guild commands reset finished
 	 */
 	botFinishGuildResetCommand(guildId: string) {
-		log.info(lightMagenta(`Successfully reset all guild "${guildId}" (/) commands !`));
+		log.info(lightMagenta(`Successfully reset guild "${guildId}" (/) commands !`));
 	},
 
 	botConnectedDB() {

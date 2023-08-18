@@ -1,4 +1,4 @@
-import { BehaviorSubject, takeWhile } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 export class Starter {
 
@@ -9,7 +9,6 @@ export class Starter {
         this.record
         // .pipe(takeWhile(() => this.isAllChecked))
         .subscribe((res) => {
-            console.log('sub', res);
             if (this.isAllChecked) onReady();
         })
     }

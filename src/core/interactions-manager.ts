@@ -7,6 +7,11 @@ import { environment } from '@/environment';
 import { BotClient } from './bot-client';
 import { CacheType, Interaction, REST, Routes } from 'discord.js';
 import { BotButton, BotTrigger, CommandManagerConfig } from './types/bot-interaction';
+import { ConfigJson, PrivateiInteraction } from '@/types/business';
+import CONFIG_JSON from 'config';
+import { Array } from './utils/array';
+
+const CONFIG: ConfigJson = CONFIG_JSON;
 
 const INTERACTION_PATH = [
     environment.SRC_PATH,
@@ -52,6 +57,11 @@ export class InteractionsManager {
         this.loadButtons();
     }
 
+    // private privateSlashCommand(command: BotSlashCommand) {
+    //     const privateCmd = CONFIG.private.slashCommands.find(_cmd => _cmd.command === command.command.name);
+    //     if (privateCmd) command.guildIds = privateCmd.guildIds;
+    // }
+
     private loadSlashCommands(): void
     {
         const commandsPath = path.join(...this.config.commandsPath);
@@ -62,6 +72,7 @@ export class InteractionsManager {
 			const command: BotSlashCommand = require(file).command;
 			if (!command) continue;
 
+            // this.privateSlashCommand(command);
 			this._commands[command.command.name] = command;
 		}
     }
@@ -170,29 +181,32 @@ export class InteractionsManager {
         })();
     }
 
-    async deployGuild(guildId: string): Promise<number>
+    async deployGuild(privateI: PrivateiInteraction): Promise<number>
     {
-        const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
-        const cmds = this.commandsList
-            .filter(cmd => cmd.guildIds?.includes(guildId))
-            .map(_cmd => _cmd.command);
+        const guildId = privateI.guild;
+        const cmdList = privateI.commands;
+        if (guildId?.length > 0) {
+            const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
+            const cmds = cmdList.map(name => this._commands[name]);
 
-        return (async (): Promise<number> => {
-			try {
-				logger.botStartGuildDeployCommand(guildId);
+            return (async (): Promise<number> => {
+                try {
+                    logger.botStartGuildDeployCommand(guildId);
 
-				await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
-					body: cmds,
-				});
+                    await rest.put(Routes.applicationGuildCommands(environment.CLIENT_ID, guildId), {
+                        body: cmds.map(_cmd => _cmd.command),
+                    });
 
-				logger.botFinishGuildDeployCommand(guildId, cmds.length);
-			}
-			catch (error) {
-				logger.error(error);
-				return 1;
-			}
-			return 0;
-		})();
+                    logger.botFinishGuildDeployCommand(guildId, this.size(cmds));
+                }
+                catch (error) {
+                    logger.error(error);
+                    return 1;
+                }
+                return 0;
+            })();
+        }
+        return 1;
     }
 
     async resetAll(): Promise<void>
@@ -218,17 +232,21 @@ export class InteractionsManager {
     async deployAll(): Promise<number>
     {
         const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
-        const cmds = this.commandsList.map(_cmd => _cmd.command);
+        const privateCmdNames = Array.removeDuplicate(CONFIG.private.map((_private) => _private.commands).flat());
+        const cmds = this.commandsList
+            .filter(_cmd => !privateCmdNames.includes(_cmd.command.name));
+
+        CONFIG.private.forEach((_private) => this.deployGuild(_private))
 
         return (async (): Promise<number> => {
 			try {
 				logger.botStartDeployCommand();
 
 				await rest.put(Routes.applicationCommands(environment.CLIENT_ID), {
-					body: cmds,
+					body: cmds.map(_cmd => _cmd.command),
 				});
 
-				logger.botFinishDeployCommand(this.size(this.commandsList));
+				logger.botFinishDeployCommand(this.size(cmds));
 			}
 			catch (error) {
 				logger.error(error);

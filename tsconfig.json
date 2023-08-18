@@ -14,6 +14,7 @@
             "*": ["node_modules/*"],
             "@/*": ["src/*"],
             "package": ["package.json"],
+            "config": ["config.json"],
         },
         "pretty": true,
         "incremental": true,

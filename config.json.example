@@ -1,0 +1,10 @@
+{
+    "private": {
+        "slashCommands": [
+            {
+                "guild": "",
+                "commands": ["bot-admin"]
+            }
+        ]
+    }
+}

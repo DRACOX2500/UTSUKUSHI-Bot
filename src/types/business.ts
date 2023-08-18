@@ -1,6 +1,15 @@
 import { BotActivity, BotConfig } from "@/core/types/business";
 import { PresenceStatusData } from "discord.js";
 
+export interface PrivateiInteraction {
+    guild: string
+    commands: string[],
+}
+
+export interface ConfigJson {
+    private: PrivateiInteraction[]
+}
+
 export interface UtsukushiBotConfig extends BotConfig {
     ignoreDB: boolean;
     ignoreStore: boolean;
