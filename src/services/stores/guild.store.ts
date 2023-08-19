@@ -1,7 +1,8 @@
-import { Guild as GuildDJS } from 'discord.js';
+import { Guild as GuildDJS, GuildEmoji } from 'discord.js';
 import { Emoji, Guild } from "@/types/business";
 import { GuildModel } from "@/database/schemas/guild.schema";
 import { AbstractRecordStore } from "./abstract-record-store";
+import { EmojiModel } from '@/database/schemas/emoji.schema';
 
 export class GuildStore extends AbstractRecordStore<Guild> {
 
@@ -51,51 +52,120 @@ export class GuildStore extends AbstractRecordStore<Guild> {
     }
 
     async getEmojis(guild: GuildDJS): Promise<Emoji[]> {
-        // TODO: get Shared Emojis or Guild emojis
-        const emojisGuild = await guild.emojis.fetch();
-        return emojisGuild.map((_emoji): Emoji => ({
+        const _guild = await this.get(guild.id);
+        const emojis: (Emoji | GuildEmoji)[] = await this.getSharedEmojis();
+        if (!_guild?.emojisShared) {
+            const emojisGuild = await guild.emojis.fetch();
+            emojis.push(
+                ...emojisGuild.map(_emoji => _emoji)
+            );
+        }
+        return emojis.map((_emoji): Emoji => ({
             id: _emoji.id,
             name: _emoji.name ?? '',
             animated: _emoji.animated ?? false,
-        }))
+        }));
     }
 
-    async updateNotify(guild: GuildDJS, notifyChannelId: string | null) {
-        const doc = await this.getOrCreate(guild);
-        const updoc = await GuildModel.findOneAndUpdate(
-            { id: doc.id },
+    async update(guildId: string, guild: Partial<Guild>) {
+        return GuildModel.findOneAndUpdate(
+            { id: guildId },
             {
-                vocalNotifyChannel: notifyChannelId,
+                ...guild,
             },
             { new: true }
         )
         // .populate('emojis')
         // .populate('soundEffects')
         .exec();
+    }
+
+    async updateNotify(guild: GuildDJS, notifyChannelId: string | null) {
+        const doc = await this.getOrCreate(guild);
+        const updoc = await this.update(
+            doc.id,
+            {
+                vocalNotifyChannel: notifyChannelId,
+            }
+        );
         if (updoc) this.save(updoc.id, updoc);
     }
 
     async removeDoc(guild: GuildDJS) {
+        await this.removeAllEmojis(guild);
         await this.schema.deleteOne({ id: guild.id }).exec();
     }
 
-    async addAllEmoji(guild: GuildDJS, emojis: Emoji[]) {
-        //TODO: method
+    async enableSharedEmojis(guild: GuildDJS) {
+        const doc = await this.getOrCreate(guild);
+        const updoc = await this.update(
+            doc.id,
+            {
+                emojisShared: true,
+            }
+        );
+        if (updoc) this.save(updoc.id, updoc);
+        await this.addAllEmojis(guild);
     }
 
-    async removeAllEmoji(guild: GuildDJS) {
-        //TODO: method
+    async getSharedEmojis(): Promise<Emoji[]> {
+        return EmojiModel.find().exec();
     }
 
-    async addEmoji(guild: GuildDJS, emojis: Emoji) {
-        //TODO: method
+    async disableSharedEmojis(guild: GuildDJS) {
+        const doc = await this.getOrCreate(guild);
+        const updoc = await this.update(
+            doc.id,
+            {
+                emojisShared: false,
+            }
+        );
+        if (updoc) this.save(updoc.id, updoc);
+        await this.removeAllEmojis(guild);
     }
 
-    async updateEmoji(guild: GuildDJS, emojis: Emoji) {
-        //TODO: method
+    async addAllEmojis(guild: GuildDJS): Promise<Emoji[]> {
+        const emojis = await guild.emojis.fetch();
+        const list = emojis.map(_emoji => _emoji);
+        return EmojiModel.insertMany(list, { ordered : false });
     }
 
-    async removeEmoji(guild: GuildDJS, emojis: Emoji) {
-        //TODO: method
+    async removeAllEmojis(guild: GuildDJS): Promise<void> {
+        const emojis = await guild.emojis.fetch();
+        const list = emojis.map(_emoji => _emoji);
+        await EmojiModel.deleteMany(list).exec();
+    }
+
+    async addEmoji(guild: GuildDJS, emoji: Emoji): Promise<Emoji | null> {
+        const _guild = await this.get(guild.id);
+        if (_guild?.emojisShared) {
+            const doc = new EmojiModel(emoji);
+            return doc.save();
+        }
+        return null;
+    }
+
+    async updateEmoji(guild: GuildDJS, emojiId: string, emoji: Emoji): Promise<Emoji | null> {
+        const _guild = await this.get(guild.id);
+        if (_guild?.emojisShared) {
+            const doc = await EmojiModel.findOne({ id: emojiId }).exec();
+            if (!doc) return null;
+            return EmojiModel.findOneAndUpdate(
+                    { id: doc.id },
+                    {
+                        ...emoji,
+                    },
+                    { new: true }
+                )
+                .exec();
+        }
+        return null;
+    }
+
+    async removeEmoji(guild: GuildDJS, emoji: Emoji): Promise<void> {
+        const _guild = await this.get(guild.id);
+        if (_guild?.emojisShared) {
+            await EmojiModel.deleteOne({ id: emoji.id }).exec();
+        }
     }
 }

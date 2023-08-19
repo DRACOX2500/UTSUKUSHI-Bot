@@ -10,7 +10,7 @@ export class ReactAsBotSelect extends BotSelectBuilder {
             label: emoji.name,
             value: this.toEmojiValue(emoji),
             emoji,
-        }))
+        }));
 
         this
             .setPlaceholder('Nothing selected')
@@ -20,6 +20,6 @@ export class ReactAsBotSelect extends BotSelectBuilder {
     }
 
     private toEmojiValue(emoji: Emoji) {
-        return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}> `
+        return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`
     }
 }

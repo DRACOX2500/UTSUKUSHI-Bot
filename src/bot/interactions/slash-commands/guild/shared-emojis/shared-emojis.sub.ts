@@ -32,15 +32,13 @@ export class SharedEmojisSubCommand extends BotSubSlashCommand<UtsukushiBotClien
         const option = interaction.options.getBoolean('on-off', true);
 
         await interaction.deferReply({ ephemeral: true });
-        const guildEmojis = await guild.emojis.fetch();
-        const emojis = DiscordService.toEmojiType(...guildEmojis.map(_emoji => _emoji));
 
         if (option) client.store.guilds
-            .addAllEmoji(guild, emojis)
+            .enableSharedEmojis(guild)
             .then(() => interaction.editReply('✅ Emojis added to database successfully !'))
             .catch(() => interaction.editReply('❌ Emojis added to database failed !'));
         else client.store.guilds
-        .removeAllEmoji(guild)
+        .disableSharedEmojis(guild)
         .then(() => interaction.editReply('✅ Emojis deleted to database successfully !'))
         .catch(() => interaction.editReply('❌ Emojis deleted to database failed !'));
     }
