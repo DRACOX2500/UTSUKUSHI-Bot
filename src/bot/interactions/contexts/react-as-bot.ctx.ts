@@ -14,8 +14,7 @@ export class ReplyAsBotContext extends BotContextCommand<UtsukushiBotClient> {
 
         this.command
             .setName('React As Bot')
-            .setType(ApplicationCommandType.Message)
-            .setDMPermission(true);
+            .setType(ApplicationCommandType.Message);
     }
 
     override async result(
