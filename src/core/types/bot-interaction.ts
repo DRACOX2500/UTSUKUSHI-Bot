@@ -7,6 +7,7 @@ export interface CommandManagerConfig {
     triggersPath: string[];
     contextPath: string[];
 	modalsPath: string[];
+	selectsPath: string[];
 }
 
 export interface BotButton<T extends BotClient =  BotClient> {

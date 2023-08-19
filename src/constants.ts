@@ -1,6 +1,8 @@
 import { DEFAULT_ACTIVITY } from "./core/constants";
 import { UtsukushiSystem } from "./types/business";
 
+export const REGEX_LINK = /https?:\/\/.+/;
+
 export const CACHE_REPO = '.cache';
 
 export const BOT_EVENTS = {

@@ -1,4 +1,4 @@
-import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
 import { BotClient } from "./bot-client";
 import {
 	BotSlashCommand as BotSlashCommandType,
@@ -157,6 +157,23 @@ export class BotModal<T extends BotClient = BotClient> extends ModalBuilder {
 	}
 
 	async result(interaction: ModalSubmitInteraction, client: T): Promise<void> {
+		// OVERRIDE
+	}
+}
+
+export class BotSelectBuilder extends StringSelectMenuBuilder {
+    custom_id: string;
+    constructor(id: string) {
+        super();
+        this.custom_id = id;
+
+        this.setCustomId(this.custom_id);
+    }
+}
+
+export class BotSelect<T extends BotClient = BotClient> extends ModalBuilder {
+	select!: BotSelectBuilder;
+	async result(interaction: StringSelectMenuInteraction, client: T): Promise<void> {
 		// OVERRIDE
 	}
 }

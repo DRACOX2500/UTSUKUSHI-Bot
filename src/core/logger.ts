@@ -2,7 +2,7 @@ import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yello
 import json from 'package';
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import { ChatInputCommandInteraction, ButtonInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, ButtonInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, UserContextMenuCommandInteraction, StringSelectMenuInteraction } from 'discord.js';
 
 const LOG_DIR = './logs';
 const DATE_NOW = Date.now();
@@ -175,6 +175,10 @@ const logger = {
 
 	modal(interaction: ModalSubmitInteraction) {
 		logger.info(`[Modal] ${interaction.user.username} : ${interaction.customId}`);
+	},
+
+	select(interaction: StringSelectMenuInteraction) {
+		logger.info(`[Select] ${interaction.user.username} : ${interaction.customId}`);
 	}
 }
 

@@ -50,6 +50,16 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         return guild;
     }
 
+    async getEmojis(guild: GuildDJS): Promise<Emoji[]> {
+        // TODO: get Shared Emojis or Guild emojis
+        const emojisGuild = await guild.emojis.fetch();
+        return emojisGuild.map((_emoji): Emoji => ({
+            id: _emoji.id,
+            name: _emoji.name ?? '',
+            animated: _emoji.animated ?? false,
+        }))
+    }
+
     async updateNotify(guild: GuildDJS, notifyChannelId: string | null) {
         const doc = await this.getOrCreate(guild);
         const updoc = await GuildModel.findOneAndUpdate(

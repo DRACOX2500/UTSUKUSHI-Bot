@@ -10,7 +10,7 @@ import { BotButton, BotTrigger, CommandManagerConfig } from './types/bot-interac
 import { ConfigJson, PrivateiInteraction } from '@/types/business';
 import CONFIG_JSON from 'config';
 import { Array } from './utils/array';
-import { BotModal } from './bot-command';
+import { BotModal, BotSelect } from './bot-command';
 
 const CONFIG: ConfigJson = CONFIG_JSON;
 
@@ -41,6 +41,10 @@ const DEFAULT_CONFIG: CommandManagerConfig = {
         ...INTERACTION_PATH,
         'modals'
     ],
+    selectsPath: [
+        ...INTERACTION_PATH,
+        'selects'
+    ],
 }
 
 export class InteractionsManager {
@@ -52,6 +56,7 @@ export class InteractionsManager {
     private _commands: Record<string, BotSlashCommand> = {};
     private _contexts: Record<string, BotContextCommand> = {};
     private _modals: Record<string, BotModal> = {};
+    private _selects: Record<string, BotSelect> = {};
 
     constructor(
         client: BotClient | null = null,
@@ -64,6 +69,7 @@ export class InteractionsManager {
         this.loadTriggers();
         this.loadButtons();
         this.loadModals();
+        this.loadSelects();
     }
 
     private loadSlashCommands(): void
@@ -77,6 +83,20 @@ export class InteractionsManager {
 			if (!command) continue;
 
 			this._commands[command.command.name] = command;
+		}
+    }
+
+    private loadSelects(): void
+    {
+        const commandsPath = path.join(...this.config.selectsPath);
+
+		const list = this.importPaths(commandsPath, /\.slc\.[jt]s$/);
+
+		for (const file of list) {
+			const select: BotSelect = require(file).select;
+			if (!select) continue;
+
+			this._selects[select.select.custom_id] = select;
 		}
     }
 
@@ -318,9 +338,32 @@ export class InteractionsManager {
     ): Promise<void>
     {
         if (interaction.isAutocomplete()) {
-            this._commands[interaction.commandName].autocomplete(interaction, client);
+           this._commands[interaction.commandName].autocomplete(interaction, client);
         }
-        else if (interaction.isChatInputCommand()) {
+        else if (interaction.isModalSubmit()) {
+            try {
+                logger.modal(interaction);
+                await this._modals[interaction.customId].result(interaction, client);
+            } catch (error) {
+                logger.error(`Modal ${interaction.customId} : Command Error`, error);
+            }
+        }
+        else if (interaction.isStringSelectMenu()) {
+            try {
+                logger.select(interaction);
+                await this._selects[interaction.customId].result(interaction, client);
+            } catch (error) {
+                logger.error(`Select ${interaction.customId} : Command Error`, error);
+            }
+        }
+        else await this.handleInteractions2(interaction, client);
+    }
+
+    private async handleInteractions2(
+        interaction: Interaction<CacheType>,
+        client: BotClient
+    ): Promise<void> {
+        if (interaction.isChatInputCommand()) {
             try {
                 logger.chatCommand(interaction);
                 await this._commands[interaction.commandName].result(interaction, client);
@@ -342,14 +385,6 @@ export class InteractionsManager {
                 await this._contexts[interaction.commandName].result(interaction, client);
             } catch (error) {
                 logger.error(`Context ${interaction.commandName} : Command Error`, error);
-            }
-        }
-        else if (interaction.isModalSubmit()) {
-            try {
-                logger.modal(interaction);
-                await this._modals[interaction.customId].result(interaction, client);
-            } catch (error) {
-                logger.error(`Context ${interaction.customId} : Command Error`, error);
             }
         }
     }
