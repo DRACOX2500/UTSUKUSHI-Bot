@@ -1,5 +1,5 @@
-import { RED_FUEL_PUMP } from "@/constants";
-import { Fuel } from "@/services/api/fuel-api-service";
+import { RED_FUEL_PUMP } from "../../../constants";
+import { Fuel } from "../../../services/api/fuel-api-service";
 import { EmbedBuilder, time } from "discord.js";
 
 export class FuelEmbed extends EmbedBuilder {
@@ -10,14 +10,6 @@ export class FuelEmbed extends EmbedBuilder {
         this
             .setAuthor({ name: `Result#${index + 1}`, iconURL: RED_FUEL_PUMP })
             .setColor(0x2b1291)
-            // .setDescription(
-            //     `**Address** : ${data.fields.adresse}\n` +
-            //         `**Services** : ${data.fields.services_service?.replaceAll(
-            //             '//',
-            //             ', '
-            //         )}\n\n` +
-            //         `**Last Data Updated** : ${time(new Date(data.fields.prix_maj))}`
-            // )
             .addFields(
                 {
                     name: 'Address :',

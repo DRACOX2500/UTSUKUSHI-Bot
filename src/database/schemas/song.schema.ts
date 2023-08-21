@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { Song } from "@/types/business";
-import { SCHEMAS } from "@/database/database";
+import { Song } from "../../types/business";
+import { SCHEMAS } from "../../database/database";
 
 const songSchema = new Schema<Song>({
     url: {

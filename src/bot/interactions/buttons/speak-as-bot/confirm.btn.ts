@@ -1,7 +1,8 @@
-import { ConfirmButton } from "@/bot/builders/buttons/confirm";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotButton } from "@/core/bot-command";
 import { ButtonInteraction, CacheType } from "discord.js";
+import { BotButton } from "../../../../core/bot-command";
+import { ConfirmButton } from "../../../builders/buttons/confirm";
+import { UtsukushiBotClient } from "../../../client";
+
 
 class Button extends BotButton<UtsukushiBotClient> {
     button = new ConfirmButton('sab-confirm');

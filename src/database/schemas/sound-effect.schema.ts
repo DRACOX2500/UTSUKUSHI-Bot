@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { SoundEffect } from "@/types/business";
-import { SCHEMAS } from "@/database/database";
+import { SoundEffect } from "../../types/business";
+import { SCHEMAS } from "../../database/database";
 
 const soundEffectSchema = new Schema<SoundEffect>({
     name: {

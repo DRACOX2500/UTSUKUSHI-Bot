@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 import { AttachmentBuilder } from 'discord.js';
 import StaticMaps from 'staticmaps';
-import { CACHE_REPO } from '@/constants';
+import { CACHE_REPO } from '../constants';
 
 const staticMaps = new StaticMaps({
     width: 400,

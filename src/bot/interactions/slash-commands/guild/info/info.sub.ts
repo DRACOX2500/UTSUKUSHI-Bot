@@ -1,10 +1,11 @@
-import { GuildEmbed } from "@/bot/builders/embeds/guild";
-import { GuildBanEmbed } from "@/bot/builders/embeds/guild-ban";
-import { GuildExtraEmbed } from "@/bot/builders/embeds/guild-extra";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { ERROR_COMMAND, ERROR_CMD_GUILD } from "@/core/constants";
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, CacheType, EmbedBuilder, Guild } from "discord.js";
+import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, CacheType, Guild, EmbedBuilder } from "discord.js";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_CMD_GUILD, ERROR_COMMAND } from "../../../../../core/constants";
+import { GuildEmbed } from "../../../../builders/embeds/guild";
+import { GuildBanEmbed } from "../../../../builders/embeds/guild-ban";
+import { GuildExtraEmbed } from "../../../../builders/embeds/guild-extra";
+import { UtsukushiBotClient } from "../../../../client";
+
 
 /**
  * @SubSlashCommand `Info`

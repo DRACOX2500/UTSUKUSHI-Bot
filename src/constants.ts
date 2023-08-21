@@ -32,3 +32,20 @@ export const DEFAULT_SYSTEM: UtsukushiSystem = {
 	activity: DEFAULT_ACTIVITY.activity,
 	status: DEFAULT_ACTIVITY.status,
 }
+
+const YOUTUBE = 0xff0000;
+const SPOTIFY = 0x18d860;
+const SOUNDCLOUD = 0xf15b22;
+const YOUTUBE_DARKER = 0xb50000;
+const SPOTIFY_DARKER = 0x129141;
+const SOUNDCLOUD_DARKER = 0xa9390e;
+export const COLOR: any = {
+    'youtube': YOUTUBE,
+    'spotify': SPOTIFY,
+    'soundcloud': SOUNDCLOUD,
+    'youtube_dark': YOUTUBE_DARKER,
+    'spotify_dark': SPOTIFY_DARKER,
+    'soundcloud_dark': SOUNDCLOUD_DARKER
+}
+export const GIT_ASSETS = 'https://raw.githubusercontent.com/DRACOX2500/UTSUKUSHI-Bot/dev2.0/src/assets/'
+export const MUSIC_BLUE = 'https://em-content.zobj.net/source/twitter/31/multiple-musical-notes_1f3b6.png';

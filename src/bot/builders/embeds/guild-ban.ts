@@ -1,4 +1,4 @@
-import { DiscordService } from "@/services/discord-service";
+import { DiscordService } from "../../../services/discord-service";
 import { EmbedBuilder, Guild, GuildBan, italic } from "discord.js";
 
 export class GuildBanEmbed extends EmbedBuilder {

@@ -1,10 +1,11 @@
-import { CancelButton } from "@/bot/builders/buttons/cancel";
-import { ConfirmButton } from "@/bot/builders/buttons/confirm";
-import { SpeakAsBotEmbed } from "@/bot/builders/embeds/speak-as-bot";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSlashCommand } from "@/core/bot-command";
-import { DiscordService } from "@/services/discord-service";
-import { ChatInputCommandInteraction, CacheType, ActionRowBuilder, ButtonBuilder } from "discord.js";
+import { ChatInputCommandInteraction, CacheType, ButtonBuilder, ActionRowBuilder } from "discord.js";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { DiscordService } from "../../../../services/discord-service";
+import { CancelButton } from "../../../builders/buttons/cancel";
+import { ConfirmButton } from "../../../builders/buttons/confirm";
+import { SpeakAsBotEmbed } from "../../../builders/embeds/speak-as-bot";
+import { UtsukushiBotClient } from "../../../client";
+
 
 /**
  * @SlashCommand `speak-as-bot`

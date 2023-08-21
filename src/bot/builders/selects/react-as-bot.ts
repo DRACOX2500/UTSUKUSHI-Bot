@@ -1,6 +1,7 @@
-import { BotSelectBuilder } from "@/core/bot-command";
-import { Emoji } from "@/types/business";
 import { APISelectMenuOption } from "discord.js";
+import { BotSelectBuilder } from "../../../core/bot-command";
+import { Emoji } from "../../../types/business";
+
 
 export class ReactAsBotSelect extends BotSelectBuilder {
     constructor(id: string, emojis: Emoji[] = []) {

@@ -1,4 +1,4 @@
-import { ProgProfile } from '@/core/types/business';
+import { ProgProfile } from '../core/types/business';
 
 const PROFILE_ARG = '--profile';
 

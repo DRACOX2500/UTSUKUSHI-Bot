@@ -1,8 +1,7 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import logger from "@/core/logger";
-import { BotTrigger } from "@/core/types/bot-interaction";
-import { Emoji } from "@/types/business";
-import { Guild, GuildEmoji } from "discord.js";
+import { UtsukushiBotClient } from "../../../bot/client";
+import { BotTrigger } from "../../../core/types/bot-interaction";
+import { Emoji } from "../../../types/business";
+import { GuildEmoji } from "discord.js";
 
 class EmojiListUpdateTrigger implements BotTrigger<UtsukushiBotClient> {
 

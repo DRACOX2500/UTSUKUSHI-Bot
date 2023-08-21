@@ -1,12 +1,12 @@
 import { AbstractStore } from "./abstract-store";
-import { UtsukushiSystem } from "@/types/business";
+import { UtsukushiSystem } from "../../types/business";
 import { UserStore } from './user.store';
 import { GuildStore } from "./guild.store";
-import { SystemModel } from '@/database/schemas/system.schema';
-import { BOT_EVENTS, DEFAULT_SYSTEM } from "@/constants";
-import { BotActivity } from "@/core/types/business";
+import { SystemModel } from '../../database/schemas/system.schema';
+import { BOT_EVENTS, DEFAULT_SYSTEM } from "../../constants";
+import { BotActivity } from "../../core/types/business";
 import { PresenceStatusData } from "discord.js";
-import { UtsukushiBotClient } from "@/bot/client";
+import { UtsukushiBotClient } from "../../bot/client";
 
 export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
 

@@ -1,4 +1,4 @@
-import { BotButtonBuilder } from "@/core/bot-command";
+import { BotButtonBuilder } from "../../../core/bot-command";
 import { ButtonStyle } from "discord.js";
 
 export class NextButton extends BotButtonBuilder {

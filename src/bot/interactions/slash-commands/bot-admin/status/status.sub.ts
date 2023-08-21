@@ -1,9 +1,10 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { ERROR_COMMAND, ERROR_CMD_MESSAGE } from "@/core/constants";
-import logger from "@/core/logger";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { BotSubCommandOptions } from "@/types/commands";
 import { SlashCommandSubcommandBuilder, SlashCommandStringOption, ChatInputCommandInteraction, CacheType, PresenceStatusData } from "discord.js";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "../../../../../core/constants";
+import logger from "../../../../../core/logger";
+import { BotSubCommandOptions } from "../../../../../types/commands";
+import { UtsukushiBotClient } from "../../../../client";
+
 
 /**
  * @SubSlashCommand

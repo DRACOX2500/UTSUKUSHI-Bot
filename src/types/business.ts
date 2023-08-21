@@ -1,4 +1,4 @@
-import { BotActivity, BotConfig } from "@/core/types/business";
+import { BotActivity, BotConfig } from "../core/types/business";
 import { PresenceStatusData } from "discord.js";
 
 export interface PrivateiInteraction {

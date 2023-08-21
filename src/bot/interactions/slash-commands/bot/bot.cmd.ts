@@ -1,7 +1,8 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSlashCommand } from "@/core/bot-command";
-import { PingSubCommand } from "./ping/ping.sub";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { UtsukushiBotClient } from "../../../client";
 import { GitSubCommand } from "./git/git.sub";
+import { PingSubCommand } from "./ping/ping.sub";
+
 
 /**
  * @SlashCommand `bot`

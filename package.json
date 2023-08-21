@@ -12,10 +12,10 @@
 		"build": "tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
-		"deploy-commands": "ts-node dist/index.js",
-		"reset-commands": "ts-node dist/index.js  --guild-id",
-		"start": "ts-node dist/index.js",
-		"dev": "ts-node dist/index.js --profile dev",
+		"deploy-commands": "node dist/index.js",
+		"reset-commands": "node dist/index.js  --guild-id",
+		"start": "node dist/index.js",
+		"dev": "node dist/index.js --profile dev",
 		"build-start": "npm run build && npm run start",
 		"super-start": "npm run build && npm run deploy-commands && npm run start",
 		"build-dev": "npm run build && npm run dev",
@@ -36,21 +36,25 @@
 		"typescript"
 	],
 	"dependencies": {
+		"@discord-player/extractor": "^4.4.1",
 		"ansicolor": "^1.1.100",
 		"axios": "0.27.2",
+		"discord-player": "^6.6.2",
 		"discord.js": "^14.12.1",
 		"dotenv": "^16.3.1",
+		"ffmpeg-static": "^5.2.0",
 		"mongoose": "^7.4.2",
+		"opusscript": "^0.1.0",
 		"pino": "^8.15.0",
 		"pino-pretty": "^10.2.0",
 		"rxjs": "^7.8.1",
-		"staticmaps": "^1.12.0"
+		"staticmaps": "^1.12.0",
+		"ytdl-core": "^4.11.5"
 	},
 	"devDependencies": {
+		"@types/mocha": "^10.0.1",
 		"@types/staticmaps": "^1.12.1",
 		"nodemon": "^3.0.1",
-		"ts-node": "^10.9.1",
-		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.1.6"
 	}
 }

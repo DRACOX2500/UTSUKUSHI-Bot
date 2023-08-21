@@ -1,9 +1,10 @@
-import { BotClient } from "@/core/bot-client";
-import { BotContextCommand } from "@/core/bot-command";
-import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "@/core/constants";
-import logger from "@/core/logger";
-import { BotCommandOptions } from "@/core/types/bot-command";
-import { ApplicationCommandType, CacheType, Message, MessageContextMenuCommandInteraction, PermissionsBitField } from "discord.js";
+import { ApplicationCommandType, PermissionsBitField, Message, MessageContextMenuCommandInteraction, CacheType } from "discord.js";
+import { BotClient } from "../../../core/bot-client";
+import { BotContextCommand } from "../../../core/bot-command";
+import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "../../../core/constants";
+import logger from "../../../core/logger";
+import { BotCommandOptions } from "../../../core/types/bot-command";
+
 
 /**
  * @ContextCommand

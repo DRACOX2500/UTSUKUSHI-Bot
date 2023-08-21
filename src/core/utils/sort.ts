@@ -10,4 +10,8 @@ export namespace Sort {
 		}
 		return 0;
 	}
+
+	export function byStartsWith(a: string, b: string, start: string): number {
+		return +b.startsWith(start) - +a.startsWith(start);
+	}
 }

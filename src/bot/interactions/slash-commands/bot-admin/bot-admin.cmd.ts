@@ -1,9 +1,10 @@
-import { BotSlashCommand } from "@/core/bot-command";
-import { ActivityType, ChatInputCommandInteraction, CacheType, SlashCommandBuilder } from "discord.js";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSubCommandOptions } from "@/types/commands";
+import { ChatInputCommandInteraction, CacheType, ActivityType } from "discord.js";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { BotSubCommandOptions } from "../../../../types/commands";
+import { UtsukushiBotClient } from "../../../client";
 import { ActivitySubCommand } from "./activity/activity.sub";
 import { StatusSubCommand } from "./status/status.sub";
+
 
 /**
  * @SlashCommand `bot-admin`

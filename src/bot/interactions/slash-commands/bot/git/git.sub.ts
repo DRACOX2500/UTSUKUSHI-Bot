@@ -1,7 +1,8 @@
-import { BotClient } from "@/core/bot-client";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
-import { GITHUB_LINK } from "@/constants";
+import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { GITHUB_LINK } from "../../../../../constants";
+import { BotClient } from "../../../../../core/bot-client";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+
 
 /**
  * @SubSlashCommand `git`

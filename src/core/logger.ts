@@ -1,5 +1,5 @@
 import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yellow } from 'ansicolor';
-import json from 'package';
+import json from '../../package.json';
 import pino from 'pino';
 import pretty from 'pino-pretty';
 import { ChatInputCommandInteraction, ButtonInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, UserContextMenuCommandInteraction, StringSelectMenuInteraction } from 'discord.js';

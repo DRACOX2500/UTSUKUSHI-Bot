@@ -1,7 +1,4 @@
 {
-    "ts-node": {
-        "require": ["tsconfig-paths/register"]
-    },
     "compilerOptions": {
         "module": "CommonJS",
         "declaration": true,
@@ -9,13 +6,16 @@
         "allowSyntheticDefaultImports": true,
         "target": "ES2022",
         "outDir": "./dist",
-        "baseUrl": ".",
-        "paths": {
-            "*": ["node_modules/*"],
-            "@/*": ["src/*"],
-            "package": ["package.json"],
-            "config": ["config.json"],
-        },
+        // "baseUrl": ".",
+        // "paths": {
+        //     "*": ["node_modules/*"],
+        //     "src/*": ["src/*"],
+        //     "package": ["package.json"],
+        //     "config": ["config.json"],
+        // },
+        "lib": [
+            "ES2023"
+        ],
         "pretty": true,
         "incremental": true,
         "moduleResolution": "node",
@@ -23,7 +23,9 @@
         "strict": true,
         "sourceMap": true,
         "resolveJsonModule": true,
-        "noEmit": false
+        "noEmit": false,
+        "importHelpers": false,
+        "allowJs": false
     },
     "watchOptions": {
         "watchFile": "useFsEvents",

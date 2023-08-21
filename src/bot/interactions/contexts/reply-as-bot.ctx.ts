@@ -1,7 +1,8 @@
-import { BotClient } from "@/core/bot-client";
-import { BotContextCommand } from "@/core/bot-command";
 import { ApplicationCommandType, MessageContextMenuCommandInteraction, CacheType } from "discord.js";
-import { ReplyAsBotModal } from "@/bot/interactions/modals/reply-as-bot.mdl";
+import { BotClient } from "../../../core/bot-client";
+import { BotContextCommand } from "../../../core/bot-command";
+import { ReplyAsBotModal } from "../modals/reply-as-bot.mdl";
+
 
 /**
  * @ContextCommand

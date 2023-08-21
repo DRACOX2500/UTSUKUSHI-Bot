@@ -1,8 +1,8 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { ERROR_COMMAND, ERROR_CMD_GUILD } from "@/core/constants";
-import { DiscordService } from "@/services/discord-service";
 import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, CacheType } from "discord.js";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_CMD_GUILD, ERROR_COMMAND } from "../../../../../core/constants";
+import { UtsukushiBotClient } from "../../../../client";
+
 
 /**
  * @SubSlashCommand `Shared-Emojis`

@@ -1,8 +1,9 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSlashCommand } from "@/core/bot-command";
 import { PermissionsBitField } from "discord.js";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { UtsukushiBotClient } from "../../../client";
 import { DisplaySubCommand } from "./display/display.sub";
 import { RemoveSubCommand } from "./remove/remove.sub";
+
 
 /**
  * @SlashCommand `guild-cache`

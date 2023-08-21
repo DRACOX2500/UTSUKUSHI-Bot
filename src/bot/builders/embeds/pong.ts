@@ -1,7 +1,8 @@
-import { ChatInputCommandInteraction, EmbedBuilder, Message } from "discord.js";
-import { Getter } from "@/core/utils/getter";
-import { PONG_COLOR, PONG_SMASH_CHANCE } from "@/constants";
-import { BotClient } from "@/core/bot-client";
+import { EmbedBuilder, Message, ChatInputCommandInteraction } from "discord.js";
+import { PONG_SMASH_CHANCE, PONG_COLOR } from "../../../constants";
+import { BotClient } from "../../../core/bot-client";
+import { Getter } from "../../../core/utils/getter";
+
 
 export class PongEmbedBuilder extends EmbedBuilder {
     private timestamp: number;

@@ -1,4 +1,4 @@
-import { DiscordService } from "@/services/discord-service";
+import { DiscordService } from "../../../services/discord-service";
 import { EmbedBuilder, Guild, GuildEmoji, Role, Sticker, bold, roleMention } from "discord.js";
 
 export class GuildExtraEmbed extends EmbedBuilder {

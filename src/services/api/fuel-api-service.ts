@@ -1,5 +1,5 @@
-import { DataEconomieGouvResponse } from "@/types/api";
-import { HttpService } from "@/services/http-service";
+import { DataEconomieGouvResponse } from "../../types/api";
+import { HttpService } from "../../services/http-service";
 
 enum FuelEnum {
     Gazole,

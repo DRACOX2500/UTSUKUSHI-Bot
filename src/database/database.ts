@@ -1,7 +1,7 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BOT_EVENTS } from "@/constants";
-import logger from "@/core/logger";
-import { environment } from "@/environment";
+import { UtsukushiBotClient } from "../bot/client";
+import { BOT_EVENTS } from "../constants";
+import logger from "../core/logger";
+import { environment } from "../environment";
 import mongoose from "mongoose";
 
 export function connectMongoDB(client: UtsukushiBotClient): void {

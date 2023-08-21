@@ -1,6 +1,6 @@
-import { REGEX_LINK } from '@/constants';
-import { Array } from '@/core/utils/array';
-import { Emoji } from '@/types/business';
+import { REGEX_LINK } from '../constants';
+import { Array } from '../core/utils/array';
+import { Emoji } from '../types/business';
 import { Locale, GuildEmoji } from 'discord.js';
 
 export class DiscordService {

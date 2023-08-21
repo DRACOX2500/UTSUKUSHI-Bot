@@ -1,10 +1,11 @@
-import { FuelEmbed } from "@/bot/builders/embeds/fuel";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSlashCommand } from "@/core/bot-command";
-import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "@/core/constants";
-import { Fuel, FuelApiService } from "@/services/api/fuel-api-service";
-import { StaticMapsService } from "@/services/staticmaps-service";
-import { ChatInputCommandInteraction, CacheType  } from "discord.js";
+import { ChatInputCommandInteraction, CacheType } from "discord.js";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "../../../../core/constants";
+import { FuelApiService, Fuel } from "../../../../services/api/fuel-api-service";
+import { StaticMapsService } from "../../../../services/staticmaps-service";
+import { FuelEmbed } from "../../../builders/embeds/fuel";
+import { UtsukushiBotClient } from "../../../client";
+
 
 /**
  * @SlashCommand `fuel`

@@ -1,6 +1,7 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotModal } from "@/core/bot-command";
 import { ActionRowBuilder, TextInputBuilder, TextInputStyle, ModalSubmitInteraction, CacheType } from "discord.js";
+import { BotModal } from "../../../core/bot-command";
+import { UtsukushiBotClient } from "../../client";
+
 
 export class ReplyAsBotModal extends BotModal<UtsukushiBotClient> {
 	constructor(targetId: string) {

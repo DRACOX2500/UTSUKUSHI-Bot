@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { Emoji } from "@/types/business";
-import { SCHEMAS } from "@/database/database";
+import { Emoji } from "../../types/business";
+import { SCHEMAS } from "../../database/database";
 
 const emojiSchema = new Schema<Emoji>({
     id: {

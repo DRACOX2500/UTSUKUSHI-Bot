@@ -1,13 +1,17 @@
 import { Guild as GuildDJS, GuildEmoji } from 'discord.js';
-import { Emoji, Guild } from "@/types/business";
-import { GuildModel } from "@/database/schemas/guild.schema";
+import { Emoji, Guild, Song } from "../../types/business";
+import { GuildModel } from "../../database/schemas/guild.schema";
 import { AbstractRecordStore } from "./abstract-record-store";
-import { EmojiModel } from '@/database/schemas/emoji.schema';
+import { EmojiModel } from '../../database/schemas/emoji.schema';
+import { SongService } from '../database/song-service';
 
 export class GuildStore extends AbstractRecordStore<Guild> {
 
+    private songService: SongService;
+
     constructor() {
         super(GuildModel, {});
+        this.songService = new SongService();
     }
 
     override save(id: string, value: Guild): Guild {
@@ -16,12 +20,16 @@ export class GuildStore extends AbstractRecordStore<Guild> {
             emojisShared: value.emojisShared,
             soundEffects: value.soundEffects,
             vocalNotifyChannel: value.vocalNotifyChannel,
+            lastPlay: value.lastPlay,
         }
         return super.save(id, _value);
     }
 
     private async getFromDB(guildId: string): Promise<Guild | null> {
-        const doc = await GuildModel.findOne({ id: guildId }).exec();
+        const doc = await GuildModel
+            .findOne({ id: guildId })
+            .populate('lastPlay')
+            .exec();
         if (doc) return this.save(doc.id, doc);
         return null;
     }
@@ -75,6 +83,7 @@ export class GuildStore extends AbstractRecordStore<Guild> {
             },
             { new: true }
         )
+        .populate('lastPlay')
         // .populate('emojis')
         // .populate('soundEffects')
         .exec();
@@ -86,6 +95,18 @@ export class GuildStore extends AbstractRecordStore<Guild> {
             doc.id,
             {
                 vocalNotifyChannel: notifyChannelId,
+            }
+        );
+        if (updoc) this.save(updoc.id, updoc);
+    }
+
+    async updateLastTrack(guild: GuildDJS, song: Song) {
+        const doc = await this.getOrCreate(guild);
+        const _song = await this.songService.getOrCreate(song);
+        const updoc = await this.update(
+            doc.id,
+            {
+                lastPlay: _song,
             }
         );
         if (updoc) this.save(updoc.id, updoc);

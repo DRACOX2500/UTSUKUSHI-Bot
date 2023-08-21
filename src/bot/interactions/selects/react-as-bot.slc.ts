@@ -1,8 +1,9 @@
-import { ReactAsBotSelect } from "@/bot/builders/selects/react-as-bot";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSelect } from "@/core/bot-command";
-import { DiscordService } from "@/services/discord-service";
 import { StringSelectMenuInteraction } from "discord.js";
+import { BotSelect } from "../../../core/bot-command";
+import { DiscordService } from "../../../services/discord-service";
+import { ReactAsBotSelect } from "../../builders/selects/react-as-bot";
+import { UtsukushiBotClient } from "../../client";
+
 
 class Select extends BotSelect<UtsukushiBotClient> {
     select = new ReactAsBotSelect('rcab-select');

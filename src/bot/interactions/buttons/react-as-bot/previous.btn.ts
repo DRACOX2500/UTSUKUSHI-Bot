@@ -1,9 +1,10 @@
-import { PreviousButton } from "@/bot/builders/buttons/previous";
-import { ReactAsBotReply } from "@/bot/builders/replies/react-as-bot";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotButton } from "@/core/bot-command";
-import { DiscordService } from "@/services/discord-service";
 import { ButtonInteraction, CacheType } from "discord.js";
+import { BotButton } from "../../../../core/bot-command";
+import { DiscordService } from "../../../../services/discord-service";
+import { PreviousButton } from "../../../builders/buttons/previous";
+import { ReactAsBotReply } from "../../../builders/replies/react-as-bot";
+import { UtsukushiBotClient } from "../../../client";
+
 
 class Button extends BotButton<UtsukushiBotClient> {
     button = new PreviousButton('rcab-prev');

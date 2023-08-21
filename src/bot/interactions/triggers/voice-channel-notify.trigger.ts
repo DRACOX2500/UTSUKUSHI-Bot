@@ -1,7 +1,7 @@
-import { NotifyEmbed } from "@/bot/builders/embeds/notify";
-import { UtsukushiBotClient } from "@/bot/client";
-import logger from "@/core/logger";
-import { BotTrigger } from "@/core/types/bot-interaction";
+import { NotifyEmbed } from "../../../bot/builders/embeds/notify";
+import { UtsukushiBotClient } from "../../../bot/client";
+import logger from "../../../core/logger";
+import { BotTrigger } from "../../../core/types/bot-interaction";
 import { Guild, TextBasedChannel, VoiceChannel } from "discord.js";
 
 /**

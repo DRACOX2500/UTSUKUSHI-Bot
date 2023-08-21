@@ -1,10 +1,10 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotSlashCommand } from "@/core/bot-command";
 import { PermissionsBitField } from "discord.js";
 import { LocaleSubCommand } from "./locale/locale.sub";
 import { NotifySubCommand } from "./notify/notify.sub";
 import { SharedEmojisSubCommand } from "./shared-emojis/shared-emojis.sub";
 import { InfoSubCommand } from "./info/info.sub";
+import { BotSlashCommand } from "../../../../core/bot-command";
+import { UtsukushiBotClient } from "../../../client";
 
 /**
  * @SlashCommand `guild`

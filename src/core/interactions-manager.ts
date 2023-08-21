@@ -3,12 +3,12 @@ import path from 'node:path';
 
 import { BotContextCommand, BotSlashCommand } from "./types/bot-command";
 import logger from './logger';
-import { environment } from '@/environment';
+import { environment } from '../environment';
 import { BotClient } from './bot-client';
 import { CacheType, Interaction, REST, Routes } from 'discord.js';
 import { BotButton, BotTrigger, CommandManagerConfig } from './types/bot-interaction';
-import { ConfigJson, PrivateiInteraction } from '@/types/business';
-import CONFIG_JSON from 'config';
+import { ConfigJson, PrivateiInteraction } from '../types/business';
+import CONFIG_JSON from '../../config.json';
 import { Array } from './utils/array';
 import { BotModal, BotSelect } from './bot-command';
 

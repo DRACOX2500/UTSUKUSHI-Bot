@@ -10,7 +10,8 @@ dist/
 
 #Local
 package-lock.json
-logs/*.log
+logs/
+*.log
 .env*
 .cache/
 config.json

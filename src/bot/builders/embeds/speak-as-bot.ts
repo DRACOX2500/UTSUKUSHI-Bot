@@ -1,5 +1,5 @@
-import { BotClient } from "@/core/bot-client";
 import { Attachment, EmbedBuilder } from "discord.js";
+import { BotClient } from "../../../core/bot-client";
 
 export class SpeakAsBotEmbed extends EmbedBuilder {
 

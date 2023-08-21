@@ -1,9 +1,10 @@
-import { PongEmbedBuilder } from "@/bot/builders/embeds/pong";
-import { BotClient } from "@/core/bot-client";
-import logger from "@/core/logger";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
-import { ERROR_COMMAND } from "@/core/constants";
+import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { BotClient } from "../../../../../core/bot-client";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_COMMAND } from "../../../../../core/constants";
+import logger from "../../../../../core/logger";
+import { PongEmbedBuilder } from "../../../../builders/embeds/pong";
+
 
 /**
  * @SubSlashCommand `ping`

@@ -1,7 +1,8 @@
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
-import { ERROR_CMD_GUILD, ERROR_COMMAND } from "@/core/constants";
-import { UtsukushiBotClient } from "@/bot/client";
+import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_CMD_GUILD, ERROR_COMMAND } from "../../../../../core/constants";
+import { UtsukushiBotClient } from "../../../../client";
+
 
 /**
  * @SubSlashCommand `remove`

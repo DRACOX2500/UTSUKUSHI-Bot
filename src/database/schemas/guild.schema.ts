@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { Guild } from "@/types/business";
-import { SCHEMAS } from "@/database/database";
+import { Guild } from "../../types/business";
+import { SCHEMAS } from "../../database/database";
 
 export const GUILD_SCHEMA = 'Guild';
 

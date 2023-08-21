@@ -1,12 +1,17 @@
-import { User } from "@/types/business";
+import { Song, User } from "../../types/business";
 import { User as UserDJS } from 'discord.js';
-import { UserModel } from "@/database/schemas/user.schema";
+import { UserModel } from "../../database/schemas/user.schema";
 import { AbstractRecordStore } from "./abstract-record-store";
+import logger from "../../core/logger";
+import { SongService } from '../database/song-service';
 
 export class UserStore extends AbstractRecordStore<User> {
 
+    private songService: SongService;
+
     constructor() {
         super(UserModel, {});
+        this.songService = new SongService();
     }
 
     override save(id: string, value: User): User {
@@ -49,5 +54,21 @@ export class UserStore extends AbstractRecordStore<User> {
 
     async removeDoc(user: UserDJS) {
         await this.schema.deleteOne({ id: user.id }).exec();
+    }
+
+    async addSong(user: UserDJS, song: Song) {
+        try {
+            const _user = await this.getOrCreate(user);
+            const _song = await this.songService.getOrCreate(song);
+            await UserModel.updateOne(
+                { id: _user.id },
+                {
+                    $push: { songs: _song }
+                },
+                { new: true }
+            ).exec();
+        } catch (error) {
+            logger.error("", error);
+        }
     }
 }

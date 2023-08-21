@@ -1,13 +1,14 @@
-import { BOT_EVENTS } from "@/constants";
-import { BotClient } from "@/core/bot-client";
-import { OnAfterReady } from "@/core/bot-client-events";
-import { Starter } from "@/core/starter";
-import { connectMongoDB } from "@/database/database";
-import { ProfileService } from "@/services/profile-service";
-import { UtsukushiStore } from "@/services/stores/utsukushi.store";
-import { OnAfterDatabaseReady, OnAfterStoreInit, OnAfterUtsukushiReady } from "@/types/bot-client-events";
-import { UtsukushiBotConfig } from "@/types/business";
+import { BOT_EVENTS } from "../constants";
+import { BotClient } from "../core/bot-client";
+import { OnAfterReady } from "../core/bot-client-events";
+import { Starter } from "../core/starter";
+import { connectMongoDB } from "../database/database";
+import { ProfileService } from "../services/profile-service";
+import { UtsukushiStore } from "../services/stores/utsukushi.store";
+import { OnAfterDatabaseReady, OnAfterStoreInit, OnAfterUtsukushiReady } from "../types/bot-client-events";
+import { UtsukushiBotConfig } from "../types/business";
 import { GatewayIntentBits } from "discord.js";
+import { PlayerService } from "../services/player-service";
 
 const REQUIREMENT = [
     'utsukushi',
@@ -52,7 +53,8 @@ export class UtsukushiBotClient extends BotClient
         super.setStatus(syst.status);
     }
 
-    override onAfterReady(): void {
+    override async onAfterReady(): Promise<void> {
+        await PlayerService.init(this);
         this.starter.check('login');
     }
 

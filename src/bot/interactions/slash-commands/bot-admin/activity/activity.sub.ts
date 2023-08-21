@@ -1,10 +1,11 @@
-import { UtsukushiBotClient } from "@/bot/client";
-import { ERROR_COMMAND, ERROR_CMD_MESSAGE, TWITCH_LINK } from "@/core/constants";
-import logger from "@/core/logger";
-import { BotSubSlashCommand } from "@/core/bot-command";
-import { BotActivity } from "@/core/types/business";
-import { BotSubCommandOptions } from "@/types/commands";
 import { SlashCommandSubcommandBuilder, SlashCommandIntegerOption, ActivityType, SlashCommandStringOption, ChatInputCommandInteraction, CacheType } from "discord.js";
+import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { ERROR_CMD_MESSAGE, ERROR_COMMAND, TWITCH_LINK } from "../../../../../core/constants";
+import logger from "../../../../../core/logger";
+import { BotActivity } from "../../../../../core/types/business";
+import { BotSubCommandOptions } from "../../../../../types/commands";
+import { UtsukushiBotClient } from "../../../../client";
+
 
 export const NAME = 'activity'
 

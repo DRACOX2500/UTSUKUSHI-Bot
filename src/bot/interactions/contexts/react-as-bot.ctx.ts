@@ -1,8 +1,9 @@
-import { ReactAsBotReply } from "@/bot/builders/replies/react-as-bot";
-import { UtsukushiBotClient } from "@/bot/client";
-import { BotContextCommand } from "@/core/bot-command";
-import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "@/core/constants";
 import { ApplicationCommandType, MessageContextMenuCommandInteraction, CacheType } from "discord.js";
+import { BotContextCommand } from "../../../core/bot-command";
+import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "../../../core/constants";
+import { ReactAsBotReply } from "../../builders/replies/react-as-bot";
+import { UtsukushiBotClient } from "../../client";
+
 
 /**
  * @ContextCommand

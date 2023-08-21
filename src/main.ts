@@ -1,6 +1,6 @@
-import { ProfileService } from "@/services/profile-service";
-import { UtsukushiBotClient } from "@/bot/client";
-import logger from "@/core/logger";
+import { ProfileService } from "./services/profile-service";
+import { UtsukushiBotClient } from "./bot/client";
+import logger from "./core/logger";
 import { NodeJsService } from "./services/nodejs-service";
 
 export function main(command: string, args: any[]) {
