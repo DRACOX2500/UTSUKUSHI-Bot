@@ -8,6 +8,7 @@ const userSchema = new Schema<User>({
         require: true,
         unique: true,
     },
+    historicEnabled: Boolean,
     songs: {
         type: [{
             type: Schema.Types.ObjectId,

@@ -2,7 +2,6 @@ import { Song, User } from "../../types/business";
 import { User as UserDJS } from 'discord.js';
 import { UserModel } from "../../database/schemas/user.schema";
 import { AbstractRecordStore } from "./abstract-record-store";
-import logger from "../../core/logger";
 import { SongService } from '../database/song-service';
 
 export class UserStore extends AbstractRecordStore<User> {
@@ -17,13 +16,17 @@ export class UserStore extends AbstractRecordStore<User> {
     override save(id: string, value: User): User {
         const _value: User = {
             id: value.id,
+            historicEnabled: value.historicEnabled,
             songs: value.songs,
         }
         return super.save(id, _value);
     }
 
     private async getFromDB(userId: string): Promise<User | null> {
-        const doc = await UserModel.findOne({ id: userId }).exec();
+        const doc = await UserModel
+            .findOne({ id: userId })
+            .populate('songs')
+            .exec();
         if (doc) return this.save(doc.id, doc);
         return null;
     }
@@ -34,12 +37,25 @@ export class UserStore extends AbstractRecordStore<User> {
         return this.save(saved.id, saved);
     }
 
+    async update(userId: string, user: Partial<User> | object ) {
+        return UserModel.findOneAndUpdate(
+            { id: userId },
+            {
+                ...user,
+            },
+            { new: true }
+        )
+        .populate('songs')
+        .exec();
+    }
+
     async getOrCreate(user: UserDJS): Promise<User> {
         const doc = await this.get(user.id);
         if (doc) return doc;
         else {
             const _save: User = {
                 id: user.id,
+                historicEnabled: true,
                 songs: [],
             };
             return this.create(_save);
@@ -56,19 +72,41 @@ export class UserStore extends AbstractRecordStore<User> {
         await this.schema.deleteOne({ id: user.id }).exec();
     }
 
+    isInSongslist(user: User, song: Song) {
+        return user.songs
+            .map(_song => _song.url)
+            .includes(song.url);
+    }
+
+    async updateHistoric(user: UserDJS, historic: boolean) {
+        const _user = await this.getOrCreate(user);
+        const updoc = await this.update(
+            _user.id,
+            {
+                historicEnabled: historic,
+            },
+        );
+        console.log(updoc);
+
+        if (updoc) this.save(updoc.id, updoc);
+    }
+
     async addSong(user: UserDJS, song: Song) {
-        try {
-            const _user = await this.getOrCreate(user);
-            const _song = await this.songService.getOrCreate(song);
-            await UserModel.updateOne(
-                { id: _user.id },
-                {
-                    $push: { songs: _song }
-                },
-                { new: true }
-            ).exec();
-        } catch (error) {
-            logger.error("", error);
-        }
+        const _user = await this.getOrCreate(user);
+
+        if (
+            this.isInSongslist(_user, song) ||
+            !_user.historicEnabled
+        ) return;
+
+        const _song = await this.songService.getOrCreate(song);
+        const updoc = await this.update(
+            _user.id,
+            {
+                $push: { songs: _song }
+            },
+        );
+
+        if (updoc) this.save(updoc.id, updoc);
     }
 }

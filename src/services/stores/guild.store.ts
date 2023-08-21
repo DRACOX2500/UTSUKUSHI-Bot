@@ -100,8 +100,15 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         if (updoc) this.save(updoc.id, updoc);
     }
 
+    isLastTrack(guild: Guild, song: Song) {
+        return guild.lastPlay?.url === song.url;
+    }
+
     async updateLastTrack(guild: GuildDJS, song: Song) {
         const doc = await this.getOrCreate(guild);
+
+        if (this.isLastTrack(doc, song)) return;
+
         const _song = await this.songService.getOrCreate(song);
         const updoc = await this.update(
             doc.id,

@@ -4,6 +4,7 @@ import { ERROR_CMD_GUILD, ERROR_CMD_MESSAGE, ERROR_CMD_SONG, ERROR_CMD_VC, ERROR
 import { PlayerService } from "../../../../../services/player-service";
 import { ChatInputCommandInteraction, CacheType, AutocompleteInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { TrackAddedEmbed } from "../../../../builders/embeds/track-added";
+import { SongService } from "../../../../../services/database/song-service";
 
 /**
  * @SlashCommand `play`
@@ -60,12 +61,7 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
             const embed = new TrackAddedEmbed(track);
             await interaction.followUp({ embeds: [embed] });
 
-            const song = {
-                title: track.title,
-                url: track.url,
-            };
-            await client.store.users.addSong(interaction.user, song);
-            await client.store.guilds.updateLastTrack(interaction.guild as any, song);
+            SongService.saveTrack(track, client, interaction);
         } catch (error: any) {
             if (error.message === ERROR_VOICE_CHANNEL) interaction.followUp(ERROR_CMD_VC);
             else await interaction.followUp(ERROR_CMD_MESSAGE);

@@ -42,6 +42,7 @@ export interface Guild {
 
 export interface User {
     id: string;
+    historicEnabled?: boolean;
     songs: Song[];
 }
 
