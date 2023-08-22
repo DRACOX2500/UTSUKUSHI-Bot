@@ -1,28 +1,24 @@
-import { Model } from "mongoose";
 import { Observable, BehaviorSubject } from "rxjs";
 
-export class AbstractStore<T = any> {
-
-    schema: Model<T>;
+export abstract class AbstractStore<T = any> {
 
     private _data$: Observable<T>;
     private _dataSubject$: BehaviorSubject<T>;
 
-    constructor(schema: Model<any>, value: T) {
-        this.schema = schema;
+    constructor(value: T) {
         this._dataSubject$ = new BehaviorSubject(value);
         this._data$ = this._dataSubject$.asObservable();
     }
 
-    async set(value: T) {
+    protected async set(value: T) {
         this._dataSubject$.next(value);
     }
 
-    get value(): T {
+    protected get value(): T {
         return this._dataSubject$.value;
     }
 
-    get value$(): Observable<T> {
+    protected get value$(): Observable<T> {
         return this._data$;
     }
 }

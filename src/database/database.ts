@@ -11,7 +11,7 @@ export function connectMongoDB(client: UtsukushiBotClient): void {
             logger.botConnectedDB();
             client.emit(BOT_EVENTS.DATABASE_CONNECTED);
         })
-        .catch(error => logger.error(error));
+        .catch(error => logger.error('DATABASE', error));
 }
 
 export const SCHEMAS = {

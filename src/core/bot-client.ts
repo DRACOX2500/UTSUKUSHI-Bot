@@ -31,20 +31,20 @@ export class BotClient extends Client implements BotClientEvents {
 			logger.botLoginLog(this.username);
 			this.onAfterReady();
 		});
-		this.on('error', logger.error);
+		this.on('error', err => logger.error('BOT', err));
 		this.on('warn', logger.warn);
 
 		this.on('shardError', (error) => {
 			logger.error(
-				{ tag: 'WebSocket', error: error },
-				'A websocket connection encountered an error : ' + error.message
+				'A websocket connection encountered an error : ' + error.message,
+				error
 			);
 		});
 
 		process.on('unhandledRejection', (error: any) => {
 			logger.error(
-				{ tag: 'Promise Rejection', error: error },
-				'Unhandled promise rejection : ' + error?.message
+				'Unhandled promise rejection : ' + error?.message,
+				error
 			);
 		});
 	}

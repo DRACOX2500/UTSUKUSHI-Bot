@@ -47,7 +47,7 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		if (option === 'private') await interaction.deferReply({ ephemeral: true });
 		else await interaction.deferReply();
 
-		const guildData = await client.store.guilds.get(guild.id);
+		const guildData = await client.store.guilds.getItem(guild.id);
 		if (!guildData) await interaction.editReply('❌ No Guild data in database !');
 		else {
 			const json = JSON.stringify(guildData, null, '\t')

@@ -1,4 +1,3 @@
-import { AbstractStore } from "./abstract-store";
 import { UtsukushiSystem } from "../../types/business";
 import { UserStore } from './user.store';
 import { GuildStore } from "./guild.store";
@@ -7,16 +6,21 @@ import { BOT_EVENTS, DEFAULT_SYSTEM } from "../../constants";
 import { BotActivity } from "../../core/types/business";
 import { PresenceStatusData } from "discord.js";
 import { UtsukushiBotClient } from "../../bot/client";
+import { AbstractStore } from "./abstract-store";
+import { Model } from "mongoose";
 
 export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
 
     readonly users: UserStore;
-    readonly guilds: GuildStore ;
+    readonly guilds: GuildStore;
 
     readonly clipboard: Record<string, any> ;
 
+    private schema: Model<UtsukushiSystem>;
+
     constructor() {
-        super(SystemModel, DEFAULT_SYSTEM);
+        super(DEFAULT_SYSTEM);
+        this.schema = SystemModel;
         this.clipboard = {};
         this.users = new UserStore();
         this.guilds = new GuildStore();
@@ -31,8 +35,6 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
         const res = await this.schema.find().limit(1).exec();
         if (res.length === 0) await this.initDefault();
         super.set(res[0] ?? this.value);
-        this.users.set({});
-        this.guilds.set({});
         client.emit(BOT_EVENTS.STORE_INIT);
     }
 
@@ -48,7 +50,7 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
         // .populate('emojis')
         // .populate('soundEffects')
         .exec();
-        this.set(updoc as UtsukushiSystem);
+        if (updoc) this.set(updoc.toObject());
     }
 
     async updateStatus(status: PresenceStatusData) {
@@ -63,6 +65,10 @@ export class UtsukushiStore extends AbstractStore<UtsukushiSystem> {
         // .populate('emojis')
         // .populate('soundEffects')
         .exec();
-        this.set(updoc as UtsukushiSystem);
+        if (updoc) this.set(updoc.toObject());
+    }
+
+    get system(): UtsukushiSystem {
+        return this.value;
     }
 }

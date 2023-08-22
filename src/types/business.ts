@@ -25,6 +25,8 @@ export interface Emoji {
 export interface SoundEffect {
     name: string;
     url: string;
+    user: User
+    guild?: Guild;
 }
 
 export interface Song {
@@ -32,18 +34,26 @@ export interface Song {
     url: string;
 }
 
+export interface HistoryItem<T> {
+    item: T;
+    date: Date;
+}
+
+export interface History<T> {
+    enabled?: boolean;
+    list: HistoryItem<T>[];
+}
+
 export interface Guild {
     id: string;
     emojisShared: boolean;
     vocalNotifyChannel?: string | null;
     lastPlay?: Song;
-    soundEffects: SoundEffect[];
 }
 
 export interface User {
     id: string;
-    historicEnabled?: boolean;
-    songs: Song[];
+    songs: History<Song>;
 }
 
 export interface UtsukushiSystem {

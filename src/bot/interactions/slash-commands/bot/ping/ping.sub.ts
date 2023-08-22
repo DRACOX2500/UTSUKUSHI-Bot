@@ -2,7 +2,6 @@ import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "disc
 import { BotClient } from "../../../../../core/bot-client";
 import { BotSubSlashCommand } from "../../../../../core/bot-command";
 import { ERROR_COMMAND } from "../../../../../core/constants";
-import logger from "../../../../../core/logger";
 import { PongEmbedBuilder } from "../../../../builders/embeds/pong";
 
 
@@ -29,7 +28,7 @@ export class PingSubCommand extends BotSubSlashCommand {
 			(await interaction.reply({ content: 'Pinging...', fetchReply: true })) ??
 			null;
 
-		const embedPong = new PongEmbedBuilder(sent, interaction, client);
-		interaction.editReply({ content: '', embeds: [embedPong] }).catch((err: Error) => logger.error({}, err.message));
+		const embed = new PongEmbedBuilder(sent, interaction, client);
+		await interaction.editReply({ embeds: [embed] });
 	};
 }

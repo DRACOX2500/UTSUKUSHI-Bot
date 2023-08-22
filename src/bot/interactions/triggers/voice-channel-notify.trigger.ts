@@ -15,7 +15,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 		channelId: string,
 		guild: Guild
 	): Promise<void> {
-		const data = await client.store.guilds.getOrCreate(guild);
+		const data = await client.store.guilds.getOrAddItemByGuild(guild);
 		if (data?.vocalNotifyChannel) {
 			const channelNotify = await guild.channels
 				.fetch(data.vocalNotifyChannel) as TextBasedChannel;
@@ -46,7 +46,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 				const user = newState.id;
 				const channelId = newState.channelId as string;
 				const guild = newState.guild;
-				this.notifyGuild(client, user, channelId, guild).catch((err: Error) => logger.error({}, err.message));
+				await this.notifyGuild(client, user, channelId, guild);
 			}
 			else if (newState.channelId === null) {
 				// 'a user left!'

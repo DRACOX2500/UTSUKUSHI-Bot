@@ -45,7 +45,7 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
         await interaction.deferReply();
 
         if (!query) {
-            const guildData = await client.store.guilds.get(guild.id);
+            const guildData = await client.store.guilds.getItem(guild.id);
             if (guildData?.lastPlay) {
                 query = guildData.lastPlay.url;
             }

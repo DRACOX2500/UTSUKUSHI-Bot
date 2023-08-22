@@ -1,66 +1,78 @@
 import { Guild as GuildDJS, GuildEmoji } from 'discord.js';
-import { Emoji, Guild, Song } from "../../types/business";
+import { Emoji, Guild, Song, SoundEffect, User } from "../../types/business";
 import { GuildModel } from "../../database/schemas/guild.schema";
-import { AbstractRecordStore } from "./abstract-record-store";
 import { EmojiModel } from '../../database/schemas/emoji.schema';
 import { SongService } from '../database/song-service';
+import { SoundEffectService } from '../database/sound-effect-service';
+import { HydratedDocument } from 'mongoose';
+import { AbstractRecordDocStore } from './abstract-record-doc-store';
 
-export class GuildStore extends AbstractRecordStore<Guild> {
+export class GuildStore extends AbstractRecordDocStore<Guild> {
 
     private songService: SongService;
+    private soundEffectService: SoundEffectService;
 
     constructor() {
-        super(GuildModel, {});
+        super(GuildModel, 'guilds-cache');
         this.songService = new SongService();
+        this.soundEffectService = new SoundEffectService();
     }
 
-    override save(id: string, value: Guild): Guild {
-        const _value: Guild = {
-            id: value.id,
-            emojisShared: value.emojisShared,
-            soundEffects: value.soundEffects,
-            vocalNotifyChannel: value.vocalNotifyChannel,
-            lastPlay: value.lastPlay,
+    override async update(id: string, value: Partial<Guild>): Promise<Guild | null> {
+        return this.updateItem(id, value, ['lastPlay']);
+    }
+
+    async removeItemByGuild(guild: GuildDJS): Promise<HydratedDocument<Guild> | null> {
+        const doc = await super.removeItem(guild.id);
+        if (doc) {
+            await this.removeAllEmojis(guild)
+            await this.soundEffectService.removeByGuild(doc);
         }
-        return super.save(id, _value);
+        return doc;
     }
 
-    private async getFromDB(guildId: string): Promise<Guild | null> {
-        const doc = await GuildModel
-            .findOne({ id: guildId })
-            .populate('lastPlay')
-            .exec();
-        if (doc) return this.save(doc.id, doc);
-        return null;
+    async updateNotify(guild: GuildDJS, notifyChannelId: string | null): Promise<void> {
+        await this.update(
+            guild.id,
+            {
+                vocalNotifyChannel: notifyChannelId,
+            }
+        );
     }
 
-    async create(guild: Guild): Promise<Guild> {
-        const doc = new GuildModel(guild);
-        const saved = await doc.save();
-        return this.save(saved.id, saved);
-    }
-
-    async getOrCreate(guild: GuildDJS): Promise<Guild> {
-        const doc = await this.get(guild.id);
-        if (doc) return doc;
-        else {
-            const _save: Guild = {
-                id: guild.id,
-                emojisShared: false,
-                soundEffects: [],
-            };
-            return this.create(_save);
+    getOrAddItemByGuild(guild: GuildDJS): Promise<Guild> {
+        const value: Guild = {
+            id: guild.id,
+            emojisShared: false,
         }
+        return this.getOrAddItem(value);
     }
 
-    async get(guildId: string): Promise<Guild | null> {
-        const guild = this.value[guildId];
-        if (!guild)  return this.getFromDB(guildId);
-        return guild;
+    async getOrAddDocByGuild(guild: GuildDJS): Promise<HydratedDocument<Guild>> {
+        const _guild = await this.getOrAddItemByGuild(guild);
+		return this.getDocById(_guild.id) as any;
+    }
+
+    async updateLastTrack(guild: GuildDJS, song: Song): Promise<void> {
+        const doc = await this.getOrAddItemByGuild(guild);
+
+        if (this.isLastTrack(doc, song)) return;
+
+        const _song = await this.songService.getOrCreate(song);
+        await this.update(
+            doc.id,
+            {
+                lastPlay: _song,
+            }
+        );
+    }
+
+    isLastTrack(guild: Guild, song: Song): boolean {
+        return guild.lastPlay?.url === song.url;
     }
 
     async getEmojis(guild: GuildDJS): Promise<Emoji[]> {
-        const _guild = await this.get(guild.id);
+        const _guild = await this.getItem(guild.id);
         const emojis: (Emoji | GuildEmoji)[] = await this.getSharedEmojis();
         if (!_guild?.emojisShared) {
             const emojisGuild = await guild.emojis.fetch();
@@ -75,81 +87,30 @@ export class GuildStore extends AbstractRecordStore<Guild> {
         }));
     }
 
-    async update(guildId: string, guild: Partial<Guild>) {
-        return GuildModel.findOneAndUpdate(
-            { id: guildId },
-            {
-                ...guild,
-            },
-            { new: true }
-        )
-        .populate('lastPlay')
-        // .populate('emojis')
-        // .populate('soundEffects')
-        .exec();
-    }
-
-    async updateNotify(guild: GuildDJS, notifyChannelId: string | null) {
-        const doc = await this.getOrCreate(guild);
-        const updoc = await this.update(
-            doc.id,
-            {
-                vocalNotifyChannel: notifyChannelId,
-            }
-        );
-        if (updoc) this.save(updoc.id, updoc);
-    }
-
-    isLastTrack(guild: Guild, song: Song) {
-        return guild.lastPlay?.url === song.url;
-    }
-
-    async updateLastTrack(guild: GuildDJS, song: Song) {
-        const doc = await this.getOrCreate(guild);
-
-        if (this.isLastTrack(doc, song)) return;
-
-        const _song = await this.songService.getOrCreate(song);
-        const updoc = await this.update(
-            doc.id,
-            {
-                lastPlay: _song,
-            }
-        );
-        if (updoc) this.save(updoc.id, updoc);
-    }
-
-    async removeDoc(guild: GuildDJS) {
-        await this.removeAllEmojis(guild);
-        await this.schema.deleteOne({ id: guild.id }).exec();
-    }
-
-    async enableSharedEmojis(guild: GuildDJS) {
-        const doc = await this.getOrCreate(guild);
+    async enableSharedEmojis(guild: GuildDJS): Promise<void> {
+        const doc = await this.getOrAddItemByGuild(guild);
         const updoc = await this.update(
             doc.id,
             {
                 emojisShared: true,
             }
         );
-        if (updoc) this.save(updoc.id, updoc);
-        await this.addAllEmojis(guild);
+        if (updoc) await this.addAllEmojis(guild);
     }
 
     async getSharedEmojis(): Promise<Emoji[]> {
         return EmojiModel.find().exec();
     }
 
-    async disableSharedEmojis(guild: GuildDJS) {
-        const doc = await this.getOrCreate(guild);
+    async disableSharedEmojis(guild: GuildDJS): Promise<void> {
+        const doc = await this.getOrAddItemByGuild(guild);
         const updoc = await this.update(
             doc.id,
             {
                 emojisShared: false,
             }
         );
-        if (updoc) this.save(updoc.id, updoc);
-        await this.removeAllEmojis(guild);
+        if (updoc) await this.removeAllEmojis(guild);
     }
 
     async addAllEmojis(guild: GuildDJS): Promise<Emoji[]> {
@@ -165,7 +126,7 @@ export class GuildStore extends AbstractRecordStore<Guild> {
     }
 
     async addEmoji(guild: GuildDJS, emoji: Emoji): Promise<Emoji | null> {
-        const _guild = await this.get(guild.id);
+        const _guild = await this.getItem(guild.id);
         if (_guild?.emojisShared) {
             const doc = new EmojiModel(emoji);
             return doc.save();
@@ -174,7 +135,7 @@ export class GuildStore extends AbstractRecordStore<Guild> {
     }
 
     async updateEmoji(guild: GuildDJS, emojiId: string, emoji: Emoji): Promise<Emoji | null> {
-        const _guild = await this.get(guild.id);
+        const _guild = await this.getItem(guild.id);
         if (_guild?.emojisShared) {
             const doc = await EmojiModel.findOne({ id: emojiId }).exec();
             if (!doc) return null;
@@ -191,9 +152,35 @@ export class GuildStore extends AbstractRecordStore<Guild> {
     }
 
     async removeEmoji(guild: GuildDJS, emoji: Emoji): Promise<void> {
-        const _guild = await this.get(guild.id);
+        const _guild = await this.getItem(guild.id);
         if (_guild?.emojisShared) {
             await EmojiModel.deleteOne({ id: emoji.id }).exec();
         }
+    }
+
+    async addSoundEffect(se: SoundEffect, guild?: GuildDJS): Promise<SoundEffect | null> {
+        let _guild: HydratedDocument<Guild> | undefined;
+        if (guild) _guild = await this.getOrAddDocByGuild(guild) ?? undefined;
+        return this.soundEffectService.getOrCreate(se, _guild);
+    }
+
+    async getSoundEffect(url: string): Promise<SoundEffect | null> {
+        return this.soundEffectService.get(url);
+    }
+
+    async getAllSoundEffects(guild?: GuildDJS): Promise<SoundEffect[]> {
+        const selist = await this.soundEffectService.getAllPublic();
+        if (guild) {
+            const doc = await this.getDocById(guild.id);
+            if (doc) {
+                const guildSe = await this.soundEffectService.getAllByGuild(doc);
+                selist.push(...guildSe);
+            }
+        }
+        return selist;
+    }
+
+    async getAllSoundEffectsByUser(user: HydratedDocument<User>): Promise<SoundEffect[]> {
+        return this.soundEffectService.getAllByUser(user);
     }
 }

@@ -29,11 +29,8 @@ export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		client.store.guilds.removeDoc(guild)
-			.then(() => {
-				client.store.guilds.remove(guild.id);
-				interaction.editReply('✅ Guild data removed successfully !');
-			})
+		client.store.guilds.removeItemByGuild(guild)
+			.then(() => interaction.editReply('✅ Guild data removed successfully !'))
 			.catch(() => interaction.editReply('❌ Failed to remove Guild data !'));
 	};
 }

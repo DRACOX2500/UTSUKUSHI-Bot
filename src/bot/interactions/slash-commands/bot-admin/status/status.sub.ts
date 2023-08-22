@@ -1,7 +1,6 @@
 import { SlashCommandSubcommandBuilder, SlashCommandStringOption, ChatInputCommandInteraction, CacheType, PresenceStatusData } from "discord.js";
 import { BotSubSlashCommand } from "../../../../../core/bot-command";
 import { ERROR_CMD_MESSAGE, ERROR_COMMAND } from "../../../../../core/constants";
-import logger from "../../../../../core/logger";
 import { BotSubCommandOptions } from "../../../../../types/commands";
 import { UtsukushiBotClient } from "../../../../client";
 
@@ -43,9 +42,9 @@ export class StatusSubCommand extends BotSubSlashCommand<UtsukushiBotClient, Bot
 		client.setStatus(options.status as PresenceStatusData);
 
 		client.store.updateStatus(options.status as PresenceStatusData);
-		interaction.reply({
+		await interaction.reply({
 			content: '🤖 Bot status has been change !',
 			ephemeral: true,
-		}).catch((err: Error) => logger.error({}, err.message));
+		});
 	};
 }

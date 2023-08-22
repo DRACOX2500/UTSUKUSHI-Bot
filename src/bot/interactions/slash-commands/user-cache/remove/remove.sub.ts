@@ -29,11 +29,8 @@ export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		client.store.users.removeDoc(user)
-			.then(() => {
-				client.store.users.remove(user.id);
-				interaction.editReply('✅ User data removed successfully !');
-			})
+		client.store.users.removeItem(user.id)
+			.then(() => interaction.editReply('✅ User data removed successfully !'))
 			.catch(() => interaction.editReply('❌ Failed to remove User data !'));
 	};
 }

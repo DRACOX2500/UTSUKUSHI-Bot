@@ -1,7 +1,7 @@
 import { Guild, GuildMember, Interaction, Message, TextBasedChannel } from 'discord.js';
 import { UtsukushiBotClient } from '../bot/client';
 import logger from '../core/logger';
-import { AudioFilters, Player, SearchResult } from 'discord-player';
+import { AudioFilters, GuildQueue, Player, SearchResult } from 'discord-player';
 import { TrackReply } from '../bot/builders/replies/track';
 import { Sort } from '../core/utils/sort';
 import { REGEX_LINK } from '../constants';
@@ -44,7 +44,9 @@ export class PlayerService {
 		}
 
 		player.events.on('playerStart', async (queue, track) => {
-			logger.info(`Started playing **${track.title}**!`);
+			logger.info(`Started playing **${track.title}** [${queue.metadata.type}]!`);
+			if (queue.metadata.type === 'sound-effect') return;
+
 			const channel: TextBasedChannel = queue.metadata.channel;
 			const guildId: string = queue.metadata.guildId;
 			if (channel && guildId) {
@@ -71,13 +73,24 @@ export class PlayerService {
 		});
 		player.events.on('emptyQueue', (queue) => {
 			logger.info('Queue finished!');
+			this.disconnect(queue);
 		});
 		player.events.on('error', (queue, error) => {
 			logger.error(`General player error event: ${error.message}`);
+			this.disconnect(queue);
 		});
 		player.events.on('playerError', (queue, error) => {
 			logger.error(`Player error event: ${error.message}`);
+			this.disconnect(queue);
 		});
+	}
+
+	private static disconnect(queue: GuildQueue) {
+		const guildId: string = (queue.metadata as any).guildId;
+		if (guildId) {
+			PlayerService.removeTrackMessage(guildId);
+			PlayerService.stopByID(guildId);
+		}
 	}
 
 	static get player(): Player {
@@ -106,12 +119,14 @@ export class PlayerService {
 		});
 	}
 
-	static async play(interaction: Interaction, query: string | SearchResult) {
+	static async play(interaction: Interaction, query: string | SearchResult, source: string = 'auto', type: string = 'song') {
 		const channel = (interaction.member as GuildMember).voice.channel;
 		if (!channel) throw new Error('Voice channel not found');
 		return PlayerService._player.play(channel, query, {
+			searchEngine: `${source}Search` as any,
 			nodeOptions: {
 				metadata: {
+					type,
 					channel: interaction.channel,
 					guildId: interaction.guild?.id,
 					client: interaction.guild?.members.me,
@@ -124,9 +139,15 @@ export class PlayerService {
 				leaveOnStop: false,
 				bufferingTimeout: 0,
 				volume: 100,
-				//defaultFFmpegFilters: ['lofi', 'bassboost', 'normalizer']
 			},
 		});
+	}
+
+	static async playSoundEffect(interaction: Interaction, query: string | SearchResult) {
+		const channel = (interaction.member as GuildMember).voice.channel;
+		if (!channel) throw new Error('Voice channel not found');
+		if (this.isPlaying(interaction.guild?.id)) throw new Error('Player is currently used');
+		return PlayerService.play(interaction, query, 'youtube', 'sound-effect');
 	}
 
 	static async searchAndPlay(interaction: Interaction, query: string, source: string = 'auto') {
@@ -142,10 +163,23 @@ export class PlayerService {
 		queue?.node.setPaused(!queue.node.isPaused());
 	}
 
+	private static isPlaying(guildId?: string) {
+		if (!guildId) return true;
+		const queue = PlayerService._player.nodes.get(guildId);
+		return queue?.isPlaying();
+	}
+
+	private static stopByID(guildId: string) {
+		const queue = PlayerService._player.nodes.get(guildId);
+		queue?.node.stop();
+		queue?.delete();
+	}
+
 	static stop(guild: Guild) {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		queue?.node.stop();
 		queue?.delete();
+		PlayerService.removeTrackMessage(guild.id);
 	}
 
 	static skip(guild: Guild) {

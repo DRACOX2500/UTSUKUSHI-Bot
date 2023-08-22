@@ -1,15 +1,57 @@
+import logger from "../../core/logger";
 import { AbstractStore } from "./abstract-store";
 
-export class AbstractRecordStore<T = any> extends AbstractStore<Record<string, T>> {
+interface Item<T> {
+    item: T;
+    date: Date,
+}
 
-    save(id: string, value: T): T {
+const TIMER = 3600000;
+
+export abstract class AbstractRecordStore<T = any> extends AbstractStore<Record<string, Item<T>>> {
+
+    private id: string;
+
+    constructor(id?: `${string}-cache`) {
+        super({});
+        this.id = id ?? 'cache';
+        setInterval(() => this.clean(), TIMER);
+    }
+
+    private async clean() {
+        const NOW = new Date().getTime();
+        const record = this.value;
+        let count = 0
+        for (const key in record) {
+            if (!record[key]) continue;
+            if (NOW - record[key].date.getTime() > TIMER) {
+                delete record[key];
+            }
+            else count++;
+        }
+        logger.info(`[Cache] ${this.id} clean (entries: ${count}) !`);
+        this.set(record);
+    }
+
+    protected save(id: string, value: T): T {
         const record = this.value
-        record[id] = value;
+        record[id] = {
+            item: value,
+            date: new Date(),
+        };
         this.set(record);
         return value;
     }
 
-    remove(id: string) {
+    protected get(id: string): T | null {
+        const item = this.value[id]?.item ?? null;
+        if (item) {
+            this.save(id, item);
+        }
+        return item;
+    }
+
+    protected remove(id: string) {
         const record = this.value
         delete record[id];
         this.set(record);

@@ -20,13 +20,6 @@ const guildSchema = new Schema<Guild>({
         type: Schema.Types.ObjectId,
         ref: SCHEMAS.SONG
     },
-    soundEffects: {
-        type: [{
-            type: Schema.Types.ObjectId,
-            ref: SCHEMAS.SOUND_EFFECT
-        }],
-        default: [],
-    },
 })
 
 export const GuildModel = model<Guild>(SCHEMAS.GUILD, guildSchema);

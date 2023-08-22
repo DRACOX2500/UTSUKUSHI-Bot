@@ -5,6 +5,8 @@ import { PlayerService } from "../../../../../services/player-service";
 import { ChatInputCommandInteraction, CacheType, AutocompleteInteraction, SlashCommandSubcommandBuilder } from "discord.js";
 import { TrackAddedEmbed } from "../../../../builders/embeds/track-added";
 import { SongService } from "../../../../../services/database/song-service";
+import { Date } from "../../../../../core/utils/date";
+import { Sort } from "../../../../../core/utils/sort";
 
 /**
  * @SlashCommand `play-historic`
@@ -34,8 +36,8 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
         await interaction.deferReply();
 
         if (!query) {
-            const userData = await client.store.users.getOrCreate(user);
-            const songsUrls = userData.songs.map(song => song.url);
+            const userData = await client.store.users.getOrAddItemByUser(user);
+            const songsUrls = userData.songs.list.map(song => song.item.url);
             if (!songsUrls.includes(query)) {
                 await interaction.editReply(ERROR_CMD_SONG);
                 throw new Error(ERROR_QUERY);
@@ -60,20 +62,18 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
         const user = interaction.user;
         const focusedOption = interaction.options.getFocused(true);
 
-        const userData = await client.store.users.get(user.id)
-        const results = userData?.songs ?? [];
-        if (results.length > 0) {
-            interaction.respond(
-                results
-                .slice(0, 10)
-                .filter(
-                    (t) => t.title?.toLowerCase().includes(focusedOption.value.toLowerCase())
-                )
-                .map((t) => ({
-                    name: t.title ?? '',
-                    value: t.url,
-                }))
-            );
-        }
+        const userData = await client.store.users.getItem(user.id);
+        const results = userData?.songs.list ?? [];
+        const choices = results
+            .filter(
+                (t) => focusedOption.value.length === 0 || t.item.title?.toLowerCase().includes(focusedOption.value.toLowerCase())
+            )
+            .sort((a, b) => Sort.byDate(a.date, b.date))
+            .slice(0, 25)
+            .map((t) => ({
+                name: `${Date.toText(t.date)} | ${t.item.title ?? ''}`,
+                value: t.item.url,
+            }))
+        interaction.respond(choices);
     }
 }

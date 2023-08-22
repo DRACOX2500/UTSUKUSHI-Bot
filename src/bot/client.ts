@@ -6,7 +6,7 @@ import { connectMongoDB } from "../database/database";
 import { ProfileService } from "../services/profile-service";
 import { UtsukushiStore } from "../services/stores/utsukushi.store";
 import { OnAfterDatabaseReady, OnAfterStoreInit, OnAfterUtsukushiReady } from "../types/bot-client-events";
-import { UtsukushiBotConfig } from "../types/business";
+import { UtsukushiBotConfig, UtsukushiSystem } from "../types/business";
 import { GatewayIntentBits } from "discord.js";
 import { PlayerService } from "../services/player-service";
 
@@ -48,7 +48,7 @@ export class UtsukushiBotClient extends BotClient
     }
 
     setBotStatusData(): void {
-        const syst = this.store.value;
+        const syst = this.store.system;
         super.setActivity(syst.activity);
         super.setStatus(syst.status);
     }

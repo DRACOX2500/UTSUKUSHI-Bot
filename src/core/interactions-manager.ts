@@ -176,8 +176,7 @@ export class InteractionsManager {
 			});
 		}
 		catch (err) {
-			// Not .js or .ts files
-            logger.error(err);
+            logger.error('Not .js or .ts files', err);
 		}
         return list.flat();
 	}
@@ -237,7 +236,7 @@ export class InteractionsManager {
                 logger.botFinishGuildResetCommand(guildId);
             }
             catch (error) {
-                logger.error(error);
+                logger.error('Reset Guild Commands', error);
             }
         })();
     }
@@ -268,7 +267,7 @@ export class InteractionsManager {
                     logger.botFinishGuildDeployCommand(guildId, this.size(cmds), ctxs.length);
                 }
                 catch (error) {
-                    logger.error(error);
+                    logger.error('Deploy Guild Commands', error);
                     return 1;
                 }
                 return 0;
@@ -292,7 +291,7 @@ export class InteractionsManager {
                 logger.botFinishResetCommand();
             }
             catch (error) {
-                logger.error(error);
+                logger.error('Reset All Commands', error);
             }
         })();
     }
@@ -325,7 +324,7 @@ export class InteractionsManager {
 				logger.botFinishDeployCommand(this.size(cmds), ctxs.length);
 			}
 			catch (error) {
-				logger.error(error);
+				logger.error('Deploy All Commands', error);
 				return 1;
 			}
 			return 0;

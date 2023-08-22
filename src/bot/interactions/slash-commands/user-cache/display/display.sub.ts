@@ -25,7 +25,7 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 		await interaction.deferReply();
 
-		const userData = await client.store.users.get(user.id);
+		const userData = await client.store.users.getItem(user.id);
 		if (!userData) await interaction.editReply('❌ No User data in database !');
 		else {
 			const json = JSON.stringify(userData, null, '\t')

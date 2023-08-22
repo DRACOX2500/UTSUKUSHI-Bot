@@ -8,13 +8,28 @@ const userSchema = new Schema<User>({
         require: true,
         unique: true,
     },
-    historicEnabled: Boolean,
     songs: {
-        type: [{
-            type: Schema.Types.ObjectId,
-            ref: SCHEMAS.SONG
-        }],
-        default: []
+        type: {
+            enabled: Boolean,
+            list: {
+                type: [{
+                    item: {
+                        type: Schema.Types.ObjectId,
+                        ref: SCHEMAS.SONG,
+                        required: true,
+                    },
+                    date: {
+                        type: Date,
+                        required: true,
+                    }
+                }],
+                require: true,
+                default: []
+            }
+        },
+        default: {
+            list: []
+        }
     }
 })
 
