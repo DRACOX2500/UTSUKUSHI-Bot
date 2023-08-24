@@ -1,5 +1,5 @@
-import { ButtonBuilder, ButtonInteraction } from 'discord.js';
-import { BotClient } from '../bot-client';
+import { type ButtonBuilder, type ButtonInteraction } from 'discord.js';
+import { type BotClient } from '../bot-client';
 
 export interface CommandManagerConfig {
     buttonsPath: string[];
@@ -10,15 +10,20 @@ export interface CommandManagerConfig {
 	selectsPath: string[];
 }
 
-export interface BotButton<T extends BotClient =  BotClient> {
+export interface BotButton<T extends BotClient = BotClient> {
 	button: ButtonBuilder;
 
-	result(
+	result: (
 		interaction: ButtonInteraction,
 		client: T
-	): Promise<void>;
+	) => Promise<void>;
 }
 
 export interface BotTrigger<T extends BotClient = BotClient> {
-	trigger(client: T): Promise<void>;
+	trigger: (client: T) => Promise<void>;
+}
+
+export interface BotChoice {
+	name: string;
+	value: string;
 }

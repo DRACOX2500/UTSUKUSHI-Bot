@@ -1,11 +1,11 @@
 export interface OnAfterDatabaseReady {
-    onAfterDatabaseReady(): void;
+    onAfterDatabaseReady: () => void;
 }
 
 export interface OnAfterUtsukushiReady {
-    onAfterUtsukushiReady(): void;
+    onAfterUtsukushiReady: () => void;
 }
 
 export interface OnAfterStoreInit {
-    onAfterStoreInit(): void;
+    onAfterStoreInit: () => void;
 }

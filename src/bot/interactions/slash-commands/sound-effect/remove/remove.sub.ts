@@ -1,7 +1,7 @@
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction, CacheType, bold } from "discord.js";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
-import { UtsukushiBotClient } from "../../../../client";
-import { ERROR_CMD_SONG } from "../../../../../core/constants";
+import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction, type AutocompleteInteraction, type CacheType, bold } from 'discord.js';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
+import { type UtsukushiBotClient } from '../../../../client';
+import { ERROR_CMD_SONG } from '../../../../../core/constants';
 
 /**
  * @SubSlashCommand `remove`
@@ -15,18 +15,17 @@ export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 			.addStringOption(option =>
 				option
 					.setName('query')
-					.setDescription("Sound-Effect search query")
+					.setDescription('Sound-Effect search query')
 					.setRequired(true)
-					.setAutocomplete(true)
+					.setAutocomplete(true),
 			);
 		return super.set(subcommand);
 	}
 
 	async result(
 		interaction: ChatInputCommandInteraction,
-		client: UtsukushiBotClient
+		client: UtsukushiBotClient,
 	): Promise<void> {
-		let guild = interaction.guild ?? undefined;
 		const query = interaction.options.getString('query', true);
 
 		await interaction.deferReply({ ephemeral: true });
@@ -47,18 +46,18 @@ export class RemoveSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		const doc = await client.store.users.getDocById(user.id);
 		if (!doc) return;
 		const results = await client.store.guilds.getAllSoundEffectsByUser(doc);
-        if (results.length > 0) {
-            interaction.respond(
-                results
-                .filter(
-                    (t) => focusedOption.value.length === 0 ||  t.name?.toLowerCase().includes(focusedOption.value.toLowerCase())
-                )
-                .slice(0, 25)
-                .map((t) => ({
-                    name: t.name,
-                    value: t.url,
-                }))
-            );
-        }
+		if (results.length > 0) {
+			interaction.respond(
+				results
+					.filter(
+						(t) => focusedOption.value.length === 0 || t.name?.toLowerCase().includes(focusedOption.value.toLowerCase()),
+					)
+					.slice(0, 25)
+					.map((t) => ({
+						name: t.name,
+						value: t.url,
+					})),
+			);
+		}
 	}
 }

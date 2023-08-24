@@ -1,13 +1,13 @@
-import { AutocompleteInteraction, ButtonBuilder, ButtonInteraction, CacheType, ChatInputCommandInteraction, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction } from 'discord.js';
-import { BotClient } from "./bot-client";
+import { type AutocompleteInteraction, ButtonBuilder, type ButtonInteraction, type CacheType, type ChatInputCommandInteraction, ContextMenuCommandBuilder, type MessageContextMenuCommandInteraction, ModalBuilder, type ModalSubmitInteraction, SlashCommandBuilder, type SlashCommandSubcommandBuilder, type SlashCommandSubcommandGroupBuilder, StringSelectMenuBuilder, type StringSelectMenuInteraction } from 'discord.js';
+import { type BotClient } from './bot-client';
 import {
-	BotSlashCommand as BotSlashCommandType,
-	BotSubSlashCommand as BotSubSlashCommandType,
-	BotSubGroupSlashCommand as BotSubGroupSlashCommandType,
-	BotMessageContextCommand,
-	BotCommandOptions
+	type BotSlashCommand as BotSlashCommandType,
+	type BotSubSlashCommand as BotSubSlashCommandType,
+	type BotSubGroupSlashCommand as BotSubGroupSlashCommandType,
+	type BotMessageContextCommand,
+	type BotCommandOptions,
 } from './types/bot-command';
-import { BotButton as BotButtonType } from './types/bot-interaction';
+import { type BotButton as BotButtonType } from './types/bot-interaction';
 
 class AbstractCommand<
 	T extends BotClient = BotClient,
@@ -23,8 +23,8 @@ class AbstractCommand<
 		cmdName: string,
 		interaction: ChatInputCommandInteraction,
 		client: T,
-		options?: any
-	) {
+		options?: any,
+	): void {
 		this.cmdsList.find(_cmd => _cmd.command.name === cmdName)?.result(interaction, client, options);
 	}
 
@@ -43,14 +43,14 @@ class AbstractCommand<
 	async result(
 		interaction: ChatInputCommandInteraction,
 		client: T,
-		options?: any
+		options?: any,
 	): Promise<void> {
 		const subCommand = interaction.options.getSubcommand();
-		if (subCommand && this.cmdsList.length) this.execSubResult(
+		if (subCommand && (this.cmdsList.length > 0)) this.execSubResult(
 			subCommand,
 			interaction,
 			client,
-			options
+			options,
 		);
 	};
 }
@@ -62,26 +62,26 @@ export abstract class BotSlashCommand<
 	extends AbstractCommand<T, B>
 	implements BotSlashCommandType<T, B> {
 	guildIds: string[];
-    command: SlashCommandBuilder;
+	command: SlashCommandBuilder;
 
 	constructor(cmds: Record<string, B> = {}, guildIds: string[] = []) {
-		super(cmds)
+		super(cmds);
 		this.guildIds = guildIds;
 		this.command = new SlashCommandBuilder();
 		this.cmdsList.forEach(
 			(sub) => this.isGroup(sub) ?
 				this.command.addSubcommandGroup(_s => (sub as BotSubGroupSlashCommandType<T, any>).set(_s)) :
-				this.command.addSubcommand(_s => (sub as BotSubSlashCommandType<T, any>).set(_s))
+				this.command.addSubcommand(_s => (sub as BotSubSlashCommandType<T, any>).set(_s)),
 		);
 	}
 
 	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
-        const subCommand = interaction.options.getSubcommand();
+		const subCommand = interaction.options.getSubcommand();
 		if (subCommand) (this.cmds[subCommand] as BotSubSlashCommand).autocomplete(
 			interaction,
-			client
+			client,
 		);
-    }
+	}
 }
 
 export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O = any>
@@ -92,6 +92,7 @@ export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O
 	constructor(cmds: Record<string, BotSubSlashCommandType<T, any>> = {}) {
 		super(cmds);
 	}
+
 	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder {
 		this.command = subCommandGroup;
 		return this.command;
@@ -99,23 +100,25 @@ export abstract class BotSubGroupSlashCommand<T extends BotClient = BotClient, O
 }
 
 export abstract class BotSubSlashCommand<T extends BotClient = BotClient, O = any>
-	implements BotSubSlashCommandType<T, O> {
+implements BotSubSlashCommandType<T, O> {
 	command!: SlashCommandSubcommandBuilder;
 
 	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
 		this.command = subcommand;
 		return this.command;
 	}
+
 	async result(interaction: ChatInputCommandInteraction<CacheType>, client: T, options?: O | undefined): Promise<void> {
 		// OVERRIDE
 	}
+
 	async autocomplete(interaction: AutocompleteInteraction<CacheType>, client: T): Promise<void> {
-        // OVERRIDE
-    }
+		// OVERRIDE
+	}
 }
 
-export abstract class BotContextCommand<T extends BotClient = BotClient, O = any>
-	implements BotMessageContextCommand<T> {
+export abstract class BotContextCommand<T extends BotClient = BotClient>
+implements BotMessageContextCommand<T> {
 	command!: ContextMenuCommandBuilder;
 
 	constructor() {
@@ -135,9 +138,9 @@ export abstract class BotButtonBuilder extends ButtonBuilder {
 	constructor(id: string, disable: boolean = false) {
 		super();
 
-        this
-            .setCustomId(id)
-            .setDisabled(disable);
+		this
+			.setCustomId(id)
+			.setDisabled(disable);
 	}
 }
 
@@ -162,13 +165,13 @@ export class BotModal<T extends BotClient = BotClient> extends ModalBuilder {
 }
 
 export class BotSelectBuilder extends StringSelectMenuBuilder {
-    custom_id: string;
-    constructor(id: string) {
-        super();
-        this.custom_id = id;
+	custom_id: string;
+	constructor(id: string) {
+		super();
+		this.custom_id = id;
 
-        this.setCustomId(this.custom_id);
-    }
+		this.setCustomId(this.custom_id);
+	}
 }
 
 export class BotSelect<T extends BotClient = BotClient> extends ModalBuilder {

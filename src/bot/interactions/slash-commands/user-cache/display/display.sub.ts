@@ -1,7 +1,7 @@
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, codeBlock } from "discord.js";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
-import { DiscordService } from "../../../../../services/discord-service";
-import { UtsukushiBotClient } from "../../../../client";
+import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction, codeBlock } from 'discord.js';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
+import { DiscordService } from '../../../../../services/discord-service';
+import { type UtsukushiBotClient } from '../../../../client';
 
 
 /**
@@ -19,7 +19,7 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 	async result(
 		interaction: ChatInputCommandInteraction,
-		client: UtsukushiBotClient
+		client: UtsukushiBotClient,
 	): Promise<void> {
 		const user = interaction.user;
 
@@ -28,7 +28,7 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		const userData = await client.store.users.getItem(user.id);
 		if (!userData) await interaction.editReply('❌ No User data in database !');
 		else {
-			const json = JSON.stringify(userData, null, '\t')
+			const json = JSON.stringify(userData, null, '\t');
 			const safetext = DiscordService.limitText(json, 1950);
 			await interaction.user.send(codeBlock('json', safetext));
 			await interaction.editReply({

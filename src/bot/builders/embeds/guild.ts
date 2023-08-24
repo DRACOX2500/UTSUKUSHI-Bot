@@ -1,19 +1,19 @@
-import { EmbedBuilder, Guild, GuildMember, time } from "discord.js";
+import { EmbedBuilder, type Guild, type GuildMember, time } from 'discord.js';
 
 export class GuildEmbed extends EmbedBuilder {
 
 	constructor(
-        guild: Guild,
-        owner: GuildMember,
-        user: GuildMember
-    ) {
-        super();
+		guild: Guild,
+		owner: GuildMember,
+		user: GuildMember,
+	) {
+		super();
 
-        const avatarUrl = owner.user.avatarURL() ?? undefined;
-        const joinedAt = user.joinedAt as Date;
+		const avatarUrl = owner.user.avatarURL() ?? undefined;
+		const joinedAt = user.joinedAt as Date;
 
-        this
-            .setColor(0xf9ff00)
+		this
+			.setColor(0xf9ff00)
 			.setAuthor({
 				name: owner.user.username,
 				iconURL: avatarUrl,
@@ -29,7 +29,7 @@ export class GuildEmbed extends EmbedBuilder {
 					name: 'Booster Count',
 					value: String(guild.premiumSubscriptionCount),
 				},
-				{ name: 'Locale', value: guild.preferredLocale }
+				{ name: 'Locale', value: guild.preferredLocale },
 			);
 	}
 }

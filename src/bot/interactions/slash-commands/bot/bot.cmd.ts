@@ -1,7 +1,7 @@
-import { BotSlashCommand } from "../../../../core/bot-command";
-import { UtsukushiBotClient } from "../../../client";
-import { GitSubCommand } from "./git/git.sub";
-import { PingSubCommand } from "./ping/ping.sub";
+import { BotSlashCommand } from '../../../../core/bot-command';
+import { type UtsukushiBotClient } from '../../../client';
+import { GitSubCommand } from './git/git.sub';
+import { PingSubCommand } from './ping/ping.sub';
 
 
 /**
@@ -14,7 +14,7 @@ class BotCommand extends BotSlashCommand<UtsukushiBotClient> {
 	constructor() {
 		super({
 			'git': new GitSubCommand(),
-			'ping': new PingSubCommand()
+			'ping': new PingSubCommand(),
 		});
 
 		this.command

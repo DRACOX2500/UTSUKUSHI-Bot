@@ -1,8 +1,8 @@
-import { BotSlashCommand } from "../../../../core/bot-command";
-import { UtsukushiBotClient } from "../../../client";
-import { DisplaySubCommand } from "./display/display.sub";
-import { HistoricSubCommand } from "./historic/historic..sub";
-import { RemoveSubCommand } from "./remove/remove.sub";
+import { BotSlashCommand } from '../../../../core/bot-command';
+import { type UtsukushiBotClient } from '../../../client';
+import { DisplaySubCommand } from './display/display.sub';
+import { HistoricSubCommand } from './historic/historic..sub';
+import { RemoveSubCommand } from './remove/remove.sub';
 
 /**
  * @SlashCommand `user-cache`
@@ -13,10 +13,10 @@ class UserCacheCommand extends BotSlashCommand<UtsukushiBotClient> {
 
 	constructor() {
 		super({
-            'display': new DisplaySubCommand(),
-            'remove': new RemoveSubCommand(),
-			'historic': new HistoricSubCommand()
-        });
+			'display': new DisplaySubCommand(),
+			'remove': new RemoveSubCommand(),
+			'historic': new HistoricSubCommand(),
+		});
 
 		this.command
 			.setName('user-cache')

@@ -1,7 +1,7 @@
-import { Guild, GuildMember, Interaction, Message, TextBasedChannel } from 'discord.js';
-import { UtsukushiBotClient } from '../bot/client';
+import { type Guild, type GuildMember, type Interaction, type Message, type TextBasedChannel } from 'discord.js';
+import { type UtsukushiBotClient } from '../bot/client';
 import logger from '../core/logger';
-import { AudioFilters, GuildQueue, Player, SearchResult } from 'discord-player';
+import { AudioFilters, type GuildQueue, Player, type SearchResult, type Track } from 'discord-player';
 import { TrackReply } from '../bot/builders/replies/track';
 import { Sort } from '../core/utils/sort';
 import { REGEX_LINK } from '../constants';
@@ -12,15 +12,15 @@ export class PlayerService {
 	private static _player: Player;
 	private static lastTrack: Record<string, Message> = {};
 
-	private static saveTrackMessage(guildId: string, message: Message) {
+	private static saveTrackMessage(guildId: string, message: Message): void {
 		PlayerService.lastTrack[guildId] = message;
 	}
 
-	private static async removeTrackMessage(guildId: string) {
-		await PlayerService.lastTrack[guildId]?.delete()
+	private static async removeTrackMessage(guildId: string): Promise<void> {
+		await PlayerService.lastTrack[guildId]?.delete();
 	}
 
-	static async init(client: UtsukushiBotClient) {
+	static async init(client: UtsukushiBotClient): Promise<void> {
 		const player = new Player(client, {
 			ytdlOptions: {
 				filter: 'audioonly',
@@ -60,7 +60,7 @@ export class PlayerService {
 			logger.info(`Track **${track.title}** queued`);
 		});
 		player.events.on('audioTracksAdd', (queue, track) => {
-			logger.info(`Multiple Track's queued`);
+			logger.info('Multiple Track\'s queued');
 		});
 		player.events.on('playerSkip', (queue, track) => {
 			logger.info(`Skipping **${track.title}** due to an issue!`);
@@ -69,7 +69,7 @@ export class PlayerService {
 			logger.info('Looks like my job here is done, leaving now!');
 		});
 		player.events.on('emptyChannel', (queue) => {
-			logger.info(`Leaving because no vc activity for the past 5 minutes`);
+			logger.info('Leaving because no vc activity for the past 5 minutes');
 		});
 		player.events.on('emptyQueue', (queue) => {
 			logger.info('Queue finished!');
@@ -85,7 +85,7 @@ export class PlayerService {
 		});
 	}
 
-	private static disconnect(queue: GuildQueue) {
+	private static disconnect(queue: GuildQueue): void {
 		const guildId: string = (queue.metadata as any).guildId;
 		if (guildId) {
 			PlayerService.removeTrackMessage(guildId);
@@ -112,17 +112,17 @@ export class PlayerService {
 		return list;
 	}
 
-	static async search(interaction: Interaction, query: string, source: string = 'auto') {
-		return PlayerService._player.search(query, {
+	static async search(interaction: Interaction, query: string, source: string = 'auto'): Promise<SearchResult> {
+		return await PlayerService._player.search(query, {
 			requestedBy: interaction.user,
 			searchEngine: `${source}Search` as any,
 		});
 	}
 
-	static async play(interaction: Interaction, query: string | SearchResult, source: string = 'auto', type: string = 'song') {
+	static async play(interaction: Interaction, query: string | SearchResult, source: string = 'auto', type: string = 'song'): Promise<{ track: Track }> {
 		const channel = (interaction.member as GuildMember).voice.channel;
 		if (!channel) throw new Error('Voice channel not found');
-		return PlayerService._player.play(channel, query, {
+		return await PlayerService._player.play(channel, query, {
 			searchEngine: `${source}Search` as any,
 			nodeOptions: {
 				metadata: {
@@ -143,80 +143,82 @@ export class PlayerService {
 		});
 	}
 
-	static async playSoundEffect(interaction: Interaction, query: string | SearchResult) {
+	static async playSoundEffect(interaction: Interaction, query: string | SearchResult): Promise<{ track: Track }> {
 		const channel = (interaction.member as GuildMember).voice.channel;
 		if (!channel) throw new Error('Voice channel not found');
 		if (this.isPlaying(interaction.guild?.id)) throw new Error('Player is currently used');
-		return PlayerService.play(interaction, query, 'youtube', 'sound-effect');
+		return await PlayerService.play(interaction, query, 'youtube', 'sound-effect');
 	}
 
-	static async searchAndPlay(interaction: Interaction, query: string, source: string = 'auto') {
-		let _query: any = query
+	static async searchAndPlay(interaction: Interaction, query: string, source: string = 'auto'): Promise<{ track: Track }> {
+		let _query: any = query;
 		if (!REGEX_LINK.exec(query)) {
 			_query = await PlayerService.search(interaction, _query, source);
 		}
-		return PlayerService.play(interaction, _query);
+		return await PlayerService.play(interaction, _query);
 	}
 
-	static togglePause(guild: Guild) {
+	static togglePause(guild: Guild): void {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		queue?.node.setPaused(!queue.node.isPaused());
 	}
 
-	private static isPlaying(guildId?: string) {
+	private static isPlaying(guildId?: string): boolean {
 		if (!guildId) return true;
 		const queue = PlayerService._player.nodes.get(guildId);
-		return queue?.isPlaying();
+		return queue?.isPlaying() ?? false;
 	}
 
-	private static stopByID(guildId: string) {
+	private static stopByID(guildId: string): void {
 		const queue = PlayerService._player.nodes.get(guildId);
 		queue?.node.stop();
 		queue?.delete();
 	}
 
-	static stop(guild: Guild) {
+	static stop(guild: Guild): void {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		queue?.node.stop();
 		queue?.delete();
 		PlayerService.removeTrackMessage(guild.id);
 	}
 
-	static skip(guild: Guild) {
+	static skip(guild: Guild): void {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		queue?.node.skip();
 	}
 
-	static async setVolume(guild: Guild, volume: number) {
+	static async setVolume(guild: Guild, volume: number): Promise<void> {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		queue?.node.setVolume(volume);
 		await queue?.channel?.send(`🔊 Volume set to **${volume}**`);
 	}
 
-	static async volumeDown(guild: Guild) {
+	static async volumeDown(guild: Guild): Promise<void> {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		if (queue) {
 			const volume = queue.node.volume - 10;
 			if (volume >= 0) {
 				queue.node.setVolume(volume);
-                await queue?.channel?.send(`🔊 Volume set to **${volume}**`);
-			} else {
+				await queue?.channel?.send(`🔊 Volume set to **${volume}**`);
+			}
+			else {
 				queue.node.setVolume(0);
-				await queue.channel?.send(`🔊 Volume set to **0**`);
+				await queue.channel?.send('🔊 Volume set to **0**');
 			}
 		}
 	}
 
-	static async volumeUp(guild: Guild) {
+	static async volumeUp(guild: Guild): Promise<void> {
 		const queue = PlayerService._player.nodes.get(guild.id);
 		if (queue) {
 			const volume = queue.node.volume + 10;
 			if (volume <= 100) {
 				queue.node.setVolume(volume);
-                await queue?.channel?.send(`🔊 Volume set to **${volume}**`);
-			} else {
+				await queue?.channel?.send(`🔊 Volume set to **${volume}**`);
+			}
+			else {
 				queue.node.setVolume(100);
-				await queue.channel?.send(`🔊 Volume set to **100**`);
+				await queue.channel?.send('🔊 Volume set to **100**');
 			}
 		}
 	}
@@ -232,7 +234,7 @@ export class PlayerService {
 		return false;
 	}
 
-	static async enableFilter(guild: Guild, filter: string) {
+	static async enableFilter(guild: Guild, filter: string): Promise<void> {
 		const queue = PlayerService._player.nodes.get(guild.id);
 
 		const isValid = PlayerService.filters.includes(filter);
@@ -243,7 +245,7 @@ export class PlayerService {
 		}
 		else if (queue && filter === 'none') {
 			queue.filters.ffmpeg.setFilters([]);
-			await queue?.channel?.send(`🔊 Filter disabled`);
+			await queue?.channel?.send('🔊 Filter disabled');
 		}
 	}
 
@@ -255,9 +257,9 @@ export class PlayerService {
 				value: filter,
 			};
 		})
-		.sort((a, b) => Sort.byStartsWith(a.name, b.name, '🟩'));
+			.sort((a, b) => Sort.byStartsWith(a.name, b.name, '🟩'));
 		_filters.unshift({
-			name: `⚪ | none`,
+			name: '⚪ | none',
 			value: 'none',
 		});
 		return _filters;

@@ -1,10 +1,10 @@
-import { PermissionsBitField } from "discord.js";
-import { LocaleSubCommand } from "./locale/locale.sub";
-import { NotifySubCommand } from "./notify/notify.sub";
-import { SharedEmojisSubCommand } from "./shared-emojis/shared-emojis.sub";
-import { InfoSubCommand } from "./info/info.sub";
-import { BotSlashCommand } from "../../../../core/bot-command";
-import { UtsukushiBotClient } from "../../../client";
+import { PermissionsBitField } from 'discord.js';
+import { LocaleSubCommand } from './locale/locale.sub';
+import { NotifySubCommand } from './notify/notify.sub';
+import { SharedEmojisSubCommand } from './shared-emojis/shared-emojis.sub';
+import { InfoSubCommand } from './info/info.sub';
+import { BotSlashCommand } from '../../../../core/bot-command';
+import { type UtsukushiBotClient } from '../../../client';
 
 /**
  * @SlashCommand `guild`
@@ -20,14 +20,14 @@ class GuildCommand extends BotSlashCommand<UtsukushiBotClient> {
 			'info': new InfoSubCommand(),
 			'locale': new LocaleSubCommand(),
 			'notify': new NotifySubCommand(),
-            'shared-emojis': new SharedEmojisSubCommand()
+			'shared-emojis': new SharedEmojisSubCommand(),
 		});
 
 		this.command
 			.setName('guild')
 			.setDescription('Commands about guild 🏛️!')
 			.setDMPermission(false)
-            .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild);
+			.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild);
 	}
 }
 

@@ -1,5 +1,5 @@
-import { BotActivity, BotConfig } from "../core/types/business";
-import { PresenceStatusData } from "discord.js";
+import { type BotActivity, type BotConfig } from '../core/types/business';
+import { type PresenceStatusData } from 'discord.js';
 
 export interface PrivateiInteraction {
     guild: string
@@ -41,7 +41,7 @@ export interface HistoryItem<T> {
 
 export interface History<T> {
     enabled?: boolean;
-    list: HistoryItem<T>[];
+    list: Array<HistoryItem<T>>;
 }
 
 export interface Guild {

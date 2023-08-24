@@ -1,8 +1,8 @@
-import { NotifyEmbed } from "../../../bot/builders/embeds/notify";
-import { UtsukushiBotClient } from "../../../bot/client";
-import logger from "../../../core/logger";
-import { BotTrigger } from "../../../core/types/bot-interaction";
-import { Guild, TextBasedChannel, VoiceChannel } from "discord.js";
+import { NotifyEmbed } from '../../../bot/builders/embeds/notify';
+import { type UtsukushiBotClient } from '../../../bot/client';
+import logger from '../../../core/logger';
+import { type BotTrigger } from '../../../core/types/bot-interaction';
+import { type Guild, type TextBasedChannel, type VoiceChannel } from 'discord.js';
 
 /**
  * @Trigger `voice-channel-notify`
@@ -13,7 +13,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 		client: UtsukushiBotClient,
 		user: string,
 		channelId: string,
-		guild: Guild
+		guild: Guild,
 	): Promise<void> {
 		const data = await client.store.guilds.getOrAddItemByGuild(guild);
 		if (data?.vocalNotifyChannel) {
@@ -23,7 +23,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 			const userJoin = (await guild.members.fetch(user)).user;
 
 			const embed = new NotifyEmbed(userJoin, vc);
-			channelNotify?.send({ embeds: [embed] }).catch((err: Error) => logger.error({}, err.message));
+			channelNotify?.send({ embeds: [embed] }).catch((err: Error) => { logger.error({}, err.message); });
 		}
 	}
 

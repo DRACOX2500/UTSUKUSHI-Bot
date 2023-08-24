@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-	CommandInteraction,
-	ContextMenuCommandBuilder,
-	SlashCommandBuilder,
-	ChatInputCommandInteraction,
-	ContextMenuCommandInteraction,
-	SlashCommandSubcommandsOnlyBuilder,
-	AutocompleteInteraction,
-	UserContextMenuCommandInteraction,
-	MessageContextMenuCommandInteraction,
-	SlashCommandSubcommandBuilder,
-	SlashCommandSubcommandGroupBuilder,
+	type CommandInteraction,
+	type ContextMenuCommandBuilder,
+	type SlashCommandBuilder,
+	type ChatInputCommandInteraction,
+	type ContextMenuCommandInteraction,
+	type SlashCommandSubcommandsOnlyBuilder,
+	type AutocompleteInteraction,
+	type UserContextMenuCommandInteraction,
+	type MessageContextMenuCommandInteraction,
+	type SlashCommandSubcommandBuilder,
+	type SlashCommandSubcommandGroupBuilder,
 } from 'discord.js';
-import { BotClient } from '../bot-client';
+import { type BotClient } from '../bot-client';
 
 type BotSlashCommandType =
 	| SlashCommandBuilder
@@ -39,11 +41,11 @@ export interface BotCommand<
 	/**
 	 * Function that responds to the command
 	 */
-	result(
+	result: (
 		interaction: I,
 		client: T,
 		options?: Partial<BotCommandOptions>
-	): Promise<void>;
+	) => Promise<void>;
 }
 
 interface SharedSubSlashCommand<T extends BotClient = BotClient, O = any> {
@@ -51,21 +53,21 @@ interface SharedSubSlashCommand<T extends BotClient = BotClient, O = any> {
 	 * @Command SubSlashCommand
 	 */
 	readonly command: SlashCommandSubcommandGroupBuilder | SlashCommandSubcommandBuilder;
-	result(
+	result: (
 		interaction: ChatInputCommandInteraction,
 		client: T,
 		options?: O
-	): Promise<void>;
+	) => Promise<void>;
 }
 
 interface AutocompleteCommand<T extends BotClient = BotClient> {
 	/**
 	 * Function that responds to the AutocompleteInteraction
 	 */
-	autocomplete(
+	autocomplete: (
 		interaction: AutocompleteInteraction,
 		client: T
-	): Promise<void>;
+	) => Promise<void>;
 }
 
 export interface BotSlashCommand<
@@ -98,7 +100,7 @@ export interface BotSubGroupSlashCommand<T extends BotClient = BotClient, O = an
 	 * @Command SubSlashCommand
 	 */
 	readonly command: SlashCommandSubcommandGroupBuilder;
-	set(subCommandGroup: SlashCommandSubcommandGroupBuilder): SlashCommandSubcommandGroupBuilder;
+	set: (subCommandGroup: SlashCommandSubcommandGroupBuilder) => SlashCommandSubcommandGroupBuilder;
 }
 
 export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any>
@@ -107,7 +109,7 @@ export interface BotSubSlashCommand<T extends BotClient = BotClient, O = any>
 	 * @Command SubSlashCommand
 	 */
 	readonly command: SlashCommandSubcommandBuilder;
-	set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder;
+	set: (subcommand: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder;
 }
 
 export interface BotContextCommand<
@@ -118,11 +120,11 @@ export interface BotContextCommand<
 	 * @Command ContextMenuCommand
 	 */
 	readonly command: ContextMenuCommandBuilder;
-	result(
+	result: (
 		interaction: I,
 		client: T,
 		options?: Partial<BotCommandOptions>
-	): Promise<void>;
+	) => Promise<void>;
 }
 
 export interface BotMessageContextCommand<T extends BotClient = BotClient>

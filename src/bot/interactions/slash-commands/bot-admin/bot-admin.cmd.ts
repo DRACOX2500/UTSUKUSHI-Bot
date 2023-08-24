@@ -1,9 +1,9 @@
-import { ChatInputCommandInteraction, CacheType, ActivityType } from "discord.js";
-import { BotSlashCommand } from "../../../../core/bot-command";
-import { BotSubCommandOptions } from "../../../../types/commands";
-import { UtsukushiBotClient } from "../../../client";
-import { ActivitySubCommand } from "./activity/activity.sub";
-import { StatusSubCommand } from "./status/status.sub";
+import { type ChatInputCommandInteraction, type CacheType, ActivityType } from 'discord.js';
+import { BotSlashCommand } from '../../../../core/bot-command';
+import { type BotSubCommandOptions } from '../../../../types/commands';
+import { type UtsukushiBotClient } from '../../../client';
+import { ActivitySubCommand } from './activity/activity.sub';
+import { StatusSubCommand } from './status/status.sub';
 
 
 /**
@@ -16,7 +16,7 @@ class BotAdminCommand extends BotSlashCommand<UtsukushiBotClient> {
 	constructor() {
 		super({
 			'activity': new ActivitySubCommand(),
-			'status': new StatusSubCommand()
+			'status': new StatusSubCommand(),
 		});
 
 		this.command

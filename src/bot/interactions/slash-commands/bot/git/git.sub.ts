@@ -1,7 +1,7 @@
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "discord.js";
-import { GITHUB_LINK } from "../../../../../constants";
-import { BotClient } from "../../../../../core/bot-client";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
+import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
+import { GITHUB_LINK } from '../../../../../constants';
+import { type BotClient } from '../../../../../core/bot-client';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
 
 
 /**
@@ -19,7 +19,7 @@ export class GitSubCommand extends BotSubSlashCommand {
 
 	async result(
 		interaction: ChatInputCommandInteraction,
-		_client?: BotClient
+		_client?: BotClient,
 	): Promise<void> {
 		interaction.reply({
 			content: GITHUB_LINK,

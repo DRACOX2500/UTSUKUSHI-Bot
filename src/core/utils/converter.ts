@@ -10,7 +10,7 @@ export namespace Converter {
 	 * - hours - minutes - seconds `00:00:00`
 	 */
 	export function durationStringToNumber(
-		durationString: string
+		durationString: string,
 	): number | null {
 		if (!durationString.match(/^\d{1,2}$|^(\d{1,2}:){1,2}\d{1,2}$/))
 			return null;
@@ -33,7 +33,7 @@ export namespace Converter {
 		const min = Math.floor(seconds / 60);
 		const sec = seconds % 60;
 
-		function padTo2Digits(num: number) {
+		function padTo2Digits(num: number): string {
 			return num.toString().padStart(2, '0');
 		}
 		return `${padTo2Digits(min)}:${padTo2Digits(sec)}`;

@@ -1,4 +1,4 @@
-import { ActivityType, PresenceStatusData } from "discord.js";
+import { type ActivityType, type PresenceStatusData } from 'discord.js';
 
 export type ProgProfile = 'prod' | 'dev' | 'test';
 

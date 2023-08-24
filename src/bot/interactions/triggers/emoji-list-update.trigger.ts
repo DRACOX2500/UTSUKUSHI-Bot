@@ -1,7 +1,7 @@
-import { UtsukushiBotClient } from "../../../bot/client";
-import { BotTrigger } from "../../../core/types/bot-interaction";
-import { Emoji } from "../../../types/business";
-import { GuildEmoji } from "discord.js";
+import { type UtsukushiBotClient } from '../../../bot/client';
+import { type BotTrigger } from '../../../core/types/bot-interaction';
+import { type Emoji } from '../../../types/business';
+import { type GuildEmoji } from 'discord.js';
 
 class EmojiListUpdateTrigger implements BotTrigger<UtsukushiBotClient> {
 
@@ -10,7 +10,7 @@ class EmojiListUpdateTrigger implements BotTrigger<UtsukushiBotClient> {
 			animated: emoji.animated ?? false,
 			id: emoji.id,
 			name: emoji.name ?? '',
-		}
+		};
 	}
 
 	async trigger(client: UtsukushiBotClient): Promise<void> {

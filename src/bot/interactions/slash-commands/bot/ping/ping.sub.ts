@@ -1,8 +1,8 @@
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction } from "discord.js";
-import { BotClient } from "../../../../../core/bot-client";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
-import { ERROR_COMMAND } from "../../../../../core/constants";
-import { PongEmbedBuilder } from "../../../../builders/embeds/pong";
+import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
+import { type BotClient } from '../../../../../core/bot-client';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
+import { ERROR_COMMAND } from '../../../../../core/constants';
+import { PongEmbedBuilder } from '../../../../builders/embeds/pong';
 
 
 /**
@@ -20,7 +20,7 @@ export class PingSubCommand extends BotSubSlashCommand {
 
 	async result(
 		interaction: ChatInputCommandInteraction,
-		client?: BotClient
+		client?: BotClient,
 	): Promise<void> {
 		if (!client) throw new Error(ERROR_COMMAND);
 

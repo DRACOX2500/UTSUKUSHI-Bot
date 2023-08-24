@@ -1,8 +1,8 @@
-import { ChatInputCommandInteraction, CacheType, SlashCommandSubcommandBuilder } from "discord.js";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
-import { PlayerService } from "../../../../../services/player-service";
-import { UtsukushiBotClient } from "../../../../client";
-import { ERROR_CMD_GUILD, ERROR_COMMAND } from "../../../../../core/constants";
+import { type ChatInputCommandInteraction, type CacheType, type SlashCommandSubcommandBuilder } from 'discord.js';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
+import { PlayerService } from '../../../../../services/player-service';
+import { type UtsukushiBotClient } from '../../../../client';
+import { ERROR_CMD_GUILD, ERROR_COMMAND } from '../../../../../core/constants';
 
 /**
  * @SlashCommand `stop`
@@ -17,14 +17,14 @@ export class StopSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		return super.set(subcommand);
 	}
 
-    override async result(interaction: ChatInputCommandInteraction<CacheType>, client: UtsukushiBotClient, options?: any): Promise<any> {
-        const guild = interaction.guild;
-        if (!guild) {
+	override async result(interaction: ChatInputCommandInteraction<CacheType>, client: UtsukushiBotClient, options?: any): Promise<any> {
+		const guild = interaction.guild;
+		if (!guild) {
 			await interaction.reply({ content: ERROR_CMD_GUILD, ephemeral: true });
-            throw new Error(ERROR_COMMAND);
+			throw new Error(ERROR_COMMAND);
 		}
 
-        PlayerService.stop(guild)
-        await interaction.reply({ content: 'Music stopped !', ephemeral: true });
-    }
+		PlayerService.stop(guild);
+		await interaction.reply({ content: 'Music stopped !', ephemeral: true });
+	}
 }

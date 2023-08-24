@@ -1,9 +1,9 @@
-import { Client, GatewayIntentBits, PresenceStatusData } from 'discord.js';
-import { BotActivity, BotConfig, ProgProfile } from './types/business';
+import { Client, type GatewayIntentBits, type PresenceStatusData } from 'discord.js';
+import { type BotActivity, type BotConfig, type ProgProfile } from './types/business';
 import logger from './logger';
 import { InteractionsManager } from './interactions-manager';
 import { DEFAULT_ACTIVITY, ERROR_USERNAME } from './constants';
-import { BotClientEvents } from './bot-client-events';
+import { type BotClientEvents } from './bot-client-events';
 
 export class BotClient extends Client implements BotClientEvents {
 
@@ -23,28 +23,27 @@ export class BotClient extends Client implements BotClientEvents {
 	}
 
 	private initBotEvents(): void {
-		this.on('interactionCreate', (interaction) =>
-			this._cmdManager.handleInteractions(interaction, this)
+		this.on('interactionCreate', async (interaction) => { await this._cmdManager.handleInteractions(interaction, this); },
 		);
 		this.on('ready', async (client: Client) => {
 			this.setUsername(client.user?.username);
 			logger.botLoginLog(this.username);
 			this.onAfterReady();
 		});
-		this.on('error', err => logger.error('BOT', err));
+		this.on('error', err => { logger.error('BOT', err); });
 		this.on('warn', logger.warn);
 
 		this.on('shardError', (error) => {
 			logger.error(
 				'A websocket connection encountered an error : ' + error.message,
-				error
+				error,
 			);
 		});
 
 		process.on('unhandledRejection', (error: any) => {
 			logger.error(
 				'Unhandled promise rejection : ' + error?.message,
-				error
+				error,
 			);
 		});
 	}
@@ -68,5 +67,7 @@ export class BotClient extends Client implements BotClientEvents {
 		return this._cmdManager;
 	}
 
-	onAfterReady(): void {}
+	onAfterReady(): void {
+		// OVERRIDE
+	}
 }

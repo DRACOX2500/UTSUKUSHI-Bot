@@ -1,8 +1,8 @@
-import { SlashCommandSubcommandBuilder, ChatInputCommandInteraction, codeBlock } from "discord.js";
-import { BotSubSlashCommand } from "../../../../../core/bot-command";
-import { ERROR_CMD_GUILD, ERROR_COMMAND } from "../../../../../core/constants";
-import { DiscordService } from "../../../../../services/discord-service";
-import { UtsukushiBotClient } from "../../../../client";
+import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction, codeBlock } from 'discord.js';
+import { BotSubSlashCommand } from '../../../../../core/bot-command';
+import { ERROR_CMD_GUILD, ERROR_COMMAND } from '../../../../../core/constants';
+import { DiscordService } from '../../../../../services/discord-service';
+import { type UtsukushiBotClient } from '../../../../client';
 
 
 /**
@@ -22,25 +22,25 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 					.addChoices(...[
 						{
 							name: 'private',
-							value: 'private'
+							value: 'private',
 						},
 						{
 							name: 'public',
-							value: 'public'
-						}
-					])
+							value: 'public',
+						},
+					]),
 			);
 		return super.set(subcommand);
 	}
 
 	async result(
 		interaction: ChatInputCommandInteraction,
-		client: UtsukushiBotClient
+		client: UtsukushiBotClient,
 	): Promise<void> {
 		const guild = interaction.guild;
 		if (!guild) {
 			await interaction.reply({ content: ERROR_CMD_GUILD, ephemeral: true });
-            throw new Error(ERROR_COMMAND);
+			throw new Error(ERROR_COMMAND);
 		}
 
 		const option = interaction.options.getString('visibility') ?? 'private';
@@ -50,7 +50,7 @@ export class DisplaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		const guildData = await client.store.guilds.getItem(guild.id);
 		if (!guildData) await interaction.editReply('❌ No Guild data in database !');
 		else {
-			const json = JSON.stringify(guildData, null, '\t')
+			const json = JSON.stringify(guildData, null, '\t');
 			const safetext = DiscordService.limitText(json, 1950);
 			await interaction.editReply(codeBlock('json', safetext));
 		}

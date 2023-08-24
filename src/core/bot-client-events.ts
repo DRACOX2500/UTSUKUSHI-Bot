@@ -1,5 +1,5 @@
 export interface OnAfterReady {
-    onAfterReady(): void;
+    onAfterReady: () => void;
 }
 
 export interface BotClientEvents

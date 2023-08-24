@@ -1,26 +1,26 @@
-import { APISelectMenuOption } from "discord.js";
-import { BotSelectBuilder } from "../../../core/bot-command";
-import { Emoji } from "../../../types/business";
+import { type APISelectMenuOption } from 'discord.js';
+import { BotSelectBuilder } from '../../../core/bot-command';
+import { type Emoji } from '../../../types/business';
 
 
 export class ReactAsBotSelect extends BotSelectBuilder {
-    constructor(id: string, emojis: Emoji[] = []) {
-        super(id);
+	constructor(id: string, emojis: Emoji[] = []) {
+		super(id);
 
-        const options: APISelectMenuOption[] = emojis.map(emoji => ({
-            label: emoji.name,
-            value: this.toEmojiValue(emoji),
-            emoji,
-        }));
+		const options: APISelectMenuOption[] = emojis.map(emoji => ({
+			label: emoji.name,
+			value: this.toEmojiValue(emoji),
+			emoji,
+		}));
 
-        this
-            .setPlaceholder('Nothing selected')
-            .setMinValues(1)
-            .setMaxValues(5)
-            .addOptions(options);
-    }
+		this
+			.setPlaceholder('Nothing selected')
+			.setMinValues(1)
+			.setMaxValues(5)
+			.addOptions(options);
+	}
 
-    private toEmojiValue(emoji: Emoji) {
-        return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`
-    }
+	private toEmojiValue(emoji: Emoji): string {
+		return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
+	}
 }

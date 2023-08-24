@@ -1,13 +1,13 @@
-import { ActionRowBuilder, TextInputBuilder, TextInputStyle, ModalSubmitInteraction, CacheType } from "discord.js";
-import { BotModal } from "../../../core/bot-command";
-import { UtsukushiBotClient } from "../../client";
+import { ActionRowBuilder, TextInputBuilder, TextInputStyle, type ModalSubmitInteraction, type CacheType } from 'discord.js';
+import { BotModal } from '../../../core/bot-command';
+import { type UtsukushiBotClient } from '../../client';
 
 
 export class ReplyAsBotModal extends BotModal<UtsukushiBotClient> {
 	constructor(targetId: string) {
 		super('rpab-modal');
 		this
-            .setTitle('Reply as bot !')
+			.setTitle('Reply as bot !')
 			.addComponents(
 				new ActionRowBuilder<TextInputBuilder>().addComponents(
 					new TextInputBuilder()
@@ -16,22 +16,22 @@ export class ReplyAsBotModal extends BotModal<UtsukushiBotClient> {
 						.setPlaceholder('Your reply message...')
 						.setMinLength(1)
 						.setMaxLength(2000)
-						.setStyle(TextInputStyle.Paragraph)
-				)
+						.setStyle(TextInputStyle.Paragraph),
+				),
 			);
 	}
 
 	override async result(interaction: ModalSubmitInteraction<CacheType>, client: UtsukushiBotClient): Promise<void> {
-        const targetId = interaction.fields.fields.at(0)?.customId.split('#')[1];
+		const targetId = interaction.fields.fields.at(0)?.customId.split('#')[1];
 		const value = interaction.fields.fields.at(0)?.value;
-        const channel = interaction.channel;
+		const channel = interaction.channel;
 		if (value && targetId && channel) {
-            const mes = await channel.messages.fetch(targetId);
-            if (mes) await mes.reply(value);
-            else await interaction.reply({ content: '❌ Message not found !', ephemeral: true });
+			const mes = await channel.messages.fetch(targetId);
+			if (mes) await mes.reply(value);
+			else await interaction.reply({ content: '❌ Message not found !', ephemeral: true });
 		}
-        await interaction.deferUpdate();
-    }
+		await interaction.deferUpdate();
+	}
 }
 
 export const modal = new ReplyAsBotModal('');

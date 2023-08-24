@@ -4,21 +4,21 @@ import { AttachmentBuilder } from 'discord.js';
 import StaticMaps from 'staticmaps';
 import { CACHE_REPO } from '../constants';
 
-const staticMaps = new StaticMaps({
-    width: 400,
-    height: 400,
-});
-
-const ZOOM = 17;
-
 export class StaticMapsService {
 
-    static async getAttchmentMap(coords: number[], index: number = 0) {
-        if (!fs.existsSync(CACHE_REPO)) fs.mkdirSync(CACHE_REPO);
+	private static readonly staticMaps = new StaticMaps({
+		width: 400,
+		height: 400,
+	});
 
-        await staticMaps.render(coords, ZOOM);
-        await staticMaps.image.save(`.cache/fuel-${index}.webp`);
+	private static readonly ZOOM = 17;
 
-        return new AttachmentBuilder(`.cache/fuel-${index}.webp`);
-    }
+	static async getAttchmentMap(coords: number[], index: number = 0): Promise<AttachmentBuilder> {
+		if (!fs.existsSync(CACHE_REPO)) fs.mkdirSync(CACHE_REPO);
+
+		await StaticMapsService.staticMaps.render(coords, StaticMapsService.ZOOM);
+		await StaticMapsService.staticMaps.image.save(`.cache/fuel-${index}.webp`);
+
+		return new AttachmentBuilder(`.cache/fuel-${index}.webp`);
+	}
 }

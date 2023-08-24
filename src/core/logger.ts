@@ -2,7 +2,7 @@ import { cyan, green, lightGreen, lightMagenta, lightYellow, magenta, red, yello
 import json from '../../package.json';
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import { ChatInputCommandInteraction, ButtonInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, UserContextMenuCommandInteraction, StringSelectMenuInteraction } from 'discord.js';
+import { type ChatInputCommandInteraction, type ButtonInteraction, type MessageContextMenuCommandInteraction, type ModalSubmitInteraction, type UserContextMenuCommandInteraction, type StringSelectMenuInteraction } from 'discord.js';
 
 const LOG_DIR = './logs';
 const DATE_NOW = Date.now();
@@ -13,14 +13,14 @@ const DEST = `${LOG_DIR}/info${INIT_DATE + INIT_TIME}.log`;
 const SONIC_BOOM_CONFIG = { dest: DEST, append: false, sync: false, mkdir: true };
 
 const streams: any[] = [
-	// { stream: pino.destination(SONIC_BOOM_CONFIG) },
+	{ stream: pino.destination(SONIC_BOOM_CONFIG) },
 	{
 		stream: pretty({
 			colorize: true,
 			sync: true,
 		}),
 	},
-	// { level: 'error', stream: pino.destination(SONIC_BOOM_CONFIG) },
+	{ level: 'error', stream: pino.destination(SONIC_BOOM_CONFIG) },
 ];
 
 const log = pino(
@@ -36,7 +36,7 @@ const log = pino(
 			},
 		},
 	},
-	pino.multistream(streams)
+	pino.multistream(streams),
 );
 
 const logger = {
@@ -75,8 +75,8 @@ const logger = {
 					'| |  | | __/ __| | | | |/ / | | / __| \'_ \\| |\n' +
 					'| |__| | |_\\__ \\ |_| |   <| |_| \\__ \\ | | | |\n' +
 					'\\_____/\\___|___/\\__,_|_|\\_\\\\__,_|___/_| |_|_|\n' +
-					`${red('v' + json.version)}\n`
-			)
+					`${red('v' + json.version)}\n`,
+			),
 		);
 	},
 
@@ -100,8 +100,8 @@ const logger = {
 	botFinishDeployCommand(cmdSize: number, ctxSize: number) {
 		log.info(
 			green(
-				`Successfully reloaded application ${cmdSize} global (/) commands & ${ctxSize} contexts !`
-			)
+				`Successfully reloaded application ${cmdSize} global (/) commands & ${ctxSize} contexts !`,
+			),
 		);
 	},
 
@@ -116,7 +116,7 @@ const logger = {
 	 * Make a log when Bot commands reset finished
 	 */
 	botFinishResetCommand() {
-		log.info(green(`Successfully reset all (/) commands !`));
+		log.info(green('Successfully reset all (/) commands !'));
 	},
 
 	/**
@@ -132,8 +132,8 @@ const logger = {
 	botFinishGuildDeployCommand(guildId: string, cmdSize: number, ctxSize: number) {
 		log.info(
 			green(
-				`Successfully reloaded guild "${guildId}" application ${cmdSize} global (/) commands & ${ctxSize} contexts !`
-			)
+				`Successfully reloaded guild "${guildId}" application ${cmdSize} global (/) commands & ${ctxSize} contexts !`,
+			),
 		);
 	},
 
@@ -152,7 +152,7 @@ const logger = {
 	},
 
 	botConnectedDB() {
-		log.info(green('Connect to Database !'))
+		log.info(green('Connect to Database !'));
 	},
 
 	chatCommand(interaction: ChatInputCommandInteraction) {
@@ -160,7 +160,8 @@ const logger = {
 		try {
 			const subcommand = interaction.options.getSubcommand();
 			logger.info(`${prefix} ${subcommand}`);
-		} catch (error) {
+		}
+		catch (error) {
 			logger.info(prefix);
 		}
 	},
@@ -179,7 +180,7 @@ const logger = {
 
 	select(interaction: StringSelectMenuInteraction) {
 		logger.info(`[Select] ${interaction.user.username} : ${interaction.customId}`);
-	}
-}
+	},
+};
 
 export default logger;
