@@ -3,7 +3,7 @@ import { type UtsukushiBotClient } from '../bot/client';
 import logger from '../core/logger';
 import { AudioFilters, type GuildQueue, Player, type SearchResult, type Track } from 'discord-player';
 import { TrackReply } from '../bot/builders/replies/track';
-import { Sort } from '../core/utils/sort';
+import { SortUtils } from '../core/utils/sort';
 import { REGEX_LINK } from '../constants';
 
 const SOURCES = ['auto', 'youtube', 'spotify', 'soundcloud'];
@@ -257,7 +257,7 @@ export class PlayerService {
 				value: filter,
 			};
 		})
-			.sort((a, b) => Sort.byStartsWith(a.name, b.name, '🟩'));
+			.sort((a, b) => SortUtils.byStartsWith(a.name, b.name, '🟩'));
 		_filters.unshift({
 			name: '⚪ | none',
 			value: 'none',

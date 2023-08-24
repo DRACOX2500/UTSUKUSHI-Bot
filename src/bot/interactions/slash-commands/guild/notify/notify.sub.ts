@@ -1,7 +1,7 @@
 import { type SlashCommandSubcommandBuilder, type ChatInputCommandInteraction, type CacheType, type AutocompleteInteraction, ChannelType } from 'discord.js';
 import { BotSubSlashCommand } from '../../../../../core/bot-command';
 import { ERROR_CMD_GUILD, ERROR_COMMAND } from '../../../../../core/constants';
-import { Sort } from '../../../../../core/utils/sort';
+import { SortUtils } from '../../../../../core/utils/sort';
 import { DiscordService } from '../../../../../services/discord-service';
 import { type UtsukushiBotClient } from '../../../../client';
 
@@ -54,7 +54,7 @@ export class NotifySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 					name: choice.name,
 					value: choice.id,
 				}))
-				.sort((a, b) => Sort.byName(a.name, b.name));
+				.sort((a, b) => SortUtils.byName(a.name, b.name));
 			completions.unshift({ name: '---', value: '-1' });
 
 			await interaction.respond(DiscordService.limitAutoCompletion(completions));

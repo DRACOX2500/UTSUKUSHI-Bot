@@ -9,7 +9,7 @@ import { type CacheType, type Interaction, REST, Routes } from 'discord.js';
 import { type BotButton, type BotTrigger, type CommandManagerConfig } from './types/bot-interaction';
 import { type ConfigJson, type PrivateiInteraction } from '../types/business';
 import CONFIG_JSON from '../../config.json';
-import { Array } from './utils/array';
+import { ArrayUtils } from './utils/array';
 import { type BotModal, type BotSelect } from './bot-command';
 
 const CONFIG: ConfigJson = CONFIG_JSON;
@@ -287,8 +287,8 @@ export class InteractionsManager {
 
 	async deployAll(): Promise<number> {
 		const rest = new REST({ version: '10' }).setToken(environment.DISCORD_TOKEN);
-		const privateCmdNames = Array.removeDuplicate(CONFIG.private.map((_private) => _private.commands).flat());
-		const privateCtxNames = Array.removeDuplicate(CONFIG.private.map((_private) => _private.contexts).flat());
+		const privateCmdNames = ArrayUtils.removeDuplicate(CONFIG.private.map((_private) => _private.commands).flat());
+		const privateCtxNames = ArrayUtils.removeDuplicate(CONFIG.private.map((_private) => _private.contexts).flat());
 		const cmds = this.commandsList
 			.filter(_cmd => !privateCmdNames.includes(_cmd.command.name));
 		const ctxs = this.contextsList

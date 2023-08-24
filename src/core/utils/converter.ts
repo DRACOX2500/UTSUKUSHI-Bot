@@ -1,4 +1,11 @@
-export namespace Converter {
+function padTo2Digits(num: number): string {
+	return num.toString().padStart(2, '0');
+}
+
+const REGEX_DATE = /^\d{1,2}$|^(\d{1,2}:){1,2}\d{1,2}$/;
+
+export namespace ConverterUtils {
+
 	/**
 	 * @param durationString string
 	 * @return `number | null` milliseconds number or null
@@ -12,7 +19,7 @@ export namespace Converter {
 	export function durationStringToNumber(
 		durationString: string,
 	): number | null {
-		if (!durationString.match(/^\d{1,2}$|^(\d{1,2}:){1,2}\d{1,2}$/))
+		if (!REGEX_DATE.exec(durationString))
 			return null;
 
 		const time = durationString;
@@ -33,9 +40,14 @@ export namespace Converter {
 		const min = Math.floor(seconds / 60);
 		const sec = seconds % 60;
 
-		function padTo2Digits(num: number): string {
-			return num.toString().padStart(2, '0');
-		}
 		return `${padTo2Digits(min)}:${padTo2Digits(sec)}`;
+	}
+
+	/**
+	 * Return date into the following format:
+	 * - `dd/mm/yyyy HH:MM`
+	 */
+	export function dateToFormat(date: Date): string {
+		return `${padTo2Digits(date.getDate())}/${padTo2Digits(date.getMonth())}/${date.getFullYear()} ${padTo2Digits(date.getHours())}:${padTo2Digits(date.getMinutes())}`;
 	}
 }

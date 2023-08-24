@@ -4,7 +4,7 @@ import { ERROR_CMD_GUILD, ERROR_COMMAND } from '../../../../../core/constants';
 import { PlayerService } from '../../../../../services/player-service';
 import { type UtsukushiBotClient } from '../../../../client';
 import { DiscordService } from '../../../../../services/discord-service';
-import { Sort } from '../../../../../core/utils/sort';
+import { SortUtils } from '../../../../../core/utils/sort';
 
 /**
  * @SlashCommand `filter`
@@ -48,7 +48,7 @@ export class FilterSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 			.filter(
 				(_filter) => _filter.toLowerCase().includes(focusedOption.value.toLowerCase()),
 			)
-			.sort((a, b) => Sort.byName(a, b));
+			.sort((a, b) => SortUtils.byName(a, b));
 
 		const completions = PlayerService.autocompletionsFilters(guild, filters);
 

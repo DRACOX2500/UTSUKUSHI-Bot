@@ -5,8 +5,8 @@ import { PlayerService } from '../../../../../services/player-service';
 import { type ChatInputCommandInteraction, type CacheType, type AutocompleteInteraction, type SlashCommandSubcommandBuilder } from 'discord.js';
 import { TrackAddedEmbed } from '../../../../builders/embeds/track-added';
 import { SongService } from '../../../../../services/database/song-service';
-import { Date } from '../../../../../core/utils/date';
-import { Sort } from '../../../../../core/utils/sort';
+import { SortUtils } from '../../../../../core/utils/sort';
+import { ConverterUtils } from '../../../../../core/utils/converter';
 
 /**
  * @SlashCommand `play-historic`
@@ -69,10 +69,10 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
 			.filter(
 				(t) => focusedOption.value.length === 0 || t.item.title?.toLowerCase().includes(focusedOption.value.toLowerCase()),
 			)
-			.sort((a, b) => Sort.byDate(a.date, b.date))
+			.sort((a, b) => SortUtils.byDate(a.date, b.date))
 			.slice(0, 25)
 			.map((t) => ({
-				name: `${Date.toText(t.date)} | ${t.item.title ?? ''}`,
+				name: `${ConverterUtils.dateToFormat(t.date)} | ${t.item.title ?? ''}`,
 				value: t.item.url,
 			}));
 		interaction.respond(choices);

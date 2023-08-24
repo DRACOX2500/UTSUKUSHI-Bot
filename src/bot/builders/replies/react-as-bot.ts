@@ -1,9 +1,8 @@
 import { type WebhookMessageEditOptions, type TextBasedChannel, type Message, messageLink, bold, ActionRowBuilder, type SelectMenuBuilder, type ButtonBuilder } from 'discord.js';
-import { Sort } from '../../../core/utils/sort';
+import { SortUtils } from '../../../core/utils/sort';
 import { NextButton } from '../buttons/next';
 import { PreviousButton } from '../buttons/previous';
 import { ReactAsBotSelect } from '../selects/react-as-bot';
-import { Array } from '../../../core/utils/array';
 import { type Emoji } from '../../../types/business';
 
 
@@ -17,8 +16,8 @@ export class ReactAsBotReply implements WebhookMessageEditOptions {
 		emojisList: Emoji[],
 		start: number = 0,
 	) {
-		emojisList.sort((a, b) => Sort.byName(a.name, b.name));
-		const emojis = Array.limit(emojisList, 25, start);
+		emojisList.sort((a, b) => SortUtils.byName(a.name, b.name));
+		const emojis = emojisList.slice(start, 25);
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [_start, end] = this.getSelectorLimit(start, emojis.length);

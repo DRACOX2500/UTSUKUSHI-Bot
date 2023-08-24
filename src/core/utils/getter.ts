@@ -1,4 +1,4 @@
-export namespace Getter {
+export namespace GetterUtils {
 	/**
 	 * Get Random Number between 0 and max (default: 1)
 	 */

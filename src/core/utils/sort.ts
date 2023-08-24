@@ -1,4 +1,4 @@
-export namespace Sort {
+export namespace SortUtils {
 	export function byName(a: string, b: string): number {
 		const nameA = a.toUpperCase();
 		const nameB = b.toUpperCase();

@@ -1,11 +1,10 @@
 import { REGEX_LINK } from '../constants';
-import { Array } from '../core/utils/array';
 import { type Emoji } from '../types/business';
 import { Locale, type GuildEmoji } from 'discord.js';
 
 export class DiscordService {
 	static limitAutoCompletion(list: any[]): any[] {
-		return Array.limit(list, 25);
+		return list.slice(0, 25);
 	}
 
 	static limitText(text: string, limit: number = 1999): string {

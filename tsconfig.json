@@ -25,7 +25,8 @@
         "resolveJsonModule": true,
         "noEmit": false,
         "importHelpers": false,
-        "allowJs": false
+        "allowJs": false,
+        "skipLibCheck": true
     },
     "watchOptions": {
         "watchFile": "useFsEvents",
@@ -34,6 +35,6 @@
         "synchronousWatchDirectory": true,
         "excludeDirectories": ["**/node_modules", "**/dist"],
     },
-    "include": ["index.ts", "src/**/*.ts", "test/**/*.ts"],
+    "include": ["index.ts", "src/**/*.ts", "test/**/*.ts", "jest.config.js"],
     "exclude": ["node_modules", "dist"]
 }

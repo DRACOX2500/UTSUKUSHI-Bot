@@ -1,7 +1,7 @@
 import { EmbedBuilder, type Message, type ChatInputCommandInteraction } from 'discord.js';
 import { PONG_SMASH_CHANCE, PONG_COLOR } from '../../../constants';
 import { type BotClient } from '../../../core/bot-client';
-import { Getter } from '../../../core/utils/getter';
+import { GetterUtils } from '../../../core/utils/getter';
 
 
 export class PongEmbedBuilder extends EmbedBuilder {
@@ -39,7 +39,7 @@ export class PongEmbedBuilder extends EmbedBuilder {
 	}
 
 	private get title(): string {
-		if (Getter.randomNumber(PONG_SMASH_CHANCE) === 1)
+		if (GetterUtils.randomNumber(PONG_SMASH_CHANCE) === 1)
 			return '🏓🔥 ***SMAAAAAAAAAAAAAAAAASH !!!!!***';
 		else return '🏓 ***Pong !***';
 	}
