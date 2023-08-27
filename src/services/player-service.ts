@@ -25,7 +25,7 @@ export class PlayerService {
 			ytdlOptions: {
 				filter: 'audioonly',
 				quality: 'highestaudio',
-				highWaterMark: 1 << 25,
+				highWaterMark: 1 << 30,
 				requestOptions: {
 					headers: {
 						cookie: process.env.YOUTUBE_COOKIE ?? '',
@@ -76,11 +76,11 @@ export class PlayerService {
 			this.disconnect(queue);
 		});
 		player.events.on('error', (queue, error) => {
-			logger.error(`General player error event: ${error.message}`);
+			logger.error(`General player error event: ${error.message}`, error);
 			this.disconnect(queue);
 		});
 		player.events.on('playerError', (queue, error) => {
-			logger.error(`Player error event: ${error.message}`);
+			logger.error(`Player error event: ${error.message}`, error);
 			this.disconnect(queue);
 		});
 	}
