@@ -56,8 +56,9 @@ export class UserStore extends AbstractRecordDocStore<User> {
 	}
 
 	async updateHistoric(user: UserDJS, historic: boolean): Promise<void> {
+		const doc = await this.getOrAddItemByUser(user);
 		await this.update(
-			user.id,
+			doc.id,
 			{
 				'songs.enabled': historic,
 			},
