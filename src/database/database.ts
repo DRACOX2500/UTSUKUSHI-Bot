@@ -4,9 +4,9 @@ import logger from '../core/logger';
 import { environment } from '../environment';
 import mongoose from 'mongoose';
 
-export function connectMongoDB(client: UtsukushiBotClient): void {
+export async function connectMongoDB(client: UtsukushiBotClient): Promise<void> {
 	mongoose.set('strictQuery', true);
-	mongoose.connect(environment.DB_URL)
+	await mongoose.connect(environment.DB_URL)
 		.then(() => {
 			logger.botConnectedDB();
 			client.emit(BOT_EVENTS.DATABASE_CONNECTED);

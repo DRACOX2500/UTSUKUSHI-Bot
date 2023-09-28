@@ -20,7 +20,7 @@ const REQUIREMENT = [
 export class UtsukushiBotClient extends BotClient
 	implements OnAfterReady, OnAfterDatabaseReady, OnAfterUtsukushiReady, OnAfterStoreInit {
 
-	readonly store!: UtsukushiStore;
+	private _store!: UtsukushiStore;
 	protected readonly starter: Starter;
 
 	constructor(config?: Partial<UtsukushiBotConfig>) {
@@ -39,16 +39,24 @@ export class UtsukushiBotClient extends BotClient
 		this.on(BOT_EVENTS.READY, this.onAfterUtsukushiReady);
 		this.on(BOT_EVENTS.STORE_INIT, this.onAfterStoreInit);
 
-		if (!config?.ignoreDB) connectMongoDB(this);
+		this.init(config);
+	}
+
+	async init(config?: Partial<UtsukushiBotConfig>): Promise<void> {
+		if (!config?.ignoreDB) await connectMongoDB(this);
 		if (!config?.ignoreStore) {
-			this.store = new UtsukushiStore();
-			this.store.initialize(this);
+			this._store = new UtsukushiStore();
+			this._store.initialize(this);
 		}
 		this.emit(BOT_EVENTS.READY);
 	}
 
+	get store(): UtsukushiStore {
+		return this._store;
+	}
+
 	setBotStatusData(): void {
-		const syst = this.store.system;
+		const syst = this._store.system;
 		super.setActivity(syst.activity);
 		super.setStatus(syst.status);
 	}

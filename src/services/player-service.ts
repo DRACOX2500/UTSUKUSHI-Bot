@@ -22,16 +22,16 @@ export class PlayerService {
 
 	static async init(client: UtsukushiBotClient): Promise<void> {
 		const player = new Player(client, {
-			// ytdlOptions: {
-			// 	filter: 'audioonly',
-			// 	quality: 'highestaudio',
-			// 	highWaterMark: 1 << 30,
-			// 	requestOptions: {
-			// 		headers: {
-			// 			cookie: process.env.YOUTUBE_COOKIE ?? '',
-			// 		},
-			// 	},
-			// },
+			ytdlOptions: {
+				filter: 'audioonly',
+				quality: 'highestaudio',
+				highWaterMark: 1 << 30,
+				requestOptions: {
+					headers: {
+						cookie: process.env.YOUTUBE_COOKIE ?? '',
+					},
+				},
+			},
 		});
 
 		PlayerService._player = player;

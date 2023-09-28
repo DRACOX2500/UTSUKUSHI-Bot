@@ -17,7 +17,7 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
 	override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
 		subcommand
 			.setName('play-historic')
-			.setDescription('Play Music in historic 🎵!')
+			.setDescription('Play Music in historic 🎵! (🧪 experimental)')
 			.addStringOption(option =>
 				option
 					.setName('song')
