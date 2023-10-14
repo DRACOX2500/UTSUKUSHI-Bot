@@ -12,7 +12,7 @@ export class NotifyEmbed extends EmbedBuilder {
 		this
 			.setColor(0xf9ff00)
 			.setAuthor({
-				name: user.username,
+				name: `${user.globalName} (${user.username})`,
 				iconURL: avatarURL,
 			})
 			.setDescription(

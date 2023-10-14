@@ -324,12 +324,12 @@ export class InteractionsManager {
 		client: BotClient,
 	): Promise<void> {
 		if (interaction.isAutocomplete()) {
-			this._commands[interaction.commandName].autocomplete(interaction, client);
+			this._commands[interaction.commandName]?.autocomplete(interaction, client);
 		}
 		else if (interaction.isModalSubmit()) {
 			try {
 				logger.modal(interaction);
-				await this._modals[interaction.customId].result(interaction, client);
+				await this._modals[interaction.customId]?.result(interaction, client);
 			}
 			catch (error) {
 				logger.error(`Modal ${interaction.customId} : Command Error`, error);
@@ -338,7 +338,7 @@ export class InteractionsManager {
 		else if (interaction.isStringSelectMenu()) {
 			try {
 				logger.select(interaction);
-				await this._selects[interaction.customId].result(interaction, client);
+				await this._selects[interaction.customId]?.result(interaction, client);
 			}
 			catch (error) {
 				logger.error(`Select ${interaction.customId} : Command Error`, error);
@@ -354,7 +354,7 @@ export class InteractionsManager {
 		if (interaction.isChatInputCommand()) {
 			try {
 				logger.chatCommand(interaction);
-				await this._commands[interaction.commandName].result(interaction, client);
+				await this._commands[interaction.commandName]?.result(interaction, client);
 			}
 			catch (error) {
 				logger.error(`Command ${interaction.commandName} : Command Error`, error);
@@ -363,7 +363,7 @@ export class InteractionsManager {
 		else if (interaction.isButton()) {
 			try {
 				logger.button(interaction);
-				await this._buttons[interaction.customId].result(interaction, client);
+				await this._buttons[interaction.customId]?.result(interaction, client);
 			}
 			catch (error) {
 				logger.error(`Button ${interaction.customId} : Command Error`, error);
@@ -372,7 +372,7 @@ export class InteractionsManager {
 		else if (interaction.isContextMenuCommand()) {
 			try {
 				logger.context(interaction);
-				await this._contexts[interaction.commandName].result(interaction, client);
+				await this._contexts[interaction.commandName]?.result(interaction, client);
 			}
 			catch (error) {
 				logger.error(`Context ${interaction.commandName} : Command Error`, error);
