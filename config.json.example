@@ -1,11 +1,9 @@
 {
-    "private": {
-        "slashCommands": [
-            {
-                "guild": "",
-                "commands": ["bot-admin"],
-                "context": []
-            }
-        ]
-    }
+    "private": [
+        {
+            "guild": "",
+            "commands": ["bot-admin"],
+            "contexts": []
+        }
+    ]
 }
