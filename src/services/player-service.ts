@@ -1,7 +1,19 @@
-import { type Guild, type GuildMember, type Interaction, type Message, type TextBasedChannel } from 'discord.js';
+import {
+	type Guild,
+	type GuildMember,
+	type Interaction,
+	type Message,
+	type TextBasedChannel,
+} from 'discord.js';
 import { type UtsukushiBotClient } from '../bot/client';
 import logger from '../core/logger';
-import { AudioFilters, type GuildQueue, Player, type SearchResult, type Track } from 'discord-player';
+import {
+	AudioFilters,
+	type GuildQueue,
+	Player,
+	type SearchResult,
+	type Track,
+} from 'discord-player';
 import { TrackReply } from '../bot/builders/replies/track';
 import { SortUtils } from '../core/utils/sort';
 import { REGEX_LINK } from '../constants';
@@ -44,7 +56,9 @@ export class PlayerService {
 		}
 
 		player.events.on('playerStart', async (queue, track) => {
-			logger.info(`Started playing **${track.title}** [${queue.metadata.type}]!`);
+			logger.info(
+				`Started playing **${track.title}** [${queue.metadata.type}]!`,
+			);
 			if (queue.metadata.type === 'sound-effect') return;
 
 			const channel: TextBasedChannel = queue.metadata.channel;
@@ -112,14 +126,23 @@ export class PlayerService {
 		return list;
 	}
 
-	static async search(interaction: Interaction, query: string, source: string = 'auto'): Promise<SearchResult> {
+	static async search(
+		interaction: Interaction,
+		query: string,
+		source: string = 'auto',
+	): Promise<SearchResult> {
 		return await PlayerService._player.search(query, {
 			requestedBy: interaction.user,
 			searchEngine: `${source}Search` as any,
 		});
 	}
 
-	static async play(interaction: Interaction, query: string | SearchResult, source: string = 'auto', type: string = 'song'): Promise<{ track: Track }> {
+	static async play(
+		interaction: Interaction,
+		query: string | SearchResult,
+		source: string = 'auto',
+		type: string = 'song',
+	): Promise<{ track: Track }> {
 		const channel = (interaction.member as GuildMember).voice.channel;
 		if (!channel) throw new Error('Voice channel not found');
 		return await PlayerService._player.play(channel, query, {
@@ -143,15 +166,27 @@ export class PlayerService {
 		});
 	}
 
-	static async playSoundEffect(interaction: Interaction, query: string | SearchResult): Promise<{ track: Track }> {
+	static async playSoundEffect(
+		interaction: Interaction,
+		query: string | SearchResult,
+	): Promise<{ track: Track }> {
 		const channel = (interaction.member as GuildMember).voice.channel;
 		if (!channel) throw new Error('Voice channel not found');
-		if (this.isPlaying(interaction.guild?.id)) throw new Error('Player is currently used');
-		return await PlayerService.play(interaction, query, 'youtube', 'sound-effect');
+		if (this.isPlaying(interaction.guild?.id))
+			throw new Error('Player is currently used');
+		return await PlayerService.play(
+			interaction,
+			query,
+			'youtube',
+			'sound-effect',
+		);
 	}
 
-	static async searchAndPlay(interaction: Interaction, query: string, source: string = 'auto'): Promise<{ track: Track }> {
-		console.log(`query : (${query.length}) "${query}"`);
+	static async searchAndPlay(
+		interaction: Interaction,
+		query: string,
+		source: string = 'auto',
+	): Promise<{ track: Track }> {
 		let _query: any = query;
 		if (!REGEX_LINK.exec(query)) {
 			_query = await PlayerService.search(interaction, _query, source);
@@ -242,22 +277,29 @@ export class PlayerService {
 
 		if (queue && isValid) {
 			queue.filters.ffmpeg.setFilters([filter as any]);
-			await queue?.channel?.send(`🔊 Filter **${filter}** enabled`);
+			await queue?.channel?.send({
+				content: `🔊 Filter **${filter}** enabled`,
+				flags: [4096],
+			});
 		}
 		else if (queue && filter === 'none') {
 			queue.filters.ffmpeg.setFilters([]);
-			await queue?.channel?.send('🔊 Filter disabled');
+			await queue?.channel?.send({
+				content: '🔊 Filter disabled',
+				flags: [4096],
+			});
 		}
 	}
 
 	static autocompletionsFilters(guild: Guild, filters: string[]): any[] {
-		const _filters = filters.map((filter) => {
-			const isEnabled = PlayerService.isEnabledFilter(guild, filter);
-			return {
-				name: `${isEnabled ? '🟢' : '🔴'} | ${filter}`,
-				value: filter,
-			};
-		})
+		const _filters = filters
+			.map((filter) => {
+				const isEnabled = PlayerService.isEnabledFilter(guild, filter);
+				return {
+					name: `${isEnabled ? '🟢' : '🔴'} | ${filter}`,
+					value: filter,
+				};
+			})
 			.sort((a, b) => SortUtils.byStartsWith(a.name, b.name, '🟩'));
 		_filters.unshift({
 			name: '⚪ | none',

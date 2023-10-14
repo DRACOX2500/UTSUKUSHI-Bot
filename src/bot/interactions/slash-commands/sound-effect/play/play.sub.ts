@@ -34,8 +34,8 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 		const se = await client.store.guilds.getSoundEffect(query);
 		if (se) {
 			try {
-				const { track } = await PlayerService.playSoundEffect(interaction, se.url);
-				await interaction.editReply(`Now playing ${bold(track.title)}`);
+				await PlayerService.playSoundEffect(interaction, se.url);
+				await interaction.editReply(`Now playing ${bold(se.name)}`);
 			}
 			catch (error: any) {
 				if (error.message === ERROR_PLAYER_USED) interaction.followUp('Do `/music stop` before using sound effects');

@@ -6,9 +6,9 @@ import { RemoveSubCommand } from './remove/remove.sub';
 
 /**
  * @SlashCommand `sound-effect`
- * 	- `sound-effect` : ... !
+ * 	- `sound-effect` : play, add or remove sound-effects !
  */
-class GuildCacheCommand extends BotSlashCommand<UtsukushiBotClient> {
+class SoundEffectCommand extends BotSlashCommand<UtsukushiBotClient> {
 
 	constructor() {
 		super({
@@ -24,4 +24,4 @@ class GuildCacheCommand extends BotSlashCommand<UtsukushiBotClient> {
 	}
 }
 
-export const command = new GuildCacheCommand();
+export const command = new SoundEffectCommand();
