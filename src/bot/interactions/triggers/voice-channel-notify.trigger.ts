@@ -22,7 +22,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 				// }
 			}
 			else if (oldState.channelId === null) {
-				// if (newState.member?.user.bot) return;
+				if (newState.member?.user.bot) return;
 				// 'a user joined!'
 
 				await VoiceChannelService.conversationStarted(oldState, newState);
