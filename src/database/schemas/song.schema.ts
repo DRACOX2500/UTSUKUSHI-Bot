@@ -9,6 +9,7 @@ const songSchema = new Schema<Song>({
 		unique: true,
 	},
 	title: String,
+	source: String,
 });
 
 export const SongModel = model<Song>(SCHEMAS.SONG, songSchema);

@@ -5,6 +5,7 @@ import { PlayerService } from '../../../../../services/player-service';
 import { type ChatInputCommandInteraction, type CacheType, type AutocompleteInteraction, type SlashCommandSubcommandBuilder } from 'discord.js';
 import { TrackAddedEmbed } from '../../../../builders/embeds/track-added';
 import { SongService } from '../../../../../services/database/song-service';
+import { DiscordService } from '../../../../../services/discord-service';
 
 /**
  * @SlashCommand `play`
@@ -40,7 +41,7 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
 
 		let query = interaction.options.getString('song');
-		const source = interaction.options.getString('source') ?? undefined;
+		let source = interaction.options.getString('source') ?? undefined;
 
 		await interaction.deferReply();
 
@@ -48,6 +49,7 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 			const guildData = await client.store.guilds.getItem(guild.id);
 			if (guildData?.lastPlay) {
 				query = guildData.lastPlay.url;
+				source = guildData.lastPlay.source;
 			}
 			else {
 				await interaction.editReply(ERROR_CMD_SONG);
@@ -77,10 +79,11 @@ export class PlaySubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 			const results = await PlayerService.search(interaction, query, source);
 			if (results.tracks.length > 0) {
 				interaction.respond(
-					results.tracks.slice(0, 10).map((t) => ({
-						name: `${t.title} - ${t.author}`,
-						value: t.url,
-					})),
+					DiscordService.limitAutoCompletion(results.tracks, 10)
+						.map((t) => ({
+							name: DiscordService.limitText3Points(`${t.title} - ${t.author}`, 100),
+							value: t.url,
+						})),
 				);
 			}
 		}

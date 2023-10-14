@@ -3,12 +3,17 @@ import { type Emoji } from '../types/business';
 import { Locale, type GuildEmoji } from 'discord.js';
 
 export class DiscordService {
-	static limitAutoCompletion(list: any[]): any[] {
-		return list.slice(0, 25);
+	static limitAutoCompletion<T = any>(list: T[], limit: number = 25): T[] {
+		return list.slice(0, limit);
 	}
 
 	static limitText(text: string, limit: number = 1999): string {
 		if (text.length > limit) return text.slice(0, limit);
+		return text;
+	}
+
+	static limitText3Points(text: string, limit: number = 1999): string {
+		if (text.length > limit) return text.slice(0, limit - 3) + '...';
 		return text;
 	}
 

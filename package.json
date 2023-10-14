@@ -7,6 +7,10 @@
 	"repository": {
 		"url": "https://github.com/DRACOX2500/UTSUKUSHI-Bot"
 	},
+	"engines": {
+		"node": ">=16",
+		"npm": ">=9"
+	},
 	"main": "index.ts",
 	"scripts": {
 		"build": "tsc --project tsconfig.json",
@@ -23,7 +27,8 @@
 		"nodemon": "nodemon",
 		"lint": "eslint .",
 		"lint-fix": "eslint --fix .",
-		"test": "jest"
+		"test": "jest",
+		"opus-fix": "yarn add @discordjs/opus"
 	},
 	"keywords": [
 		"bot",

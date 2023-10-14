@@ -151,6 +151,7 @@ export class PlayerService {
 	}
 
 	static async searchAndPlay(interaction: Interaction, query: string, source: string = 'auto'): Promise<{ track: Track }> {
+		console.log(`query : (${query.length}) "${query}"`);
 		let _query: any = query;
 		if (!REGEX_LINK.exec(query)) {
 			_query = await PlayerService.search(interaction, _query, source);

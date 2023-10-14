@@ -14,6 +14,16 @@ import { ConverterUtils } from '../../../../../core/utils/converter';
  */
 export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClient> {
 
+	private readonly SEPARATOR = '||';
+
+	private getSongQuery(value: string): string {
+		return value.split(this.SEPARATOR)[0];
+	}
+
+	private getSongSource(value: string): string {
+		return value.split(this.SEPARATOR)[1];
+	}
+
 	override set(subcommand: SlashCommandSubcommandBuilder): SlashCommandSubcommandBuilder {
 		subcommand
 			.setName('play-historic')
@@ -31,21 +41,23 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
 	override async result(interaction: ChatInputCommandInteraction<CacheType>, client: UtsukushiBotClient, options?: any): Promise<any> {
 		const user = interaction.user;
 
-		const query = interaction.options.getString('song', true);
+		const value = interaction.options.getString('song', true);
 
 		await interaction.deferReply();
 
-		if (!query) {
+		if (!value) {
 			const userData = await client.store.users.getOrAddItemByUser(user);
 			const songsUrls = userData.songs.list.map(song => song.item.url);
-			if (!songsUrls.includes(query)) {
+			if (!songsUrls.includes(value)) {
 				await interaction.editReply(ERROR_CMD_SONG);
 				throw new Error(ERROR_QUERY);
 			}
 		}
 
 		try {
-			const { track } = await PlayerService.play(interaction, query);
+			const query = this.getSongQuery(value);
+			const source = this.getSongSource(value);
+			const { track } = await PlayerService.searchAndPlay(interaction, query, source);
 
 			const embed = new TrackAddedEmbed(track);
 			await interaction.followUp({ embeds: [embed] });
@@ -73,7 +85,7 @@ export class PlayHistoricSubCommand extends BotSubSlashCommand<UtsukushiBotClien
 			.slice(0, 25)
 			.map((t) => ({
 				name: `${ConverterUtils.dateToFormat(t.date)} | ${t.item.title ?? ''}`,
-				value: t.item.url,
+				value: t.item.url + this.SEPARATOR + (t.item.source ?? 'auto'),
 			}));
 		interaction.respond(choices);
 	}

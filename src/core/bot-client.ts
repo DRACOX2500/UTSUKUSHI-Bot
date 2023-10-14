@@ -43,7 +43,6 @@ export class BotClient extends Client implements BotClientEvents {
 		process.on('unhandledRejection', (error: any) => {
 			logger.error(
 				'Unhandled promise rejection : ' + error?.message,
-				error,
 			);
 		});
 	}

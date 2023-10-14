@@ -32,6 +32,7 @@ export interface SoundEffect {
 export interface Song {
     title?: string;
     url: string;
+    source?: string;
 }
 
 export interface HistoryItem<T> {

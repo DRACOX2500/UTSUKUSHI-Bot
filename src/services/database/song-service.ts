@@ -22,6 +22,7 @@ export class SongService {
 		const song = {
 			title: track.title,
 			url: track.url,
+			source: interaction.options.getString('source') ?? undefined,
 		};
 		await client.store.users.addSong(interaction.user, song);
 		await client.store.guilds.updateLastTrack(interaction.guild as any, song);
