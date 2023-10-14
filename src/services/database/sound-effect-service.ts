@@ -19,6 +19,12 @@ export class SoundEffectService {
 		};
 	}
 
+	async getDoc(url: string, guild?: HydratedDocument<Guild>): Promise<HydratedDocument<SoundEffect> | null> {
+		let search: any = { url };
+		if (guild) search = { url, guild: guild._id };
+		return await SoundEffectModel.findOne(search).exec();
+	}
+
 	async get(url: string, guild?: HydratedDocument<Guild>): Promise<SoundEffect | null> {
 		let search: any = { url };
 		if (guild) search = { url, guild: guild._id };

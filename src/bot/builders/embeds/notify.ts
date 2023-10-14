@@ -1,4 +1,4 @@
-import { bold, EmbedBuilder, type User, userMention, type VoiceChannel } from 'discord.js';
+import { bold, EmbedBuilder, type User, type VoiceChannel } from 'discord.js';
 
 export class NotifyEmbed extends EmbedBuilder {
 
@@ -16,7 +16,7 @@ export class NotifyEmbed extends EmbedBuilder {
 				iconURL: avatarURL,
 			})
 			.setDescription(
-				`🔔 ${userMention(user.id)} joined voice channel ${bold(channel.name)}`,
+				`🔔 ${user.globalName} joined voice channel ${bold(channel.name)}`,
 			)
 			.setTimestamp()
 			.setFooter({ text: channel.guild.name, iconURL: guildIconURL });

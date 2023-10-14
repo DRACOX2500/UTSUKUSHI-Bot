@@ -8,6 +8,7 @@ import { NotifyEmbed } from '../bot/builders/embeds/notify';
 import { type UtsukushiBotClient } from '../bot/client';
 import logger from '../core/logger';
 import { NotifyVCFinishEmbed } from '../bot/builders/embeds/notify-vc-finish';
+import { PlayerService } from './player-service';
 
 export class VoiceChannelService {
 	private static readonly actifChannels: Record<string, Date> = {};
@@ -75,6 +76,22 @@ export class VoiceChannelService {
 			channelNotify?.send({ embeds: [embed], flags: [ 4096 ] }).catch((err: Error) => {
 				logger.error({}, err.message);
 			});
+		}
+	}
+
+	static async playSoundEffect(
+		client: UtsukushiBotClient,
+		userId: string,
+		channelId: string,
+		guild: Guild,
+	): Promise<void> {
+		const channelNotify = await this.getNotifyChannel(client, guild);
+		if (channelNotify) {
+			const vc = (await guild.channels.fetch(channelId)) as VoiceChannel;
+			const userJoin = (await guild.members.fetch(userId)).user;
+
+			const user = await client.store.users.getItem(userJoin.id);
+			if (user?.anthem) await PlayerService.playSoundEffectVC(vc, guild, user.anthem.url);
 		}
 	}
 }

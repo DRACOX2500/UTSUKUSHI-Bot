@@ -31,6 +31,10 @@ const userSchema = new Schema<User>({
 			list: [],
 		},
 	},
+	anthem: {
+		type: Schema.Types.ObjectId,
+		ref: SCHEMAS.SOUND_EFFECT,
+	},
 });
 
 export const UserModel = model<User>(SCHEMAS.USER, userSchema);

@@ -1,4 +1,4 @@
-import { type Song, type User } from '../../types/business';
+import { type SoundEffect, type Song, type User } from '../../types/business';
 import { type User as UserDJS } from 'discord.js';
 import { UserModel } from '../../database/schemas/user.schema';
 import { SongService } from '../database/song-service';
@@ -6,10 +6,9 @@ import { AbstractRecordDocStore } from './abstract-record-doc-store';
 import { type HydratedDocument, type UpdateQuery } from 'mongoose';
 import { SoundEffectService } from '../database/sound-effect-service';
 
-const POPULATE = ['songs.list.item'];
+const POPULATE = ['songs.list.item', 'anthem'];
 
 export class UserStore extends AbstractRecordDocStore<User> {
-
 	private readonly songService: SongService;
 	private readonly soundEffectService: SoundEffectService;
 
@@ -19,7 +18,10 @@ export class UserStore extends AbstractRecordDocStore<User> {
 		this.soundEffectService = new SoundEffectService();
 	}
 
-	override async update(id: string, value: UpdateQuery<User> | Partial<User> | object): Promise<User | null> {
+	override async update(
+		id: string,
+		value: UpdateQuery<User> | Partial<User> | object,
+	): Promise<User | null> {
 		return await this.updateItem(id, value, POPULATE);
 	}
 
@@ -27,7 +29,9 @@ export class UserStore extends AbstractRecordDocStore<User> {
 		return await super.getItem(id, POPULATE);
 	}
 
-	override async removeItem(id: string): Promise<HydratedDocument<User> | null> {
+	override async removeItem(
+		id: string,
+	): Promise<HydratedDocument<User> | null> {
 		const doc = await super.removeItem(id);
 		if (doc) await this.soundEffectService.removeByUser(doc);
 		return doc;
@@ -50,19 +54,14 @@ export class UserStore extends AbstractRecordDocStore<User> {
 	}
 
 	isInSongslist(user: User, song: Song): boolean {
-		return user.songs.list
-			.map(_song => _song.item.url)
-			.includes(song.url);
+		return user.songs.list.map((_song) => _song.item.url).includes(song.url);
 	}
 
 	async updateHistoric(user: UserDJS, historic: boolean): Promise<void> {
 		const doc = await this.getOrAddItemByUser(user);
-		await this.update(
-			doc.id,
-			{
-				'songs.enabled': historic,
-			},
-		);
+		await this.update(doc.id, {
+			'songs.enabled': historic,
+		});
 	}
 
 	async addSong(user: UserDJS, song: Song): Promise<void> {
@@ -72,22 +71,45 @@ export class UserStore extends AbstractRecordDocStore<User> {
 		if (this.isInSongslist(_user, song) || !_user?.songs.enabled) return;
 
 		const _song = await this.songService.getOrCreate(song);
-		await this.update(
-			user.id,
-			{
-				$push: {
-					'songs.list': {
-						item: _song,
-						date: new Date(),
-					},
+		await this.update(user.id, {
+			$push: {
+				'songs.list': {
+					item: _song,
+					date: new Date(),
 				},
 			},
-		);
+		});
 	}
 
 	async removeSoundEffect(url: string, user?: UserDJS): Promise<void> {
 		let _user: HydratedDocument<User> | undefined;
-		if (user) _user = await this.getDocById(user.id) ?? undefined;
+		if (user) _user = (await this.getDocById(user.id)) ?? undefined;
 		await this.soundEffectService.remove(url, _user);
+	}
+
+	async getSoundEffectDoc(
+		url: string,
+	): Promise<HydratedDocument<SoundEffect> | null> {
+		return await this.soundEffectService.getDoc(url);
+	}
+
+	async updateAnthem(user: UserDJS, se?: SoundEffect): Promise<void> {
+		const doc = await this.getOrAddItemByUser(user);
+		if (!se) {
+			await this.setAnthem(doc.id);
+		}
+		else {
+			const seDoc = await this.getSoundEffectDoc(se?.url);
+			await this.setAnthem(doc.id, seDoc);
+		}
+	}
+
+	async setAnthem(
+		userId: string,
+		se: HydratedDocument<SoundEffect> | null = null,
+	): Promise<void> {
+		await this.update(userId, {
+			anthem: se?._id,
+		});
 	}
 }

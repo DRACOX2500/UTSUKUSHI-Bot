@@ -31,6 +31,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 				const channelId = newState.channelId as string;
 				const guild = newState.guild;
 				await VoiceChannelService.notifyUserJoinVocal(client, user, channelId, guild);
+				await VoiceChannelService.playSoundEffect(client, user, channelId, guild);
 			}
 			else if (newState.channelId === null) {
 				// 'a user left!'

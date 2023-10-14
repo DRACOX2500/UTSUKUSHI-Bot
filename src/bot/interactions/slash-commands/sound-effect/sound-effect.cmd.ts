@@ -3,6 +3,7 @@ import { type UtsukushiBotClient } from '../../../client';
 import { AddSubCommand } from './add/add.sub';
 import { PlaySubCommand } from './play/play.sub';
 import { RemoveSubCommand } from './remove/remove.sub';
+import { SetAnthemSubCommand } from './set-anthem/set-anthem.sub';
 
 /**
  * @SlashCommand `sound-effect`
@@ -15,6 +16,7 @@ class SoundEffectCommand extends BotSlashCommand<UtsukushiBotClient> {
 			'add': new AddSubCommand(),
 			'play': new PlaySubCommand(),
 			'remove': new RemoveSubCommand(),
+			'set-anthem': new SetAnthemSubCommand(),
 		});
 
 		this.command

@@ -1,4 +1,5 @@
 import {
+	type VoiceChannel,
 	type Guild,
 	type GuildMember,
 	type Interaction,
@@ -166,6 +167,33 @@ export class PlayerService {
 		});
 	}
 
+	static async playVC(
+		vc: VoiceChannel,
+		guild: Guild,
+		query: string | SearchResult,
+		source: string = 'auto',
+		type: string = 'song',
+	): Promise<{ track: Track }> {
+		const channel = vc;
+		if (!channel) throw new Error('Voice channel not found');
+		return await PlayerService._player.play(channel, query, {
+			searchEngine: `${source}Search` as any,
+			nodeOptions: {
+				metadata: {
+					type,
+					guildId: guild?.id,
+				},
+				selfDeaf: true,
+				leaveOnEmptyCooldown: 300000,
+				leaveOnEmpty: false,
+				leaveOnEnd: false,
+				leaveOnStop: false,
+				bufferingTimeout: 0,
+				volume: 100,
+			},
+		});
+	}
+
 	static async playSoundEffect(
 		interaction: Interaction,
 		query: string | SearchResult,
@@ -176,6 +204,24 @@ export class PlayerService {
 			throw new Error('Player is currently used');
 		return await PlayerService.play(
 			interaction,
+			query,
+			'youtube',
+			'sound-effect',
+		);
+	}
+
+	static async playSoundEffectVC(
+		vc: VoiceChannel,
+		guild: Guild,
+		query: string | SearchResult,
+	): Promise<{ track: Track }> {
+		const channel = vc;
+		if (!channel) throw new Error('Voice channel not found');
+		if (this.isPlaying(guild.id))
+			throw new Error('Player is currently used');
+		return await PlayerService.playVC(
+			vc,
+			guild,
 			query,
 			'youtube',
 			'sound-effect',

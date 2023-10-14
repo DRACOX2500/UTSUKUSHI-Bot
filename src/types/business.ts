@@ -55,6 +55,7 @@ export interface Guild {
 export interface User {
     id: string;
     songs: History<Song>;
+    anthem?: SoundEffect | null;
 }
 
 export interface UtsukushiSystem {
