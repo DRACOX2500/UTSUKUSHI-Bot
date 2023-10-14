@@ -5,7 +5,6 @@ function padTo2Digits(num: number): string {
 const REGEX_DATE = /^\d{1,2}$|^(\d{1,2}:){1,2}\d{1,2}$/;
 
 export namespace ConverterUtils {
-
 	/**
 	 * @param durationString string
 	 * @return `number | null` milliseconds number or null
@@ -19,8 +18,7 @@ export namespace ConverterUtils {
 	export function durationStringToNumber(
 		durationString: string,
 	): number | null {
-		if (!REGEX_DATE.exec(durationString))
-			return null;
+		if (!REGEX_DATE.exec(durationString)) return null;
 
 		const time = durationString;
 		const array = time.split(':');
@@ -43,11 +41,28 @@ export namespace ConverterUtils {
 		return `${padTo2Digits(min)}:${padTo2Digits(sec)}`;
 	}
 
+	export function convertMsToTime(milliseconds: number): string {
+		let seconds = Math.floor(milliseconds / 1000);
+		let minutes = Math.floor(seconds / 60);
+		const hours = Math.floor(minutes / 60);
+
+		seconds = seconds % 60;
+		minutes = minutes % 60;
+
+		return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(
+			seconds,
+		)}`;
+	}
+
 	/**
 	 * Return date into the following format:
 	 * - `dd/mm/yyyy HH:MM`
 	 */
 	export function dateToFormat(date: Date): string {
-		return `${padTo2Digits(date.getDate())}/${padTo2Digits(date.getMonth())}/${date.getFullYear()} ${padTo2Digits(date.getHours())}:${padTo2Digits(date.getMinutes())}`;
+		return `${padTo2Digits(date.getDate())}/${padTo2Digits(
+			date.getMonth(),
+		)}/${date.getFullYear()} ${padTo2Digits(date.getHours())}:${padTo2Digits(
+			date.getMinutes(),
+		)}`;
 	}
 }

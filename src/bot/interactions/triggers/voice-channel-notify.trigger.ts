@@ -1,31 +1,12 @@
-import { NotifyEmbed } from '../../../bot/builders/embeds/notify';
 import { type UtsukushiBotClient } from '../../../bot/client';
-import logger from '../../../core/logger';
 import { type BotTrigger } from '../../../core/types/bot-interaction';
-import { type Guild, type TextBasedChannel, type VoiceChannel } from 'discord.js';
+import { VoiceChannelService } from '../../../services/voice-channel-service';
 
 /**
  * @Trigger `voice-channel-notify`
  *  - `voice-channel-notify` : Send notification in targeted channel
  */
 class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
-	private async notifyGuild(
-		client: UtsukushiBotClient,
-		user: string,
-		channelId: string,
-		guild: Guild,
-	): Promise<void> {
-		const data = await client.store.guilds.getOrAddItemByGuild(guild);
-		if (data?.vocalNotifyChannel) {
-			const channelNotify = await guild.channels
-				.fetch(data.vocalNotifyChannel) as TextBasedChannel;
-			const vc = await guild.channels.fetch(channelId) as VoiceChannel;
-			const userJoin = (await guild.members.fetch(user)).user;
-
-			const embed = new NotifyEmbed(userJoin, vc);
-			channelNotify?.send({ embeds: [embed] }).catch((err: Error) => { logger.error({}, err.message); });
-		}
-	}
 
 	readonly trigger = async (client: UtsukushiBotClient): Promise<void> => {
 		client.on('voiceStateUpdate', async (oldState, newState) => {
@@ -41,15 +22,19 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 				// }
 			}
 			else if (oldState.channelId === null) {
-				if (newState.member?.user.bot) return;
+				// if (newState.member?.user.bot) return;
 				// 'a user joined!'
+
+				await VoiceChannelService.conversationStarted(oldState, newState);
+
 				const user = newState.id;
 				const channelId = newState.channelId as string;
 				const guild = newState.guild;
-				await this.notifyGuild(client, user, channelId, guild);
+				await VoiceChannelService.notifyUserJoinVocal(client, user, channelId, guild);
 			}
 			else if (newState.channelId === null) {
 				// 'a user left!'
+				await VoiceChannelService.conversationFinished(client, oldState, newState);
 			}
 		});
 	};
