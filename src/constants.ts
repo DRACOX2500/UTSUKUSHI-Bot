@@ -1,4 +1,4 @@
-import { DEFAULT_ACTIVITY } from './core/constants';
+import { DEFAULT_CONFIG } from './core/constants';
 import { type UtsukushiSystem } from './types/business';
 
 export const REGEX_LINK = /https?:\/\/.+/;
@@ -29,8 +29,8 @@ export const PONG_COLOR = {
 export const DEFAULT_SYSTEM: UtsukushiSystem = {
 	emojis: [],
 	soundEffects: [],
-	activity: DEFAULT_ACTIVITY.activity,
-	status: DEFAULT_ACTIVITY.status,
+	activity: DEFAULT_CONFIG.activity,
+	status: DEFAULT_CONFIG.status,
 };
 
 const YOUTUBE = 0xff0000;

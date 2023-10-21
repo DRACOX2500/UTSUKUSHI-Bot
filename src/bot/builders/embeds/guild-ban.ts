@@ -1,3 +1,4 @@
+import { BotClient } from '../../../core/bot-client';
 import { DiscordService } from '../../../services/discord-service';
 import { EmbedBuilder, type Guild, type GuildBan, italic } from 'discord.js';
 
@@ -14,7 +15,7 @@ export class GuildBanEmbed extends EmbedBuilder {
 		).join('\n');
 
 		this
-			.setColor(0xf9ff00)
+			.setColor(BotClient.color)
 			.setTitle(`${guild.name}'s Users Banned (${bans.length})`)
 			.setDescription(DiscordService.limitText(bansDesc, 1950));
 	}

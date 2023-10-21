@@ -1,4 +1,5 @@
 import { bold, EmbedBuilder, type User, type VoiceChannel } from 'discord.js';
+import { BotClient } from '../../../core/bot-client';
 
 export class NotifyEmbed extends EmbedBuilder {
 
@@ -10,7 +11,7 @@ export class NotifyEmbed extends EmbedBuilder {
 
 
 		this
-			.setColor(0xf9ff00)
+			.setColor(BotClient.color)
 			.setAuthor({
 				name: `${user.globalName} (${user.username})`,
 				iconURL: avatarURL,

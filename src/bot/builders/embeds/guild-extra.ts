@@ -1,3 +1,4 @@
+import { BotClient } from '../../../core/bot-client';
 import { DiscordService } from '../../../services/discord-service';
 import { EmbedBuilder, type Guild, type GuildEmoji, type Role, type Sticker, bold, roleMention } from 'discord.js';
 
@@ -29,7 +30,7 @@ export class GuildExtraEmbed extends EmbedBuilder {
 		);
 
 		this
-			.setColor(0xf9ff00)
+			.setColor(BotClient.color)
 			.setTitle(`${guild.name}'s Extra Data`)
 			.setDescription(DiscordService.limitText(descs.join('\n\n'), 1950));
 	}

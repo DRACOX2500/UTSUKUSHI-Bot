@@ -12,5 +12,6 @@ export interface BotConfig {
     default: {
         status: PresenceStatusData;
         activity: BotActivity;
+        color: number;
     }
 }

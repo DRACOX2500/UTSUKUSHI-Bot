@@ -2,7 +2,7 @@ import { Client, type GatewayIntentBits, type PresenceStatusData } from 'discord
 import { type BotActivity, type BotConfig, type ProgProfile } from './types/business';
 import logger from './logger';
 import { InteractionsManager } from './interactions-manager';
-import { DEFAULT_ACTIVITY, ERROR_USERNAME } from './constants';
+import { DEFAULT_CONFIG, ERROR_USERNAME } from './constants';
 import { type BotClientEvents } from './bot-client-events';
 
 export class BotClient extends Client implements BotClientEvents {
@@ -10,14 +10,16 @@ export class BotClient extends Client implements BotClientEvents {
 	protected _cmdManager: InteractionsManager;
 
 	private username: string = ERROR_USERNAME;
+	private static _color: number;
 	private readonly config: BotConfig;
 
 	constructor(profil: ProgProfile = 'prod', intents: GatewayIntentBits[] = [], config?: Partial<BotConfig>) {
 		super({ intents });
 		this.config = {
-			default: DEFAULT_ACTIVITY,
+			default: DEFAULT_CONFIG,
 			...config,
 		};
+		BotClient._color = this.config.default.color;
 		this._cmdManager = new InteractionsManager(this);
 		this.initBotEvents();
 	}
@@ -68,5 +70,13 @@ export class BotClient extends Client implements BotClientEvents {
 
 	onAfterReady(): void {
 		// OVERRIDE
+	}
+
+	static setColor(color: number): void {
+		BotClient._color = color;
+	}
+
+	static get color(): number {
+		return BotClient._color;
 	}
 }

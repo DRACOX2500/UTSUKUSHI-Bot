@@ -1,4 +1,5 @@
 import { EmbedBuilder, type Guild, type GuildMember, time } from 'discord.js';
+import { BotClient } from '../../../core/bot-client';
 
 export class GuildEmbed extends EmbedBuilder {
 
@@ -13,7 +14,7 @@ export class GuildEmbed extends EmbedBuilder {
 		const joinedAt = user.joinedAt as Date;
 
 		this
-			.setColor(0xf9ff00)
+			.setColor(BotClient.color)
 			.setAuthor({
 				name: owner.user.username,
 				iconURL: avatarUrl,
