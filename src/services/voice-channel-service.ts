@@ -25,7 +25,7 @@ export class VoiceChannelService {
 	}
 
 	private static hasMinimumMenber(state: VoiceState): boolean {
-		return state.channel?.members.size === 2;
+		return (state.channel?.members.size ?? 0) >= 2;
 	}
 
 	private static isEmpty(state: VoiceState): boolean {
