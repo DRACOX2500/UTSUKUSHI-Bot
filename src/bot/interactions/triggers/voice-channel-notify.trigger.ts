@@ -35,7 +35,6 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 		client: UtsukushiBotClient,
 	): Promise<void> {
 		// 'a bot joined!'
-		await VoiceChannelService.conversationStarted(newState);
 	}
 
 	private async onSwitch(
