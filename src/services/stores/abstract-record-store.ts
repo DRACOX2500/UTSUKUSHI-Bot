@@ -6,6 +6,7 @@ interface Item<T> {
     date: Date,
 }
 
+// 1 Hours
 const TIMER = 3600000;
 
 export abstract class AbstractRecordStore<T = any> extends AbstractStore<Record<string, Item<T>>> {
@@ -19,6 +20,7 @@ export abstract class AbstractRecordStore<T = any> extends AbstractStore<Record<
 	}
 
 	private async clean(): Promise<void> {
+		if (this.isEmpty) return;
 		const NOW = new Date().getTime();
 		const record = this.value;
 		let count = 0;
@@ -55,5 +57,19 @@ export abstract class AbstractRecordStore<T = any> extends AbstractStore<Record<
 		const record = this.value;
 		delete record[id];
 		this.set(record);
+	}
+
+	public get size(): number {
+		let count = 0;
+		const record = this.value;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		for (const key in record) {
+			count++;
+		}
+		return count;
+	}
+
+	public get isEmpty(): boolean {
+		return this.size === 0;
 	}
 }
