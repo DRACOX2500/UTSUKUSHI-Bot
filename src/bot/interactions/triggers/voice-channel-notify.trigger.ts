@@ -15,18 +15,18 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 	): Promise<void> {
 		// 'a user joined!'
 
-		await VoiceChannelService.conversationStarted(newState);
+		VoiceChannelService.conversationStarted(newState);
 
 		const user = newState.id;
 		const channelId = newState.channelId as string;
 		const guild = newState.guild;
-		await VoiceChannelService.notifyUserJoinVocal(
+		VoiceChannelService.notifyUserJoinVocal(
 			client,
 			user,
 			channelId,
 			guild,
 		);
-		// await VoiceChannelService.playSoundEffect(client, user, channelId, guild);
+		VoiceChannelService.playSoundEffect(client, user, channelId, guild);
 	}
 
 	private async onJoinBot(
@@ -43,8 +43,8 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 		client: UtsukushiBotClient,
 	): Promise<void> {
 		// 'a user switched channels'
-		await VoiceChannelService.conversationFinished(client, oldState);
-		await VoiceChannelService.conversationStarted(newState);
+		VoiceChannelService.conversationFinished(client, oldState);
+		VoiceChannelService.conversationStarted(newState);
 	}
 
 	private async onStay(
@@ -61,7 +61,7 @@ class VoiceChannelNotifyTrigger implements BotTrigger<UtsukushiBotClient> {
 		client: UtsukushiBotClient,
 	): Promise<void> {
 		// 'a user left!'
-		await VoiceChannelService.conversationFinished(client, oldState);
+		VoiceChannelService.conversationFinished(client, oldState);
 	}
 
 	readonly trigger = async (client: UtsukushiBotClient): Promise<void> => {
