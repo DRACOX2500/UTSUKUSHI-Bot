@@ -1,2 +1,4 @@
 dist/**/*
+libs/**/*
+packages/**/*
 .d.ts

@@ -6,13 +6,7 @@
         "allowSyntheticDefaultImports": true,
         "target": "ES2022",
         "outDir": "./dist",
-        // "baseUrl": ".",
-        // "paths": {
-        //     "*": ["node_modules/*"],
-        //     "src/*": ["src/*"],
-        //     "package": ["package.json"],
-        //     "config": ["config.json"],
-        // },
+        "baseUrl": ".",
         "lib": [
             "ES2023"
         ],
@@ -24,9 +18,9 @@
         "sourceMap": true,
         "resolveJsonModule": true,
         "noEmit": false,
-        "importHelpers": false,
+        "importHelpers": true,
         "allowJs": false,
-        "skipLibCheck": true
+        "skipLibCheck": true,
     },
     "watchOptions": {
         "watchFile": "useFsEvents",
@@ -36,5 +30,5 @@
         "excludeDirectories": ["**/node_modules", "**/dist"],
     },
     "include": ["index.ts", "src/**/*.ts", "test/**/*.ts", "jest.config.js"],
-    "exclude": ["node_modules", "dist", "libs", "packges"]
+    "exclude": ["node_modules", "dist"]
 }

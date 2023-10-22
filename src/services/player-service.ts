@@ -18,6 +18,9 @@ import {
 import { TrackReply } from '../bot/builders/replies/track';
 import { SortUtils } from '../core/utils/sort';
 import { REGEX_LINK } from '../constants';
+import { RadioGarden } from 'radio-garden-api';
+import { createAudioResource } from 'discord-voip';
+import { type Readable } from 'stream';
 
 const SOURCES = ['auto', 'youtube', 'spotify', 'soundcloud'];
 
@@ -165,6 +168,27 @@ export class PlayerService {
 				volume: 100,
 			},
 		});
+	}
+
+	private static readonly radio: RadioGarden = new RadioGarden();
+
+	static async playRadio(interaction: Interaction): Promise<void> {
+		const channel = (interaction.member as GuildMember).voice.channel;
+		if (!channel || !interaction.guildId || !interaction.guild) return;
+		const stream: Readable = await PlayerService.radio.listen('XehO7lZ3');
+		const resource: any = createAudioResource(stream);
+		let queue = PlayerService._player.nodes.get(interaction.guildId);
+		if (!queue) {
+			console.log('not-exist');
+			queue = PlayerService._player.nodes.create(interaction.guild);
+			await queue.connect(channel);
+			await queue.node.playRaw(resource);
+		}
+		else {
+			console.log('exist');
+			await queue.connect(channel);
+			await queue.node.playRaw(resource);
+		}
 	}
 
 	static async playVC(
