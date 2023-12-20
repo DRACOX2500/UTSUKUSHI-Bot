@@ -1,1 +1,1 @@
-worker: node dist/index.js --profile dev
+worker: npm run dev
