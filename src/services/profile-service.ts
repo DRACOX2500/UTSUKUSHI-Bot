@@ -34,8 +34,8 @@ export class ProfileService {
 
 	static get envPath(): string {
 		const profile = ProfileService.getProfile(process.argv);
-		if (profile === 'prod') return '.env';
-		return `.env.${profile}`;
+		if (profile && profile !== 'prod') return `.env.${profile}`;
+		return '.env';
 	}
 
 	static get isProd(): boolean {
