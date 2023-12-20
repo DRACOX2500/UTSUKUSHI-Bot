@@ -11,4 +11,5 @@ export const environment = {
 	DISCORD_TOKEN: process.env.DISCORD_TOKEN ?? '',
 	CLIENT_ID: process.env.CLIENT_ID ?? '',
 	DB_URL: process.env.DB_URL ?? '',
+	ADMIN_GUILD_ID: process.env.DB_URL ?? '',
 };

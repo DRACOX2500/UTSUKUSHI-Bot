@@ -14,7 +14,6 @@ logs/
 *.log
 .env*
 .cache/
-config.json
 !.env.example
 .v1.0/
 src/assets/*.webp

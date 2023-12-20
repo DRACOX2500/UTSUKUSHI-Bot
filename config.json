@@ -1,0 +1,9 @@
+{
+    "private": [
+        {
+            "guild": "ADMIN_GUILD_ID",
+            "commands": ["bot-admin"],
+            "contexts": []
+        }
+    ]
+}

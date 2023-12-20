@@ -12,7 +12,17 @@ import CONFIG_JSON from '../../config.json';
 import { ArrayUtils } from './utils/array';
 import { type BotModal, type BotSelect } from './bot-command';
 
-const CONFIG: ConfigJson = CONFIG_JSON;
+const CONFIG: ConfigJson = preConfig();
+
+function handleAdminGuild(guildId: string): string {
+	return guildId === 'ADMIN_GUILD_ID' ? environment.ADMIN_GUILD_ID : guildId;
+}
+
+function preConfig(): ConfigJson {
+	const config = CONFIG_JSON;
+	config.private = config.private.map(_p => ({ ..._p, guild: handleAdminGuild(_p.guild) }));
+	return config;
+}
 
 const INTERACTION_PATH = [
 	environment.SRC_PATH,
