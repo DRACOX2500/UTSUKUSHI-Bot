@@ -13,7 +13,10 @@
 	},
 	"main": "index.ts",
 	"scripts": {
-		"build": "npm run opus-fix && npm run ts-build",
+		"heroku-prebuild": "echo This runs before Heroku installs dependencies.",
+  		"heroku-postbuild": "echo This runs after Heroku installs dependencies, but before Heroku prunes and caches dependencies.",
+		"heroku-cleanup": "echo This runs after Heroku prunes and caches dependencies.",
+		"build": "tsc --project tsconfig.json",
 		"ts-build": "tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
