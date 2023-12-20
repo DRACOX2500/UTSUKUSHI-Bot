@@ -13,7 +13,7 @@
 	},
 	"main": "index.ts",
 	"scripts": {
-		"heroku-cleanup": "yarn && npm run opus-fix && npm run build",
+		"heroku-prebuild": "yarn && npm run opus-fix",
 		"build": "tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
