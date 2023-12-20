@@ -8,8 +8,8 @@
 		"url": "https://github.com/DRACOX2500/UTSUKUSHI-Bot"
 	},
 	"engines": {
-		"node": ">=16",
-		"npm": ">=9"
+		"node": ">=16 <19",
+		"npm": ">=9 <10"
 	},
 	"main": "index.ts",
 	"scripts": {
