@@ -13,8 +13,7 @@
 	},
 	"main": "index.ts",
 	"scripts": {
-		"postinstall": "npm run opus-fix",
-		"build": "tsc --project tsconfig.json",
+		"build": "npm run opus-fix && tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
 		"deploy-commands": "node dist/index.js",
