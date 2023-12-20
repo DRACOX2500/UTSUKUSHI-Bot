@@ -1,1 +1,1 @@
-web: npm run super-dev
+web: npm run dev
