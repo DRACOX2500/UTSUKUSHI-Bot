@@ -13,9 +13,7 @@
 	},
 	"main": "index.ts",
 	"scripts": {
-		"heroku-prebuild": "npm i -g typescript",
-  		"heroku-postbuild": "npm run opus-fix && npm run build",
-		"heroku-cleanup": "echo This runs after Heroku prunes and caches dependencies.",
+		"heroku-cleanup": "npm run opus-fix",
 		"build": "tsc --project tsconfig.json",
 		"remove-dist": "echo \"Error: no remove-dist specified\" && exit 1",
 		"watch": "tsc --project tsconfig.json --watch",
